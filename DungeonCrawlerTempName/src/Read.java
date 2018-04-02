@@ -11,60 +11,38 @@ import javax.imageio.ImageIO;
 public class Read {
 	public static void main(String[] re) throws IOException{
 //		int[][] r = readcsvfile(new File("src/csvtest.txt"));
-		int[][] r = readimagefile(new File("paintcolors2.png"));
+		int[][] r = readimagefile(new File("untitled.png"));
 		for(int k=0;k<r.length;k++){
 			for(int t=0;t<r[k].length;t++){
 				System.out.print(r[k][t]+" ");
 			}
 			System.out.println();
 		}
+		outputroom(r,"writetest");
 	}
+	static int[] colorRGB = new int[]{-1237980,-32985,-3584,-4856291,-6694422,-16735512,-20791,-1,-12629812,-3620889,-4621737,-7864299,-16777216,-8421505,-3947581,-14503604,-6075996,-14066,-1055568,-9399618};
+	static int[] colorID = new int[]{2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
+	//above needs to be done some other way, but here is the default paint colors
+	//in order: red,orange,yellow,lime,light turquoise,turquoise,rose,white,Indigo,lavender,brown,dark red,black,grey 50%,grey 25%,Green,purple,gold,light yellow,blue-grey
+	static int defaultID = 1;
+	static int voidRGB = Integer.MIN_VALUE;
 	static int ColortoID(Color col){
-		switch (col.getRGB()){//the colors able to be drawn by default in paint are below, otherwise just add
-		case -1237980://red
-			return 2;
-		case -32985://orange
-			return 3;
-		case -3584://yellow
-			return 4;
-		case -4856291://lime
-			return 5;
-		case -6694422://light turquoise
-			return 6;
-		case -16735512://turquoise
-			return 7;
-		case -20791://rose
-			return 8;
-		case -1://white
-			return 9;
-		case -12629812://Indigo
-			return 10;
-		case -3620889://lavender
-			return 11;
-		case -4621737://brown
-			return 12;
-		case -7864299://dark red
-			return 13;
-		case -16777216://black
-			return 14;
-		case -8421505://grey 50%
-			return 15;
-		case -3947581://grey 25%
-			return 16;
-		case -14503604://Green
-			return 17;
-		case -6075996://purple
-			return 18;
-		case -14066://gold
-			return 19;
-		case -1055568://light yellow
-			return 20;
-		case -9399618://blue-grey
-			return 21;
-			
+		for(int i=0;i<colorID.length;i++){
+			if(colorRGB[i]==col.getRGB()){
+				return colorID[i];
+			}
 		}
 		System.out.println(col.getRGB());
-		return 1;
+		return defaultID;
+	}
+	private static int IDtoColor(int id) {
+		for(int i=0;i<colorRGB.length;i++){
+			if(colorID[i]==id){
+				return colorRGB[i];
+			}
+		}
+		System.out.println(id);
+		return voidRGB;
 	}
 	//OK the above is declared in code right now, but it can be changed to be read later, but that will require
 	//making the methods below not static
@@ -141,4 +119,23 @@ public class Read {
 		int blue = rgb & 0xFF;
 		return new Color(red,green,blue);
 	}
+	static void outputroom(int[][] room,String name){//just outputs to project folder
+		int height=room[0].length;
+		for(int[] r :room){
+			height=Math.max(height, r.length);
+		}
+		BufferedImage b = new BufferedImage(height,room.length,BufferedImage.TYPE_INT_RGB);
+		for(int x=0;x<room.length;x++){
+			for(int y=0;y<room[x].length;y++){
+				b.setRGB(y, x, IDtoColor(room[x][y]));
+			}
+		}
+		try {
+		    File outputfile = new File(name+".png");
+		    ImageIO.write(b, "png", outputfile);
+		} catch (IOException e) {
+		   e.printStackTrace();
+		}
+	}
+	
 }
