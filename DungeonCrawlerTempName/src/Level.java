@@ -19,7 +19,7 @@ public class Level {
 	//have a larger rect the bounds a non rect room with void around it
 	
 	public static void main(String[] tf){
-		Level level=new Level(200,200);
+		Level level=new Level(300,300);
 //		Read.printint(level.level);
 		Read.outputroom(level.level, "map output");
 	}
@@ -45,8 +45,8 @@ public class Level {
 					}
 				}
 			}
-			ArrayList<int[][]> rooms = (ArrayList<int[][]>) allroomdesigns.clone();
 			int[] nextdoor = doors.get((int) (doors.size()*Math.random()));
+			ArrayList<int[][]> rooms = (ArrayList<int[][]>) allroomdesigns.clone();
 			while (rooms.size()>0){
 				int[][] fr = rooms.remove((int)(Math.random()*rooms.size()));
 				placeroom(fr,level,nextdoor);
@@ -55,25 +55,21 @@ public class Level {
 		}
 	}
 	private void placeroom(int[][] r, int[][] level,int[] placeon) {
-		ArrayList<int[]> doors = new ArrayList<int[]>();
-		for(int i=0;i<r.length;i++){
-			for(int j=0;j<r[i].length;j++){
-				if(r[i][j]==doorID){
-					doors.add(new int[]{i,j});
+		for(int rot=0;rot<4;rot++){
+			ArrayList<int[]> doors = new ArrayList<int[]>();
+			for(int i=0;i<r.length;i++){
+				for(int j=0;j<r[i].length;j++){
+					if(r[i][j]==doorID){
+						doors.add(new int[]{i,j});
+					}
 				}
 			}
-		}
-//		Read.printint(r);
-		for(int rot=0;rot<4;rot++){
-			r=rotate(r);
 			for(int[] f : doors){
 				boolean ok=true;
 				for(int i=0;i<r.length;i++){
 					for(int j=0;j<r[i].length;j++){
 						try{
-							if(level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==Read.defaultID||level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==r[i][j]||r[i][j]==Read.defaultID){
-								
-							}else{
+							if(!(level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==Read.defaultID||level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==r[i][j]||r[i][j]==Read.defaultID)){
 								ok=false;
 							}
 						}
@@ -90,7 +86,7 @@ public class Level {
 					}
 				}
 			}
-			
+			r=rotate(r);
 		}
 	}
 	static int[][] rotate(int[][] red){//just rotates clockwise
