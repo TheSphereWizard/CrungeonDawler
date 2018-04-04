@@ -36,10 +36,7 @@ public class Level {
 			level[i]=new int[height];
 		}
 		level[width/2][height/2]=doorID;
-		int rer=0;
-		while(!done()&&rer<1000){
-			rer++;//doesn't give up when reaches edges of map or wrapps around on self
-			//need to close extra rooms
+		while(!done()){
 			ArrayList<int[]> doors = new ArrayList<int[]>();
 			for(int i=0;i<level.length;i++){
 				for(int j=0;j<level[i].length;j++){
@@ -50,12 +47,11 @@ public class Level {
 			}
 			ArrayList<int[][]> rooms = (ArrayList<int[][]>) allroomdesigns.clone();
 			int[] nextdoor = doors.get((int) (doors.size()*Math.random()));
-			boolean notplaced=true;
 			while (rooms.size()>0){
 				int[][] fr = rooms.remove((int)(Math.random()*rooms.size()));
-					placeroom(fr,level,nextdoor);
-					notplaced=false;
+				placeroom(fr,level,nextdoor);
 			}
+			level[nextdoor[0]][nextdoor[1]]=3;
 		}
 	}
 	private void placeroom(int[][] r, int[][] level,int[] placeon) {
