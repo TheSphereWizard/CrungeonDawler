@@ -120,7 +120,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 				gameState = GameState.MAIN_MENU;
 				break;
 			case STARTUP:
-				if(this.getWidth() > 1 && startupTime > secInNanosec)
+				if(this.getWidth() > 1 && startupTime > secInNanosec/8)
 				{
 					frameWidth = this.getWidth();
 					frameHeight = this.getHeight();
@@ -164,6 +164,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 			break;
 		case MAIN_MENU:
 			g2d.setColor(Color.WHITE);
+			g2d.fillRect(50, 50, 100, 100);
 			break;
 		}
 	}
