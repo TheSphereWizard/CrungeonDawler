@@ -1,0 +1,144 @@
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+
+public class Read {
+	public static void main(String[] re) throws IOException{
+//		int[][] r = readcsvfile(new File("src/csvtest.txt"));
+		int[][] r = readimagefile(new File("paintcolors2.png"));
+		for(int k=0;k<r.length;k++){
+			for(int t=0;t<r[k].length;t++){
+				System.out.print(r[k][t]+" ");
+			}
+			System.out.println();
+		}
+	}
+	static int ColortoID(Color col){
+		switch (col.getRGB()){//the colors able to be drawn by default in paint are below, otherwise just add
+		case -1237980://red
+			return 2;
+		case -32985://orange
+			return 3;
+		case -3584://yellow
+			return 4;
+		case -4856291://lime
+			return 5;
+		case -6694422://light turquoise
+			return 6;
+		case -16735512://turquoise
+			return 7;
+		case -20791://rose
+			return 8;
+		case -1://white
+			return 9;
+		case -12629812://Indigo
+			return 10;
+		case -3620889://lavender
+			return 11;
+		case -4621737://brown
+			return 12;
+		case -7864299://dark red
+			return 13;
+		case -16777216://black
+			return 14;
+		case -8421505://grey 50%
+			return 15;
+		case -3947581://grey 25%
+			return 16;
+		case -14503604://Green
+			return 17;
+		case -6075996://purple
+			return 18;
+		case -14066://gold
+			return 19;
+		case -1055568://light yellow
+			return 20;
+		case -9399618://blue-grey
+			return 21;
+			
+		}
+		System.out.println(col.getRGB());
+		return 1;
+	}
+	//OK the above is declared in code right now, but it can be changed to be read later, but that will require
+	//making the methods below not static
+	static int[][] readcsvfile(File f){
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(f));
+			String r = reader.readLine();
+			ArrayList<ArrayList<Integer>> parse = new ArrayList<ArrayList<Integer>>();
+			int i=0;
+			int j=0;
+			String s="";
+			while(r!=null){
+				parse.add(new ArrayList<Integer>());
+				for(int k=0;k<r.length();k++){
+					if(!r.substring(k, k+1).equals(",")){
+						s+=r.substring(k, k+1);
+					}else{
+						j++;
+						try{
+							parse.get(i).add(Integer.parseInt(s));
+						}catch(Exception e){
+							System.out.println("error1 at "+i+","+j+"   "+s);
+						}
+						s="";
+						
+					}
+				}
+				try{
+					parse.get(i).add(Integer.parseInt(s));
+				}catch(Exception e){
+					System.out.println("error at "+i+","+j+"   "+s);
+				}
+				r = reader.readLine();
+				s="";
+				i++;
+				j=0;
+			}
+			try{
+				parse.get(i-1).add(Integer.parseInt(s));
+			}catch(Exception e){}
+			int[][] array=new int[parse.size()][];
+			for(int k=0;k<parse.size();k++){
+				array[k]=new int[parse.get(k).size()];
+				for(int t=0;t<parse.get(k).size();t++){
+					array[k][t]=parse.get(k).get(t);
+				}
+			}
+			return array;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	static int[][] readimagefile(File f){
+		BufferedImage img;
+		try {
+			img = ImageIO.read(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		int[][] result = new int[img.getHeight()][];
+		for(int x=0;x<img.getHeight();x++)
+			result[x]=new int[img.getWidth()];
+		for(int x=0;x<img.getWidth();x++){
+			for(int y=0;y<img.getHeight();y++){
+				result[y][x]=ColortoID(RGBtocolor(img.getRGB(x, y)));
+			}
+		}
+		return result;
+	}
+	static Color RGBtocolor(int rgb){
+		int red = (rgb >> 16) & 0xFF;
+		int green = (rgb >> 8) & 0xFF;
+		int blue = rgb & 0xFF;
+		return new Color(red,green,blue);
+	}
+}

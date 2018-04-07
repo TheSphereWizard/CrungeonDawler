@@ -1,0 +1,12 @@
+
+
+import java.util.ArrayList;
+
+public class Map {
+	public Map(MapKit mapKit,int rooms) {
+		
+	}
+	public static void main(String[] args) {
+		Map m = new Map(new MapKit(),20);
+	}
+}

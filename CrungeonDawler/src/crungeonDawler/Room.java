@@ -1,0 +1,13 @@
+package crungeonDawler;
+
+
+public class Room {
+	private int w,h;
+	private int[][] decorations;
+	public Room(int w,int h) {
+		this.w = w;
+		this.h = h;
+	}
+	public int getWidth()  {return w;}
+	public int getHeight() {return h;}
+}

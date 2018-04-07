@@ -1,0 +1,5 @@
+
+public class TileIDs {
+	//Hey so the reason this is not a txt file, is so I don't need to init reader
+	//which allows all the methods to be static, this can be changed later if it isn't neccessary
+}

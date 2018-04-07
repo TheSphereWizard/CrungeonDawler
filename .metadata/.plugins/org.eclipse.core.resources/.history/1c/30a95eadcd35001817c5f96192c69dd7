@@ -1,0 +1,11 @@
+import java.awt.Color;
+
+public class TileIDsforImage {
+	//Hey so the reason this is not a txt file, is so I don't need to init reader
+	//which allows all the methods to be static, this can be changed later if it isn't neccessary
+	
+	//Colors to be read in/put out
+	Color[] colors = new Color[]{new Color(0,0,0)};
+		//yes this could just work as index in color[], but I think this would be useful for making changes later, idk
+	int[] ids = new int[]{0,1,2,3,4,5,6,7,8};
+}

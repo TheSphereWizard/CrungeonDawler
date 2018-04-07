@@ -1,0 +1,7 @@
+
+
+public class Monster extends Creature{
+	public Monster(String name, int spriteID) {
+		super(name, spriteID);
+	}
+}

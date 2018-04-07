@@ -1,0 +1,19 @@
+
+
+public class MapKit {
+	private String tileSetPath,tileCollisionsPath;
+	private String decorationSetPath,decorationCollisionsPath;
+	private String roomPath;
+	private Room[] rooms;
+	private int w,h;
+	public int numRooms() {
+		return 1;
+		//return rooms.length;
+	}
+	public Room getRoom(int id) {
+		int w = (int)(Math.random()*8)+8;
+		int h = (int)(Math.random()*8)+8;
+		return new Room(w,h);
+		//return rooms[id];
+	}
+}

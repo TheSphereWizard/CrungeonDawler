@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Level {
 	//Not Today but Plan:
@@ -19,7 +20,7 @@ public class Level {
 	//have a larger rect the bounds a non rect room with void around it
 	
 	public static void main(String[] tf){
-		Level level=new Level(300,300);
+		Level level=new Level(100,100);
 //		Read.printint(level.level);
 		Read.outputroom(level.level, "map output");
 	}
@@ -55,6 +56,10 @@ public class Level {
 		}
 	}
 	private void placeroom(int[][] r, int[][] level,int[] placeon) {
+		int rand = (int) (Math.random()*4);
+		for (int i=0;i<rand;i++){
+			r=rotate(r);
+		}
 		for(int rot=0;rot<4;rot++){
 			ArrayList<int[]> doors = new ArrayList<int[]>();
 			for(int i=0;i<r.length;i++){
@@ -64,6 +69,7 @@ public class Level {
 					}
 				}
 			}
+			Collections.shuffle(doors);
 			for(int[] f : doors){
 				boolean ok=true;
 				for(int i=0;i<r.length;i++){

@@ -1,0 +1,2 @@
+INDEX VERSION 1.129+C:\Users\Sphere Wizard\DungeonCrawler\.metadata\.plugins\org.eclipse.jdt.core
+2269989154.index

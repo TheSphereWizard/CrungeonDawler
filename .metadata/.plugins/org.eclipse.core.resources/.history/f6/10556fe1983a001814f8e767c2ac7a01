@@ -1,0 +1,10 @@
+
+
+public abstract class Creature extends Entity{
+	private int totalLife;
+	private int currentLife;
+	public Creature(String name, int spriteID) {
+		super(name, spriteID);
+	}
+	
+}

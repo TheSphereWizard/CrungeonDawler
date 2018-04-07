@@ -1,0 +1,191 @@
+package dungeonCrawler;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+public class Screen extends JPanel implements KeyListener,MouseListener{
+
+	public static enum GameState{MAIN_MENU, PLAYING, GAMEOVER, MENU, LOADING, STARTUP}
+	public static GameState gameState;
+
+	private static boolean[] keyPressed = new boolean[525];
+	private static boolean[] mousePressed = new boolean[3];
+
+	public static int frameWidth;
+	public static int frameHeight;
+	public static final long secInNanosec = 1000000000L;
+	public static final long milisecInNanosec = 1000000000L;
+
+	private final int GAME_FPS = 30;
+	private final long GAME_UPDATE_PERIOD = secInNanosec / GAME_FPS;
+	private long lastTime;
+
+
+	private Game game;
+
+	public Screen(){
+		this.setDoubleBuffered(true);
+		this.setFocusable(true);
+		this.setBackground(Color.black);
+		this.addKeyListener(this);
+		this.addMouseListener(this);
+        
+        gameState = GameState.STARTUP;
+        
+        Thread gameThread = new Thread() {
+            @Override
+            public void run(){
+                GameLoop();
+            }
+        };
+        gameThread.start();
+	}
+
+	//things that actually do things
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		mousePressed[e.getButton()-1] = true;
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		mousePressed[e.getButton()-1] = false;
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		keyPressed[e.getKeyCode()] = true;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		keyPressed[e.getKeyCode()] = false;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) { }
+	@Override
+	public void mouseEntered(MouseEvent e) { }
+	@Override
+	public void mouseExited(MouseEvent e) { }
+	@Override
+	public void keyTyped(KeyEvent e) { }
+
+    private void Initialize()
+    {
+        
+    }
+
+    private void LoadContent()
+    {
+
+    }
+	
+	private void GameLoop() {
+		long startupTime = 0, lastStartupTime = System.nanoTime();
+
+		long startTime, timeTaken, timeLeft;
+
+		while(true) {
+			startTime = System.nanoTime();
+
+			switch (gameState) {
+			case PLAYING:
+				game.UpdateGame(mousePosition());
+				lastTime = System.nanoTime();
+				break;
+			case GAMEOVER:
+				//...
+				break;
+			case MAIN_MENU:
+				//...
+				break;
+			case LOADING:
+				Initialize();
+				LoadContent();
+				gameState = GameState.MAIN_MENU;
+				break;
+			case STARTUP:
+				if(this.getWidth() > 1 && startupTime > secInNanosec)
+				{
+					frameWidth = this.getWidth();
+					frameHeight = this.getHeight();
+					gameState = GameState.LOADING;
+				}
+				else
+				{
+					startupTime += System.nanoTime() - lastStartupTime;
+					lastStartupTime = System.nanoTime();
+				}
+				break;
+			}
+			repaint();
+			timeTaken = System.nanoTime() - startTime;
+			timeLeft = (GAME_UPDATE_PERIOD - timeTaken) / milisecInNanosec;
+			if (timeLeft < 10) 
+				timeLeft = 10; 
+			try {
+				Thread.sleep(timeLeft);
+			} catch (InterruptedException ex) { }
+		}
+	}
+
+	public void paintComponent(Graphics g) {
+		Graphics2D g2d = (Graphics2D)g;        
+		super.paintComponent(g2d);        
+		Draw(g2d);
+	}
+
+	public void Draw(Graphics2D g2d) {
+		switch (gameState)
+		{
+		case PLAYING:
+			game.Draw(g2d, mousePosition());
+			break;
+		case MENU:
+			game.DrawMenu(g2d,mousePosition());
+			break;
+		case GAMEOVER:
+			game.DrawGameOver(g2d, mousePosition());
+			break;
+		case MAIN_MENU:
+			g2d.setColor(Color.WHITE);
+			break;
+		}
+	}
+	
+    private void newGame()
+    {
+        lastTime = System.nanoTime();
+        game = new Game();
+    }
+    
+	private Point mousePosition() {
+		try
+		{
+			Point mp = this.getMousePosition();
+
+			if(mp != null)
+				return this.getMousePosition();
+			else
+				return new Point(0, 0);
+		}
+		catch (Exception e)
+		{
+			return new Point(0, 0);
+		}
+	}
+}

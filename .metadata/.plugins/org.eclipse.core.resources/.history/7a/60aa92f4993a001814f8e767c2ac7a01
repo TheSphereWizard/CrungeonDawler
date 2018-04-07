@@ -1,0 +1,28 @@
+
+
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+
+public class Actor {
+	private BufferedImage spriteSheet;
+	private int currentAnim;
+	private int currentFrame;
+	private int width;
+	private int height;
+	public Actor(String path){
+		URL spriteSheetURL = this.getClass().getResource("/resources/images/"+path+".png");
+		try {
+			spriteSheet = ImageIO.read(spriteSheetURL);
+		} catch (IOException e) {}
+	}
+	public Image getSprite(int vx,int vy){
+		currentFrame += 1;
+		currentFrame %= 4;
+		return spriteSheet.getSubimage(currentAnim*width, currentFrame*height, width, height);
+	}
+}

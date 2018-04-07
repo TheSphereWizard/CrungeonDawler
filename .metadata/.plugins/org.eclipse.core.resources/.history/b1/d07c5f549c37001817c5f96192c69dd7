@@ -1,0 +1,9 @@
+
+public class Room {
+	int[][] layout;
+	int[] doorlocation;
+	Room(int[][] l,int[] doorloc){
+		layout=l;
+		doorlocation=doorloc;
+	}
+}
