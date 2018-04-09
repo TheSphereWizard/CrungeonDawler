@@ -88,8 +88,11 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 	public void mouseExited(MouseEvent e) { }
 	@Override
 	public void keyTyped(KeyEvent e) { }
-
+	BufferedImage backg=null;
     private void Initialize(){
+		try{
+			backg=ImageIO.read(new File("backgroundmainmenu.jpg"));
+		}catch(Exception E){System.out.println("backgroundimagenotfound");}
     	this.setLayout(new GridBagLayout());
 
     	GridBagConstraints Titleconst = new GridBagConstraints();
@@ -241,10 +244,6 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 			game.DrawGameOver(g2d, mousePosition());
 			break;
 		case MAIN_MENU:
-			BufferedImage backg=null;
-			try{
-				backg=ImageIO.read(new File("backgroundmainmenu.jpg"));
-			}catch(Exception E){System.out.println("backgroundimagenotfound");}
 			g2d.drawImage(backg, 0, 0, this.getWidth(), this.getHeight(), null);
 			
 			
