@@ -15,7 +15,7 @@ public class Effect {
 		this.damage = damage;
 		type = Type.DAMAGE;
 	}
-	public Effect(int radius, Effect effect){
+	public Effect(int radius, Effect effect){//test
 		this.radius = radius;
 		this.effect = effect;
 		type = Type.AOE;
