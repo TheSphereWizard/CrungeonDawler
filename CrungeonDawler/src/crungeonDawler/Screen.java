@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -20,13 +22,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class Screen extends JPanel implements KeyListener,MouseListener{
+public class Screen extends JPanel implements KeyListener,MouseListener,ActionListener{
 
 	public static enum GameState{MAIN_MENU, PLAYING, GAMEOVER, MENU, LOADING, STARTUP}
 	public static GameState gameState;
 
 	private static boolean[] keyPressed = new boolean[525];
 	private static boolean[] mousePressed = new boolean[3];
+	private static boolean[] jButtonPressed = new boolean[3];
 
 	public static int frameWidth;
 	public static int frameHeight;
@@ -134,6 +137,8 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 			Title.setOpaque(false);
 		JPanel  Highscores = new JPanel ();
 		JButton NewGame    = new JButton("NewGame");
+			NewGame.addActionListener(this);
+			NewGame.setActionCommand("0");
 			NewGame.setForeground(Color.white);
 			NewGame.setFont(new Font("Times New Roman",0,24));
 			NewGame.setBorderPainted(false); 
@@ -141,6 +146,8 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 			NewGame.setFocusPainted(false); 
 			NewGame.setOpaque(false);
 		JButton Continue   = new JButton("Continue");
+			Continue.setActionCommand("1");
+			Continue.addActionListener(this);
 			Continue.setForeground(Color.white);
 			Continue.setFont(new Font("Times New Roman",0,24));
 			Continue.setBorderPainted(false); 
@@ -148,6 +155,8 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 			Continue.setFocusPainted(false); 
 			Continue.setOpaque(false);
 		JButton Exit       = new JButton("Exit");
+			Exit.setActionCommand("2");
+			Exit.addActionListener(this);
 			Exit.setForeground(Color.white);
 			Exit.setFont(new Font("Times New Roman",0,24));
 			Exit.setBorderPainted(false); 
@@ -268,5 +277,9 @@ public class Screen extends JPanel implements KeyListener,MouseListener{
 		{
 			return new Point(0, 0);
 		}
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		jButtonPressed[Integer.parseInt(e.getActionCommand())]=true;
 	}
 }
