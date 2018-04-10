@@ -187,7 +187,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 			System.out.println("backgroundimagenotfound");
 		}
     	Toolkit toolkit = Toolkit.getDefaultToolkit();
-    	Image image = toolkit.getImage("cursor.png");
+    	Image image = toolkit.getImage("cursor.png");//You can store this image in a folder, I will simply leave it out till we decide what to do with all of the images
     	Cursor c = toolkit.createCustomCursor(image , new Point(this.getX(), 
     	           this.getY()), "img");
     	this.setCursor (c);

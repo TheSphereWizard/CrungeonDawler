@@ -3,22 +3,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Level {
-	//Not Today but Plan:
-	//Start is center -Rand room or special center room
-	//on each "entrance" -need special tile for this -not sure how multiple wide doors will work
-	//try and place random room, if it fits then place it and continue else try
-	//another room type, if all rooms are invalid give up and replace with wall
-	
-	//also need to have outer bound, probably just square around level
-	
-	
-	//For Tommorow: idk do something
-	
-	//will give the level layout, room wise atleast in a bufferedImage
-	
-	//currently I am going to treat all rooms as rectangles, to not have rectangle room,
-	//have a larger rect the bounds a non rect room with void around it
-	
 	public static void main(String[] tf){
 		Level level=new Level(100,100);
 		Read.outputroom(level.level, "map output");
@@ -27,7 +11,10 @@ public class Level {
 	static ArrayList<int[][]> allroomdesigns =new ArrayList<int[][]>();
 	int[][] level;
 	int[][] roomids;
+	public int width,height;
 	Level(int width, int height){
+		this.width=width;
+		this.height=height;
 		allroomdesigns.clear();
 		for(File f : new File("Roomdesigns").listFiles()){
 			allroomdesigns.add(Read.readimagefile(f));
