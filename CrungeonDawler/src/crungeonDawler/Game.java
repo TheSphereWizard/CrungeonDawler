@@ -16,7 +16,7 @@ public class Game {
 	private Level level;
 	public Game() {
 		level=new Level(100,100);
-		//Probablly pass in a player, if we are making classes, but for right now will just define some const, but should be player pos
+		//Probablly pass in a player when one is created, if we are making classes, but for right now will just define some const, but should be player pos
 		playerpos = new int[]{level.width/2,level.height/2};
 	}
 	int[] playerpos;
