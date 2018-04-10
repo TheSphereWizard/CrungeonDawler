@@ -1,12 +1,15 @@
 package crungeonDawler;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -93,9 +96,8 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 	public void keyTyped(KeyEvent e) { }
 	BufferedImage backg=null;
     private void Initialize(){
-		
+		//eyyyy, um so a card layout
     	this.setLayout(new GridBagLayout());
-
     	GridBagConstraints Titleconst = new GridBagConstraints();
 	    	Titleconst.gridx=2;
 	    	Titleconst.gridy=2;
@@ -184,6 +186,11 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 		}catch(Exception E){
 			System.out.println("backgroundimagenotfound");
 		}
+    	Toolkit toolkit = Toolkit.getDefaultToolkit();
+    	Image image = toolkit.getImage("cursor.png");
+    	Cursor c = toolkit.createCustomCursor(image , new Point(this.getX(), 
+    	           this.getY()), "img");
+    	this.setCursor (c);
     }
 	
 	private void GameLoop() {
@@ -203,6 +210,19 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 				//...
 				break;
 			case MAIN_MENU:
+				if(jButtonPressed[0]){
+					game=new Game();
+					gameState=GameState.PLAYING;
+					jButtonPressed[0]=false;
+				}
+				if(jButtonPressed[1]){
+					//Continue so not for a while
+					jButtonPressed[1]=false;
+				}
+				if(jButtonPressed[2]){
+					System.exit(0);
+					jButtonPressed[2]=false;
+				}
 				repaint();
 				break;
 			case LOADING:
@@ -211,7 +231,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 				gameState = GameState.MAIN_MENU;
 				break;
 			case STARTUP:
-				if(this.getWidth() > 1 && startupTime > secInNanosec/8)
+				if(this.getWidth() > 1 && startupTime > secInNanosec/4)
 				{
 					frameWidth = this.getWidth();
 					frameHeight = this.getHeight();
@@ -255,8 +275,6 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 			break;
 		case MAIN_MENU:
 			g2d.drawImage(backg, 0, 0, this.getWidth(), this.getHeight(), null);
-			
-			
 			break;
 		}
 	}
@@ -280,6 +298,10 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		jButtonPressed[Integer.parseInt(e.getActionCommand())]=true;
+		try{
+			jButtonPressed[Integer.parseInt(e.getActionCommand())]=true;
+		}catch(Exception E){
+			System.out.println(e.getActionCommand());
+		}
 	}
 }
