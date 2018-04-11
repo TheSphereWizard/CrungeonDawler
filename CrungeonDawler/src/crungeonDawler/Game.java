@@ -18,9 +18,10 @@ public class Game {
 	private Level level;
 	//I am working under the assumption that this class is solely for rendering, and will not do collision detections
 	ArrayList<Entity> allEntities =new ArrayList<Entity>();
-	public Game(Player p) {
-		level=new Level(100,100);
+	public Game(Player p,Level level) {
+		this.level=level;
 		player=p;
+		player.x=3;
 	}
 	Player player;
 	public void DrawMenu(Graphics2D g2d, Point mousePosition) {
@@ -38,7 +39,7 @@ public class Game {
 		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);
 		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
 			for(int y=player.getX()-renderdist<0?0:player.getX()-renderdist;y<level.height&&y<player.getX()+renderdist;y++){
-				g2d.drawImage(getImageFromTileID(level.level[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getX())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
+				g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getX())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
 			}
 		}
 		for(Entity e : allEntities){
@@ -50,7 +51,8 @@ public class Game {
 	}
 
 	private Image getImageFromTileID(int i) {
-		return null;
+		//Should use tileSet
+		return player.getSprite();
 	}
 
 	public void DrawGameOver(Graphics2D g2d, Point mousePosition) {

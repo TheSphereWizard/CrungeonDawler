@@ -187,7 +187,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 			System.out.println("backgroundimagenotfound");
 		}
     	Toolkit toolkit = Toolkit.getDefaultToolkit();
-    	Image image = toolkit.getImage("cursor.png");//You can store this image in a folder, I will simply leave it out till we decide what to do with all of the images
+    	Image image = toolkit.getImage("resources/images/cursor.png");//You can store this image in a folder, I will simply leave it out till we decide what to do with all of the images
     	Cursor c = toolkit.createCustomCursor(image , new Point(this.getX(), 
     	           this.getY()), "img");
     	this.setCursor (c);
@@ -279,7 +279,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 	}
     private void newGame(){
         lastTime = System.nanoTime();
-        game=new Game(new Player("Test Player",new Actor("cursor.png")));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
+        game=new Game(new Player("Test Player",new Actor("testSpriteSheetforActors")),new Level(100,100,"testSpriteSheetforActors"));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
 		gameState=GameState.PLAYING;
     }
 	private Point mousePosition() {
