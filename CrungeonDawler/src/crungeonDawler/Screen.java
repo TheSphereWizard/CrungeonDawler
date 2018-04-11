@@ -211,8 +211,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 				break;
 			case MAIN_MENU:
 				if(jButtonPressed[0]){
-					game=new Game();
-					gameState=GameState.PLAYING;
+					newGame();
 					jButtonPressed[0]=false;
 				}
 				if(jButtonPressed[1]){
@@ -280,7 +279,8 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 	}
     private void newGame(){
         lastTime = System.nanoTime();
-        game = new Game();
+        game=new Game(new Player("Test Player",new Actor("cursor.png")));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
+		gameState=GameState.PLAYING;
     }
 	private Point mousePosition() {
 		try{

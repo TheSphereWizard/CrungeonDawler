@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+
 //import com.google.gson.*;
 import javax.imageio.ImageIO;
 
@@ -14,12 +16,13 @@ public class Game {
 	private Image tileSet;
 	private Image decorationSet;
 	private Level level;
-	public Game() {
+	//I am working under the assumption that this class is solely for rendering, and will not do collision detections
+	ArrayList<Entity> allEntities =new ArrayList<Entity>();
+	public Game(Player p) {
 		level=new Level(100,100);
-		//Probablly pass in a player when one is created, if we are making classes, but for right now will just define some const, but should be player pos
-		playerpos = new int[]{level.width/2,level.height/2};
+		player=p;
 	}
-	int[] playerpos;
+	Player player;
 	public void DrawMenu(Graphics2D g2d, Point mousePosition) {
 		Draw(g2d,mousePosition);
 		g2d.setColor(new Color(0,0,0,128));
@@ -29,19 +32,25 @@ public class Game {
 	}
 	public static final int pixeltilewidth =16;
 	public static final int renderdist = 5;
-	BufferedImage[] Tilesforlevel;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
-		g2d.setColor(new Color(0,0,0,255));
-		g2d.fillOval(0,0,Screen.frameWidth,Screen.frameHeight);
 		g2d.setColor(Color.red);
 		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
-		
-		for(int x=playerpos[0]-renderdist<0?0:playerpos[0]-renderdist;x<level.width&&x<playerpos[0]+renderdist;x++){
-			for(int y=playerpos[1]-renderdist<0?0:playerpos[1]-renderdist;y<level.height&&y<playerpos[1]+renderdist;y++){
-				//Tilesforlevel should take the tileid stored in level and return the image that should be drawn for the player to see
-				g2d.drawImage(Tilesforlevel[level.level[x][y]],x*pixeltilewidth, y*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
+		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);
+		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
+			for(int y=player.getX()-renderdist<0?0:player.getX()-renderdist;y<level.height&&y<player.getX()+renderdist;y++){
+				g2d.drawImage(getImageFromTileID(level.level[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getX())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
 			}
 		}
+		for(Entity e : allEntities){
+			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
+				g2d.drawImage(e.getSprite(), e.getX()*pixeltilewidth, e.getY()*pixeltilewidth,pixeltilewidth,pixeltilewidth, null);
+			}
+		}
+		
+	}
+
+	private Image getImageFromTileID(int i) {
+		return null;
 	}
 
 	public void DrawGameOver(Graphics2D g2d, Point mousePosition) {
