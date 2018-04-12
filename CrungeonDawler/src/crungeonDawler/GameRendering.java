@@ -28,17 +28,18 @@ public class GameRendering {
 	Player player;
 	public void DrawMenu(Graphics2D g2d, Point mousePosition) {
 		Draw(g2d,mousePosition);
+		g2d.translate(-Screen.frameWidth/2,-Screen.frameHeight/2);//in future don't translate
 		g2d.setColor(new Color(0,0,0,128));
 		g2d.fillRect(0,0,Screen.frameWidth,Screen.frameHeight);
-		g2d.setColor(new Color(0,0,0,255));
-		g2d.fillRect(Screen.frameHeight/3,Screen.frameWidth/3,Screen.frameHeight*2/3,Screen.frameHeight*2/3);
+		g2d.setColor(new Color(75,75,75,255));
+		g2d.fillRect(Screen.frameWidth/3,Screen.frameHeight/3,Screen.frameWidth/3,Screen.frameHeight/3);
 	}
 	public static final int pixeltilewidth =16;
 	public static final int renderdist = 15;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 		g2d.setColor(Color.red);
 		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
-		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);
+		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
 		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
 			for(int y=player.getX()-renderdist<0?0:player.getX()-renderdist;y<level.height&&y<player.getX()+renderdist;y++){
 				g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getX())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);

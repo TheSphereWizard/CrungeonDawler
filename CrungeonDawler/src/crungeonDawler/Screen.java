@@ -267,6 +267,7 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 		{
 		case PLAYING:
 			game.rendering.Draw(g2d, mousePosition());
+			gameState=gameState.MENU;
 			break;
 		case MENU:
 			game.rendering.DrawMenu(g2d,mousePosition());
