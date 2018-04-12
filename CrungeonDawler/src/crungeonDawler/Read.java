@@ -10,30 +10,9 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Read {
-//	public static void main(String[] re) throws IOException{
-////		int[][] r = readcsvfile(new File("src/csvtest.txt"));
-//		int[][] r = readimagefile(new File("untitled.png"));
-//		for(int k=0;k<r.length;k++){
-//			for(int t=0;t<r[k].length;t++){
-//				System.out.print(r[k][t]+" ");
-//			}
-//			System.out.println();
-//		}
-//		outputroom(r,"writetest");
-//	}
 	static int[] colorRGB = new int[]{-1237980,-32985, -3584,-4856291,       -6694422,-16735512,-20791,/*   -1,*/-12629812,-3620889,-4621737,-7864299,-16777216,-8421505,-3947581,-14503604,-6075996,-14066,    -1055568,-9399618};
 	static int[] colorID = new int[]{2        ,     3,     4,       5,              6,        7,     8,/*    9,*/       10,      11,      12,      13,       14,      15,      16,       17,      18,    19,          20,      21};
 	//in order:							   red,orange,yellow,    lime,light turquoise,turquoise,  rose,/*white,*/   Indigo,lavender,   brown,dark red,    black,grey 50%,grey 25%,    Green,  purple,  gold,light yellow,blue-grey
-	
-	//above needs to be done some other way, but here is the default paint colors
-	static void printint(int[][] r){
-		for(int k=0;k<r.length;k++){
-			for(int t=0;t<r[k].length;t++){
-				System.out.print(r[k][t]+" ");
-			}
-			System.out.println();
-		}
-	}
 	static int defaultID = 0;//also used for the Void
 	static int voidRGB = -1;
 	static int ColortoID(Color col){
@@ -42,7 +21,6 @@ public class Read {
 				return colorID[i];
 			}
 		}
-//		System.out.println(col.getRGB());
 		return defaultID;
 	}
 	private static int IDtoColor(int id) {
@@ -51,11 +29,8 @@ public class Read {
 				return colorRGB[i];
 			}
 		}
-//		System.out.println(id);
 		return voidRGB;
 	}
-	//OK the above is declared in code right now, but it can be changed to be read later, but that will require
-	//making the methods below not static
 	static int[][] readcsvfile(File f){
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(f));
@@ -123,8 +98,6 @@ public class Read {
 		}
 		return result;
 	}
-	
-
 	static Color RGBtocolor(int rgb){
 		int red = (rgb >> 16) & 0xFF;
 		int green = (rgb >> 8) & 0xFF;

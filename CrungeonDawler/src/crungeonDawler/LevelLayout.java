@@ -8,6 +8,7 @@ public class LevelLayout {
 		Read.outputroom(level.level, "map output");
 	}
 	static final int doorID = 2;
+	static final int placeddoorID = 3;
 	static ArrayList<int[][]> allroomdesigns =new ArrayList<int[][]>();
 	int[][] level;
 	int[][] roomids;
@@ -38,12 +39,12 @@ public class LevelLayout {
 				int[][] fr = rooms.remove((int)(Math.random()*rooms.size()));
 				roomplaced=placeroom(fr,level,roomids,nextdoor);
 			}
-			level[nextdoor[0]][nextdoor[1]]=3;
+			level[nextdoor[0]][nextdoor[1]]=placeddoorID;
 		}
 		
 		for(int i=0;i<level.length;i++){
 			for(int j=0;j<level[i].length;j++){
-				if(level[i][j]==3){
+				if(level[i][j]==placeddoorID){
 					try{
 						if(!((level[i-1][j]==8&&level[i+1][j]==8)||(level[i][j-1]==8&&level[i][j+1]==8))){
 							level[i][j]=14;
@@ -56,8 +57,8 @@ public class LevelLayout {
 			for(int j=0;j<level[i].length;j++){
 				if(level[i][j]==14){
 					try{
-						if(level[i+1][j]==8){
-							level[i+1][j]=10;
+						if(level[i][j+1]==8){
+							level[i][j+1]=10;
 						}
 					}catch(IndexOutOfBoundsException e){}
 				}
