@@ -12,6 +12,5 @@ public class Window extends JFrame{
 		this.setSize(width, height);
 		this.add(new Screen());
 		this.setVisible(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

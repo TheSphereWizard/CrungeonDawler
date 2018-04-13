@@ -41,8 +41,8 @@ public class GameRendering {
 		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
 		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
 		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
-			for(int y=player.getX()-renderdist<0?0:player.getX()-renderdist;y<level.height&&y<player.getX()+renderdist;y++){
-				g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getX())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
+			for(int y=player.getY()-renderdist<0?0:player.getY()-renderdist;y<level.height&&y<player.getY()+renderdist;y++){
+				g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getY())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
 			}
 		}
 		for(Entity e : allEntities){

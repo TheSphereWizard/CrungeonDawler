@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,7 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class Screen extends JPanel implements KeyListener,MouseListener,ActionListener{
+public class Screen extends JPanel implements /*KeyListener,*/MouseListener,ActionListener{
 
 	public static enum GameState{MAIN_MENU, PLAYING, GAMEOVER, MENU, LOADING, STARTUP}
 	public static GameState gameState;
@@ -45,12 +47,24 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 
 
 	private Game game;
-
+	private class MyDispatcher implements KeyEventDispatcher {
+	    public boolean dispatchKeyEvent(KeyEvent e) {
+	        if (e.getID() == KeyEvent.KEY_PRESSED) {
+	        	keyPressed[e.getKeyCode()] = true;
+	        }
+	        if (e.getID() == KeyEvent.KEY_RELEASED) {
+	        	keyPressed[e.getKeyCode()] = false;
+	        }
+	        return false;
+	     }
+	}
 	public Screen(){
+		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();//I use this instead of KeyListener because i can't get KeyListener to work
+        manager.addKeyEventDispatcher(this.new MyDispatcher());
 		this.setDoubleBuffered(true);
-		this.setFocusable(true);
+//		this.setFocusable(true);
 		this.setBackground(Color.black);
-		this.addKeyListener(this);
+//		this.addKeyListener(this);
 		this.addMouseListener(this);
         
         gameState = GameState.STARTUP;
@@ -62,38 +76,28 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
             }
         };
         gameThread.start();
+       
 	}
 
 	//things that actually do things
-
-	@Override
 	public void mousePressed(MouseEvent e) {
-		mousePressed[e.getButton()-1] = true;
+		
 	}
-
-	@Override
 	public void mouseReleased(MouseEvent e) {
 		mousePressed[e.getButton()-1] = false;
 	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		keyPressed[e.getKeyCode()] = true;
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		keyPressed[e.getKeyCode()] = false;
-	}
-
-	@Override
+//	public void keyPressed(KeyEvent e) {
+//		keyPressed[e.getKeyCode()] = true;
+//		System.out.println("Key is not ever called");
+//	}
+//	public void keyReleased(KeyEvent e) {
+//		keyPressed[e.getKeyCode()] = false;
+//	}
 	public void mouseClicked(MouseEvent e) { }
-	@Override
 	public void mouseEntered(MouseEvent e) { }
-	@Override
 	public void mouseExited(MouseEvent e) { }
-	@Override
-	public void keyTyped(KeyEvent e) { }
+//	public void keyTyped(KeyEvent e) { }
+	
 	BufferedImage backg=null;
     private void Initialize(){
 		//eyyyy, um so a card layout
@@ -205,6 +209,18 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 			case PLAYING:
 				game.rendering.UpdateGame(mousePosition());
 				lastTime = System.nanoTime();
+				if(keyPressed[37/*left*/]){
+					game.player.x--;
+				}
+				if(keyPressed[38/*up*/]){
+					game.player.y--;
+				}
+				if(keyPressed[39/*right*/]){
+					game.player.x++;		
+				}
+				if(keyPressed[40/*down*/]){
+					game.player.y++;
+				}
 				break;
 			case GAMEOVER:
 				//...
@@ -261,13 +277,11 @@ public class Screen extends JPanel implements KeyListener,MouseListener,ActionLi
 		super.paintComponent(g2d);        
 		Draw(g2d);
 	}
-
 	public void Draw(Graphics2D g2d) {
 		switch (gameState)
 		{
 		case PLAYING:
 			game.rendering.Draw(g2d, mousePosition());
-			gameState=gameState.MENU;
 			break;
 		case MENU:
 			game.rendering.DrawMenu(g2d,mousePosition());
