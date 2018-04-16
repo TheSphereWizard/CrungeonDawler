@@ -6,6 +6,7 @@ public abstract class Entity {
 	String name;
 	int x,y;
 	int vx,vy;
+	int[] invalidtiles = new int[]{0,14};
 	public Entity(String name, Actor actor){
 		this.name = name;
 		this.actor = actor;
