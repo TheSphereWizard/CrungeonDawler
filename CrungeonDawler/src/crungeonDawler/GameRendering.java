@@ -37,8 +37,8 @@ public class GameRendering {
 	public static final int pixeltilewidth =16;
 	public static final int renderdist = 15;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
-		g2d.setColor(Color.red);
-		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
+//		g2d.setColor(Color.red);
+//		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
 		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
 		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
 			for(int y=player.getY()-renderdist<0?0:player.getY()-renderdist;y<level.height&&y<player.getY()+renderdist;y++){

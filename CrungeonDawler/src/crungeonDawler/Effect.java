@@ -1,5 +1,5 @@
 package crungeonDawler;
-import com.google.gson.*;
+//import com.google.gson.*;
 
 public class Effect {
 	static enum Type{DAMAGE,AOE,MODIFIER,SUMMON,COMPOUND};

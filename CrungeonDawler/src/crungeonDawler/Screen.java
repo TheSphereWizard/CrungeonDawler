@@ -78,7 +78,6 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
         gameThread.start();
        
 	}
-
 	//things that actually do things
 	public void mousePressed(MouseEvent e) {
 		
@@ -207,20 +206,9 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 
 			switch (gameState) {
 			case PLAYING:
-				game.rendering.UpdateGame(mousePosition());
+				game.UpdateGame(mousePosition(),keyPressed,mousePressed);
 				lastTime = System.nanoTime();
-				if(keyPressed[37/*left*/]){
-					game.player.x--;
-				}
-				if(keyPressed[38/*up*/]){
-					game.player.y--;
-				}
-				if(keyPressed[39/*right*/]){
-					game.player.x++;		
-				}
-				if(keyPressed[40/*down*/]){
-					game.player.y++;
-				}
+				
 				break;
 			case GAMEOVER:
 				//...
