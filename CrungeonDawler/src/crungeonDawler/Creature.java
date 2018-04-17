@@ -9,4 +9,5 @@ public abstract class Creature extends Entity{
 	public Creature(String name, Actor actor) {
 		super(name, actor);
 	}
+	
 }

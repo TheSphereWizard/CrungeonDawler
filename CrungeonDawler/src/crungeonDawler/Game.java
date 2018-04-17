@@ -12,20 +12,27 @@ public class Game {
 		rendering = new GameRendering(p,currentlevel);
 		rendering.allEntities.add(p);
 	}
+	int slowdown=0;
+	int slowdownfactor=6;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		rendering.UpdateGame(mousePosition);
 		if(keyPressed[37/*left*/]){
-			tryLegalMovement(player,new int[]{-1,0});
+			if(slowdown%slowdownfactor==0)
+				tryLegalMovement(player,new int[]{-1,0});
 		}
 		if(keyPressed[38/*up*/]){
-			tryLegalMovement(player,new int[]{0,-1});
+			if((slowdown%slowdownfactor)==0)
+				tryLegalMovement(player,new int[]{0,-1});
 		}
 		if(keyPressed[39/*right*/]){
-			tryLegalMovement(player,new int[]{1,0});	
+			if(slowdown%slowdownfactor==0)
+				tryLegalMovement(player,new int[]{1,0});
 		}
 		if(keyPressed[40/*down*/]){
-			tryLegalMovement(player,new int[]{0,1});
+			if(slowdown%slowdownfactor==0)
+				tryLegalMovement(player,new int[]{0,1});
 		}
+		slowdown++;
 	}
 	void tryLegalMovement(Entity e, int[] translation){
 		if(legalMovement(e, translation)){

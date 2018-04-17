@@ -40,9 +40,12 @@ public class GameRendering {
 //		g2d.setColor(Color.red);
 //		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
 		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
+		int[][] visible = player.getVisible();
 		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
 			for(int y=player.getY()-renderdist<0?0:player.getY()-renderdist;y<level.height&&y<player.getY()+renderdist;y++){
-				g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getY())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
+				if(Game.contains(visible,new int[]{x-player.getX(),y-player.getY())){
+					g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getY())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
+				}
 			}
 		}
 		for(Entity e : allEntities){
@@ -75,7 +78,7 @@ public class GameRendering {
 		
 	}
 
-	public void UpdateGame(Point mousePosition) {
+	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed) {
 		
 	}
 	
@@ -97,5 +100,13 @@ public class GameRendering {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	boolean arraycontains(int[][] r,int w[]){
+		for(int[] i : r){
+			if (w.equals(i)){
+				return true;
+			}
+		}
+		return false;
 	}
 }
