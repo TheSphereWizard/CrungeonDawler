@@ -43,9 +43,9 @@ public class GameRendering {
 		int[][] visible = player.getVisible();
 		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
 			for(int y=player.getY()-renderdist<0?0:player.getY()-renderdist;y<level.height&&y<player.getY()+renderdist;y++){
-				if(arraycontains(visible,new int[]{x-player.getX(),y-player.getY()})){
+//				if(arraycontains(visible,new int[]{x-player.getX(),y-player.getY()})){
 					g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getY())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
-				}
+//				}
 			}
 		}
 		for(Entity e : allEntities){
