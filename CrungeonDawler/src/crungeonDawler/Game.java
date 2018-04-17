@@ -15,7 +15,7 @@ public class Game {
 	int slowdown=0;
 	int slowdownfactor=6;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
-		rendering.UpdateGame(mousePosition);
+		rendering.UpdateGame(mousePosition,keyPressed,mousePressed);
 		if(keyPressed[37/*left*/]){
 			if(slowdown%slowdownfactor==0)
 				tryLegalMovement(player,new int[]{-1,0});
