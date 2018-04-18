@@ -42,19 +42,11 @@ public class Game {
 	}
 	boolean legalMovement(Entity e, int[] translation){
 		try{
-			if(!contains(e.invalidtiles,currentlevel.levellayout[e.x+translation[0]][e.getY()+translation[1]])){
+			if(!Read.contains(e.invalidtiles,currentlevel.levellayout[e.x+translation[0]][e.getY()+translation[1]])){
 				return true;
 			}
 		}catch(IndexOutOfBoundsException error){
 			
-		}
-		return false;
-	}
-	boolean contains(int[] r,int w){
-		for(int i : r){
-			if (w==i){
-				return true;
-			}
 		}
 		return false;
 	}

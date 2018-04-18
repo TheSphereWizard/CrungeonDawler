@@ -23,6 +23,14 @@ public class Read {
 		}
 		return defaultID;
 	}
+	static boolean contains(int[] r,int w){
+		for(int i : r){
+			if (w==i){
+				return true;
+			}
+		}
+		return false;
+	}
 	private static int IDtoColor(int id) {
 		for(int i=0;i<colorRGB.length;i++){
 			if(colorID[i]==id){
