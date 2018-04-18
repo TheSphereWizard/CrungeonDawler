@@ -37,26 +37,35 @@ public class GameRendering {
 	public static final int pixeltilewidth =16;
 	public static final int renderdist = 15;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
-//		g2d.setColor(Color.red);
-//		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
-		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
-		int[][] visible = player.getVisible();
+		BufferedImage dungeon = new BufferedImage(pixeltilewidth*renderdist*2,pixeltilewidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
 		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
 			for(int y=player.getY()-renderdist<0?0:player.getY()-renderdist;y<level.height&&y<player.getY()+renderdist;y++){
-//				if(arraycontains(visible,new int[]{x-player.getX(),y-player.getY()})){
-					g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getY())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
-//				}
+				dungeon.getGraphics().drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX()+renderdist)*pixeltilewidth, (y-player.getY()+renderdist)*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
 			}
 		}
-		for(Entity e : allEntities){
-			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
-//				g2d.drawImage(e.getSprite(), -300, -300,pixeltilewidth,pixeltilewidth, null);
-				g2d.drawImage(e.getSprite(), (e.getX()-player.getX())*pixeltilewidth, (e.getY()-player.getY())*pixeltilewidth,pixeltilewidth,pixeltilewidth, null);
-			}
-		}
-		
+//		for(Entity e : allEntities){
+//			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
+//				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())*pixeltilewidth, (e.getY()-player.getY())*pixeltilewidth,pixeltilewidth,pixeltilewidth, null);
+//			}
+//		}
+		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 	}
-
+	public int[][] getVisible() {
+		ArrayList<int[]> visibletiles = new ArrayList<int[]>();
+		BufferedImage dungeon = new BufferedImage(GameRendering.pixeltilewidth*GameRendering.renderdist*2,GameRendering.pixeltilewidth*GameRendering.renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
+		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/50){
+			ArrayList<Point> line = RasterLine(player.getX(),player.getY(),theta,player.lengthOfLineOfSight);
+			for(int i=0;i<line.size();i++){
+				if(Game.currentlevel[line.get(i).x][line.get(i).y]){
+					
+				}
+			}
+		}
+		return null;
+	}
+	private ArrayList<Point> RasterLine(double x,double y,double theta,int lengthOfLineOfSight) {
+		return null;
+	}
 	private Image getImageFromTileID(int id) {
 		if(id==0){
 			return level.Void();
