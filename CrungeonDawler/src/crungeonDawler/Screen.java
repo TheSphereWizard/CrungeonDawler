@@ -284,7 +284,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	}
     private void newGame(){
         lastTime = System.nanoTime();
-        game=new Game(new Player("Test Player",new Actor("testSpriteSheetforActors")));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
+        game=new Game(new Player("Test Player",new Actor("testSpriteSheetforActors",16,16)));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
 		gameState=GameState.PLAYING;
     }
 	private Point mousePosition() {

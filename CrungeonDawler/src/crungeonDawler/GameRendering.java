@@ -16,14 +16,14 @@ public class GameRendering {
 	private Image tileSet;
 	private Image decorationSet;
 	private Level level;
+	private Game game;
 	//I am working under the assumption that this class is solely for rendering, and will not do collision detections
-	ArrayList<Entity> allEntities =new ArrayList<Entity>();
-	public GameRendering(Player p,Level level) {
+	public GameRendering(Player p,Level level,Game game) {
 		this.level=level;
+		this.game = game;
 		player=p;
 		player.x=50;
 		player.y=50;
-		allEntities.add(player);
 	}
 	Player player;
 	public void DrawMenu(Graphics2D g2d, Point mousePosition) {
@@ -34,24 +34,24 @@ public class GameRendering {
 		g2d.setColor(new Color(75,75,75,255));
 		g2d.fillRect(Screen.frameWidth/3,Screen.frameHeight/3,Screen.frameWidth/3,Screen.frameHeight/3);
 	}
-	public static final int pixeltilewidth =16;
-	public static final int renderdist = 15;
+	public static final int pixelTileWidth =16;
+	public static final int renderdist = 20;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 //		g2d.setColor(Color.red);
 //		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
 		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
 		int[][] visible = player.getVisible();
-		for(int x=player.getX()-renderdist<0?0:player.getX()-renderdist;x<level.width&&x<player.getX()+renderdist;x++){
-			for(int y=player.getY()-renderdist<0?0:player.getY()-renderdist;y<level.height&&y<player.getY()+renderdist;y++){
-				if(arraycontains(visible,new int[]{x-player.getX(),y-player.getY()})){
-					g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX())*pixeltilewidth, (y-player.getY())*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
-				}
+		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<level.width&&x<player.getX()/pixelTileWidth+renderdist;x++){
+			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<level.height&&y<player.getY()/pixelTileWidth+renderdist;y++){
+				//if(arraycontains(visible,new int[]{x-player.getX(),y-player.getY()})){
+					g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),x*pixelTileWidth-player.getX(),y*pixelTileWidth-player.getY(), pixelTileWidth, pixelTileWidth,null);
+				//}
 			}
 		}
-		for(Entity e : allEntities){
+		for(Entity e : game.allEntities){
 			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
 //				g2d.drawImage(e.getSprite(), -300, -300,pixeltilewidth,pixeltilewidth, null);
-				g2d.drawImage(e.getSprite(), (e.getX()-player.getX())*pixeltilewidth, (e.getY()-player.getY())*pixeltilewidth,pixeltilewidth,pixeltilewidth, null);
+				g2d.drawImage(e.getSprite(), (e.getX()-player.getX()), (e.getY()-player.getY()),e.getWidth(),e.getHeight(), null);
 			}
 		}
 		

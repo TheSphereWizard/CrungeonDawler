@@ -36,4 +36,10 @@ public abstract class Entity {
 	public Image getSprite(){
 		return actor.getSprite(vx, vy);
 	}
+	public int getWidth(){
+		return actor.getWidth();
+	}
+	public int getHeight(){
+		return actor.getHeight();
+	}
 }
