@@ -36,12 +36,12 @@ public class Game {
 		
 		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<currentLevel.width&&x<player.getX()/pixelTileWidth+renderdist;x++){
 			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<currentLevel.height&&y<player.getY()/pixelTileWidth+renderdist;y++){
-				dungeon.getGraphics().drawImage(getImageFromTileID(currentLevel.levellayout[x][y]),x*pixelTileWidth-player.getX()+Screen.frameWidth/2,y*pixelTileWidth-player.getY()+Screen.frameHeight/2, pixelTileWidth, pixelTileWidth,null);
+				dungeon.getGraphics().drawImage(getImageFromTileID(currentLevel.levellayout[x][y]),x*pixelTileWidth-player.getX()+dungeon.getWidth()/2,y*pixelTileWidth-player.getY()+dungeon.getHeight()/2, pixelTileWidth, pixelTileWidth,null);
 			}
 		}
 		for(Entity e : allEntities){
 			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
-				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()), (e.getY()-player.getY()),e.getWidth(),e.getHeight(), null);
+				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())+dungeon.getWidth()/2, (e.getY()-player.getY())+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
 		}
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
@@ -119,8 +119,8 @@ public class Game {
 		player=p;
 		currentLevel =new Level(100,100,"testSpriteSheetforActors");
 		allEntities.add(p);
-		player.x=50;
-		player.y=50;
+		player.x=50*pixelTileWidth;
+		player.y=50*pixelTileWidth;
 	}
 	int slowdown=0;
 	int slowdownfactor=1;
@@ -156,6 +156,6 @@ public class Game {
 		int yMin = (int) Math.floor((double)(e.getY()+t[1])/TILE_SIZE);
 		int yMax = (int) Math.ceil ((double)(e.getY()+t[1]+e.getHeight())/TILE_SIZE);
 
-		return false;
+		return true;
 	}
 }
