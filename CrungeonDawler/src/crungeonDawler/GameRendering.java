@@ -43,11 +43,11 @@ public class GameRendering {
 				dungeon.getGraphics().drawImage(getImageFromTileID(level.levellayout[x][y]),(x-player.getX()+renderdist)*pixeltilewidth, (y-player.getY()+renderdist)*pixeltilewidth, pixeltilewidth, pixeltilewidth,null);
 			}
 		}
-//		for(Entity e : allEntities){
-//			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
-//				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())*pixeltilewidth, (e.getY()-player.getY())*pixeltilewidth,pixeltilewidth,pixeltilewidth, null);
-//			}
-//		}
+		for(Entity e : allEntities){
+			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
+				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())*pixeltilewidth, (e.getY()-player.getY())*pixeltilewidth,pixeltilewidth,pixeltilewidth, null);
+			}
+		}
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 	}
 	public int[][] getVisible() {
@@ -64,6 +64,11 @@ public class GameRendering {
 		return null;
 	}
 	private ArrayList<Point> RasterLine(double x,double y,double theta,int lengthOfLineOfSight) {
+		if(theta == Math.PI/2||theta==Math.PI*3/2){
+			return null;
+		}else{
+			for()
+		}
 		return null;
 	}
 	private Image getImageFromTileID(int id) {
