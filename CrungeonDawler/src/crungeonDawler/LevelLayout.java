@@ -7,6 +7,9 @@ public class LevelLayout {
 		LevelLayout level=new LevelLayout(100,100);
 		Read.outputroom(level.level, "map output");
 	}
+	//Doors don't have lower wall on it
+	//some doors to edge are not closed
+	int[] opaquetiles = new int[]{0,14};
 	static final int doorID = 2;
 	static final int placeddoorID = 3;
 	static ArrayList<int[][]> allroomdesigns =new ArrayList<int[][]>();

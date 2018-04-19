@@ -43,22 +43,13 @@ public class Game {
 			e.y+=translation[1];
 		}
 	}
+
 	boolean legalMovement(Entity e, int[] t){
 		int xMin = (int) Math.floor((double)(e.getX()+t[0])/TILE_SIZE);
 		int xMax = (int) Math.ceil ((double)(e.getX()+t[0]+e.getWidth ())/TILE_SIZE);
 		int yMin = (int) Math.floor((double)(e.getY()+t[1])/TILE_SIZE);
 		int yMax = (int) Math.ceil ((double)(e.getY()+t[1]+e.getHeight())/TILE_SIZE);
-		if(!Read.contains(e.invalidtiles,currentlevel.levellayout[xMin][yMin])){
-			
-		}
-		return true;
-	}
-	boolean contains(int[] r,int w){
-		for(int i : r){
-			if (w==i){
-				return true;
-			}
-		}
+
 		return false;
 	}
 }

@@ -15,5 +15,6 @@ public class Window extends JFrame{
         this.setUndecorated(true);
         this.setExtendedState(this.MAXIMIZED_BOTH);
 		this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 }

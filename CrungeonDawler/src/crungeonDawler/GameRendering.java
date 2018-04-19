@@ -37,26 +37,37 @@ public class GameRendering {
 	public static final int pixelTileWidth =16;
 	public static final int renderdist = 20;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
-//		g2d.setColor(Color.red);
-//		g2d.fillRect(mousePosition.x, mousePosition.y, 10, 10);
+		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
 		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
-		int[][] visible = player.getVisible();
+		int[][] visible = getVisible();
 		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<level.width&&x<player.getX()/pixelTileWidth+renderdist;x++){
 			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<level.height&&y<player.getY()/pixelTileWidth+renderdist;y++){
-				//if(arraycontains(visible,new int[]{x-player.getX(),y-player.getY()})){
-					g2d.drawImage(getImageFromTileID(level.levellayout[x][y]),x*pixelTileWidth-player.getX(),y*pixelTileWidth-player.getY(), pixelTileWidth, pixelTileWidth,null);
-				//}
+				dungeon.getGraphics().drawImage(getImageFromTileID(level.levellayout[x][y]),x*pixelTileWidth-player.getX(),y*pixelTileWidth-player.getY(), pixelTileWidth, pixelTileWidth,null);
 			}
 		}
 		for(Entity e : game.allEntities){
 			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
-//				g2d.drawImage(e.getSprite(), -300, -300,pixeltilewidth,pixeltilewidth, null);
-				g2d.drawImage(e.getSprite(), (e.getX()-player.getX()), (e.getY()-player.getY()),e.getWidth(),e.getHeight(), null);
+				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()), (e.getY()-player.getY()),e.getWidth(),e.getHeight(), null);
 			}
 		}
-		
+		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 	}
+	public int[][] getVisible() {
+		/*ArrayList<int[]> visibletiles = new ArrayList<int[]>();
+		BufferedImage dungeon = new BufferedImage(GameRendering.pixelTileWidth*GameRendering.renderdist*2,GameRendering.pixelTileWidth*GameRendering.renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
+		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/50){
+			ArrayList<Point> line = RasterLine(player.getX(),player.getY(),theta,player.lengthOfLineOfSight);
+			for(int i=0;i<line.size();i++){
+				if(Game.currentlevel[line.get(i).x][line.get(i).y]){
 
+				}
+			}
+		}*/
+		return null;
+	}
+	private ArrayList<Point> RasterLine(double x,double y,double theta,int lengthOfLineOfSight) {
+		return null;
+	}
 	private Image getImageFromTileID(int id) {
 		if(id==0){
 			return level.Void();
@@ -70,24 +81,24 @@ public class GameRendering {
 		if(id==10){
 			return level.lowWall();
 		}
-		
+
 		return null;
 	}
 
 	public void DrawGameOver(Graphics2D g2d, Point mousePosition) {
-		
+
 	}
 
 	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed) {
-		
+
 	}
-	
+
 	public void loadMapKit(String mapFile) {
-		
+
 	}
 	public void loadTileset(String path) {
 		URL tileSetUrl = this.getClass().getResource("/resources/images/"+path+".png");
-        try {
+		try {
 			tileSet = ImageIO.read(tileSetUrl);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -95,7 +106,7 @@ public class GameRendering {
 	}
 	public void loadDecorations(String path) {
 		URL decorationSetUrl = this.getClass().getResource("/resources/images/"+path+".png");
-        try {
+		try {
 			decorationSet = ImageIO.read(decorationSetUrl);
 		} catch (IOException e) {
 			e.printStackTrace();
