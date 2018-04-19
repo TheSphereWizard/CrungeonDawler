@@ -33,11 +33,11 @@ public class Game {
 	public static final int renderdist = 20;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
-		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
+//		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
 		int[][] visible = getVisible();
 		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<level.width&&x<player.getX()/pixelTileWidth+renderdist;x++){
 			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<level.height&&y<player.getY()/pixelTileWidth+renderdist;y++){
-				dungeon.getGraphics().drawImage(getImageFromTileID(level.levellayout[x][y]),x*pixelTileWidth-player.getX(),y*pixelTileWidth-player.getY(), pixelTileWidth, pixelTileWidth,null);
+				dungeon.getGraphics().drawImage(getImageFromTileID(level.levellayout[x][y]),x*pixelTileWidth-player.getX()+Screen.frameWidth/2,y*pixelTileWidth-player.getY()+Screen.frameHeight/2, pixelTileWidth, pixelTileWidth,null);
 			}
 		}
 		for(Entity e : game.allEntities){
@@ -64,7 +64,7 @@ public class Game {
 		if(theta == Math.PI/2||theta==Math.PI*3/2){
 			return null;
 		}else{
-			for()
+//			for()
 		}
 		return null;
 	}
