@@ -269,13 +269,13 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 		switch (gameState)
 		{
 		case PLAYING:
-			game.rendering.Draw(g2d, mousePosition());
+			game.Draw(g2d, mousePosition());
 			break;
 		case MENU:
-			game.rendering.DrawMenu(g2d,mousePosition());
+			game.DrawMenu(g2d,mousePosition());
 			break;
 		case GAMEOVER:
-			game.rendering.DrawGameOver(g2d, mousePosition());
+			game.DrawGameOver(g2d, mousePosition());
 			break;
 		case MAIN_MENU:
 			g2d.drawImage(backg, 0, 0, this.getWidth(), this.getHeight(), null);
