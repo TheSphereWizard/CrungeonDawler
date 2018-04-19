@@ -31,7 +31,6 @@ public class Game {
 	public static final int renderdist = 20;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
-		
 		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<currentLevel.width&&x<player.getX()/pixelTileWidth+renderdist+1;x++){
 			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<currentLevel.height&&y<player.getY()/pixelTileWidth+renderdist+1;y++){
 				dungeon.getGraphics().drawImage(getImageFromTileID(currentLevel.levellayout[x][y]),x*pixelTileWidth-player.getX()+dungeon.getWidth()/2,y*pixelTileWidth-player.getY()+dungeon.getHeight()/2, pixelTileWidth, pixelTileWidth,null);
@@ -58,11 +57,7 @@ public class Game {
 		return null;
 	}
 	private ArrayList<Point> RasterLine(double x,double y,double theta,int lengthOfLineOfSight) {
-		if(theta == Math.PI/2||theta==Math.PI*3/2){
-			return null;
-		}else{
-//			for()
-		}
+		
 		return null;
 	}
 	private Image getImageFromTileID(int id) {
