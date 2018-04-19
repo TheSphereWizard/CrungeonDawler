@@ -12,14 +12,12 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Game {
-	Level currentlevel;
+	Level currentLevel;
 	Player player;
 	public ArrayList<Entity> allEntities =new ArrayList<Entity>();
 	final int TILE_SIZE = 16;
 	private Image tileSet;
 	private Image decorationSet;
-	private Level level;
-	private Game game;
 
 	public void DrawMenu(Graphics2D g2d, Point mousePosition) {
 		Draw(g2d,mousePosition);
@@ -34,15 +32,16 @@ public class Game {
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
 //		g2d.translate(Screen.frameWidth/2,Screen.frameHeight/2);//in future don't translate
-		int[][] visible = getVisible();
-		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<level.width&&x<player.getX()/pixelTileWidth+renderdist;x++){
-			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<level.height&&y<player.getY()/pixelTileWidth+renderdist;y++){
-				dungeon.getGraphics().drawImage(getImageFromTileID(level.levellayout[x][y]),x*pixelTileWidth-player.getX()+Screen.frameWidth/2,y*pixelTileWidth-player.getY()+Screen.frameHeight/2, pixelTileWidth, pixelTileWidth,null);
+//		int[][] visible = getVisible();
+		
+		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<currentLevel.width&&x<player.getX()/pixelTileWidth+renderdist;x++){
+			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<currentLevel.height&&y<player.getY()/pixelTileWidth+renderdist;y++){
+				dungeon.getGraphics().drawImage(getImageFromTileID(currentLevel.levellayout[x][y]),x*pixelTileWidth-player.getX()+dungeon.getWidth()/2,y*pixelTileWidth-player.getY()+dungeon.getHeight()/2, pixelTileWidth, pixelTileWidth,null);
 			}
 		}
-		for(Entity e : game.allEntities){
+		for(Entity e : allEntities){
 			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
-				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()), (e.getY()-player.getY()),e.getWidth(),e.getHeight(), null);
+				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())+dungeon.getWidth()/2, (e.getY()-player.getY())+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
 		}
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
@@ -70,16 +69,16 @@ public class Game {
 	}
 	private Image getImageFromTileID(int id) {
 		if(id==0){
-			return level.Void();
+			return currentLevel.Void();
 		}
 		if(id==14){
-			return level.Wall();
+			return currentLevel.Wall();
 		}
 		if(id==8||id==3/*this is the door id*/){
-			return level.Floor();
+			return currentLevel.Floor();
 		}
 		if(id==10){
-			return level.lowWall();
+			return currentLevel.lowWall();
 		}
 
 		return null;
@@ -118,11 +117,10 @@ public class Game {
 	}
 	Game(Player p){
 		player=p;
-		currentlevel =new Level(100,100,"testSpriteSheetforActors");
+		currentLevel =new Level(100,100,"testSpriteSheetforActors");
 		allEntities.add(p);
-		player=p;
-		player.x=50;
-		player.y=50;
+		player.x=50*pixelTileWidth;
+		player.y=50*pixelTileWidth;
 	}
 	int slowdown=0;
 	int slowdownfactor=1;
@@ -158,6 +156,6 @@ public class Game {
 		int yMin = (int) Math.floor((double)(e.getY()+t[1])/TILE_SIZE);
 		int yMax = (int) Math.ceil ((double)(e.getY()+t[1]+e.getHeight())/TILE_SIZE);
 
-		return false;
+		return true;
 	}
 }
