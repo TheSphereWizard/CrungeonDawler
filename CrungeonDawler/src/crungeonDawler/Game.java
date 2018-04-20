@@ -1,6 +1,7 @@
 package crungeonDawler;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -36,6 +37,7 @@ public class Game {
 				dungeon.getGraphics().drawImage(getImageFromTileID(currentLevel.levellayout[x][y]),x*pixelTileWidth-player.getX()+dungeon.getWidth()/2,y*pixelTileWidth-player.getY()+dungeon.getHeight()/2, pixelTileWidth, pixelTileWidth,null);
 			}
 		}
+		dungeon.getGraphics().drawImage(getVisible(), 0, 0, null);
 		for(Entity e : allEntities){
 			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())+dungeon.getWidth()/2, (e.getY()-player.getY())+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
@@ -43,22 +45,47 @@ public class Game {
 		}
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 	}
-	public int[][] getVisible() {
-		/*ArrayList<int[]> visibletiles = new ArrayList<int[]>();
-		BufferedImage dungeon = new BufferedImage(GameRendering.pixelTileWidth*GameRendering.renderdist*2,GameRendering.pixelTileWidth*GameRendering.renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
-		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/50){
-			ArrayList<Point> line = RasterLine(player.getX(),player.getY(),theta,player.lengthOfLineOfSight);
-			for(int i=0;i<line.size();i++){
-				if(Game.currentlevel[line.get(i).x][line.get(i).y]){
-
-				}
+	public BufferedImage getVisible() {
+		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
+		Graphics g = dungeon.getGraphics();
+		g.setColor(new Color(128,128,128,128));
+		g.fillRect(0, 0, dungeon.getWidth(), dungeon.getHeight());
+		g.setColor(Color.white);
+		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/20){
+			
+			double xrange = Math.cos(theta)*player.lengthOfLineOfSight;
+			double yrange = Math.sin(theta)*player.lengthOfLineOfSight;
+			double m = Math.tan(theta);
+			ArrayList<double[]> p = new ArrayList<double[]>();
+			//find x line intersection, 
+			//y=m(x-h)+k
+			for(int i=0;Math.abs(i)<Math.abs(xrange);i+=Math.signum(xrange)){
+				p.add(new double[]{player.x+i,(m*(i)+player.y)});
 			}
-		}*/
-		return null;
+			//find y line intersections
+			//()1/m*(y-k)+h=x
+			for(int i=0;Math.abs(i)<Math.abs(yrange);i+=Math.signum(yrange)){
+				p.add(new double[]{1/m*(i)+player.x,player.y+i});
+			}
+			//order them by dist from center
+			MergeSort(p);
+			g.translate(dungeon.getWidth()/2,dungeon.getHeight()/2);
+			for(int i=0;i<p.size();i++){
+//				System.out.println(Math.sqrt(Math.pow(p.get(i)[0], 2)+Math.pow(p.get(i)[1], 2)));
+				g.setColor(Color.white);
+				g.drawLine(0,0,(int)(p.get(i)[0]-player.x),(int)(p.get(i)[1]-player.y));
+				g.setColor(Color.blue);
+				g.drawOval((int)(p.get(i)[0]-player.x),(int)(p.get(i)[1]-player.y), 2, 2);
+				System.out.println((int)(p.get(i)[0]-player.x)+" "+(int)(p.get(i)[1]-player.y));
+			}
+			
+			//from those double[] points find the boxes the line is entering
+			//using that information draw the line to go into the hitbox of but not through walls.
+		}
+		return dungeon;
 	}
-	private ArrayList<Point> RasterLine(double x,double y,double theta,int lengthOfLineOfSight) {
-		
-		return null;
+	private void MergeSort(ArrayList<double[]> p) {
+		//i will do at home
 	}
 	private Image getImageFromTileID(int id) {
 		if(id==0){
@@ -73,7 +100,6 @@ public class Game {
 		if(id==10){
 			return currentLevel.lowWall();
 		}
-
 		return null;
 	}
 
