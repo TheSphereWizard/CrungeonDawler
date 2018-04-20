@@ -40,7 +40,7 @@ public class Game {
 		dungeon.getGraphics().drawImage(getVisible(), 0, 0, null);
 		for(Entity e : allEntities){
 			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
-				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())+dungeon.getWidth()/2, (e.getY()-player.getY())+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
+				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())+dungeon.getWidth()/2-e.getWidth()/2, (e.getY()-player.getY())+dungeon.getHeight()/2-e.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
 		}
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
@@ -51,33 +51,41 @@ public class Game {
 		g.setColor(new Color(128,128,128,128));
 		g.fillRect(0, 0, dungeon.getWidth(), dungeon.getHeight());
 		g.setColor(Color.white);
+		g.translate(-player.x+dungeon.getWidth()/2, -player.y+dungeon.getHeight()/2);
 		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/20){
 			
-			double xrange = Math.cos(theta)*player.lengthOfLineOfSight;
-			double yrange = Math.sin(theta)*player.lengthOfLineOfSight;
+			double xrange = Math.abs(Math.cos(theta)*player.lengthOfLineOfSight*pixelTileWidth);
+			double yrange = Math.sin(theta)*player.lengthOfLineOfSight*pixelTileWidth;
 			double m = Math.tan(theta);
 			ArrayList<double[]> p = new ArrayList<double[]>();
 			//find x line intersection, 
 			//y=m(x-h)+k
-			for(int i=0;Math.abs(i)<Math.abs(xrange);i+=Math.signum(xrange)){
-				p.add(new double[]{player.x+i,(m*(i)+player.y)});
-			}
-			//find y line intersections
-			//()1/m*(y-k)+h=x
-			for(int i=0;Math.abs(i)<Math.abs(yrange);i+=Math.signum(yrange)){
-				p.add(new double[]{1/m*(i)+player.x,player.y+i});
-			}
+			int[] center = new int[]{(int)(player.x/pixelTileWidth)*pixelTileWidth,(int)(player.y/pixelTileWidth)*pixelTileWidth};
+//			for(int i=-10;i<11;i++){
+//				g.drawLine(center[0]-10*pixelTileWidth, center[1]+i*pixelTileWidth, center[0]+10*pixelTileWidth, center[1]+i*pixelTileWidth);
+//				g.drawLine(center[0]+i*pixelTileWidth, center[1]-10*pixelTileWidth, center[0]+i*pixelTileWidth, center[1]+10*pixelTileWidth);
+//				
+//			}
+			
+//			for(int i=0;Math.abs(i)<Math.abs(xrange);i+=Math.signum(xrange)){
+//				p.add(new double[]{player.x+i,(m*(i)+player.y)});
+//			}
+//			//find y line intersections
+//			//()1/m*(y-k)+h=x
+//			for(int i=0;Math.abs(i)<Math.abs(yrange);i+=Math.signum(yrange)){
+//				p.add(new double[]{1/m*(i)+player.x,player.y+i});
+//			}
 			//order them by dist from center
-			MergeSort(p);
-			g.translate(dungeon.getWidth()/2,dungeon.getHeight()/2);
-			for(int i=0;i<p.size();i++){
-//				System.out.println(Math.sqrt(Math.pow(p.get(i)[0], 2)+Math.pow(p.get(i)[1], 2)));
-				g.setColor(Color.white);
-				g.drawLine(0,0,(int)(p.get(i)[0]-player.x),(int)(p.get(i)[1]-player.y));
-				g.setColor(Color.blue);
-				g.drawOval((int)(p.get(i)[0]-player.x),(int)(p.get(i)[1]-player.y), 2, 2);
-				System.out.println((int)(p.get(i)[0]-player.x)+" "+(int)(p.get(i)[1]-player.y));
-			}
+//			MergeSort(p);
+//			g.translate(dungeon.getWidth()/2,dungeon.getHeight()/2);
+//			for(int i=0;i<p.size();i++){
+////				System.out.println(Math.sqrt(Math.pow(p.get(i)[0], 2)+Math.pow(p.get(i)[1], 2)));
+//				g.setColor(Color.white);
+//				g.drawLine(0,0,(int)(p.get(i)[0]-player.x),(int)(p.get(i)[1]-player.y));
+//				g.setColor(Color.blue);
+//				g.drawOval((int)(p.get(i)[0]-player.x),(int)(p.get(i)[1]-player.y), 2, 2);
+////				System.out.println((int)(p.get(i)[0]-player.x)+" "+(int)(p.get(i)[1]-player.y));
+//			}
 			
 			//from those double[] points find the boxes the line is entering
 			//using that information draw the line to go into the hitbox of but not through walls.
@@ -138,8 +146,8 @@ public class Game {
 		player=p;
 		currentLevel =new Level(100,100,"testSpriteSheetforActors");
 		allEntities.add(p);
-		player.x=50*pixelTileWidth;
-		player.y=50*pixelTileWidth;
+		player.x=(int) (50.5*pixelTileWidth);
+		player.y=(int) (50.5*pixelTileWidth);
 	}
 	int slowdown=0;
 	int slowdownfactor=1;
@@ -170,10 +178,10 @@ public class Game {
 	}
 
 	boolean legalMovement(Entity e, int[] t){
-		int xMin = (int) Math.floor((double)(e.getX()+t[0])/TILE_SIZE);
-		int xMax = (int) Math.ceil ((double)(e.getX()+t[0]+e.getWidth ()-16)/TILE_SIZE);
-		int yMin = (int) Math.floor((double)(e.getY()+t[1])/TILE_SIZE);
-		int yMax = (int) Math.ceil ((double)(e.getY()+t[1]+e.getHeight()-16)/TILE_SIZE);
+		int xMin = (int) Math.floor((double)(e.getX()-e.getWidth()/2+t[0])/TILE_SIZE);
+		int xMax = (int) Math.ceil ((double)(e.getX()-e.getWidth()/2+t[0]+e.getWidth ()-16)/TILE_SIZE);
+		int yMin = (int) Math.floor((double)(e.getY()-e.getHeight()/2+t[1])/TILE_SIZE);
+		int yMax = (int) Math.ceil ((double)(e.getY()-e.getHeight()/2+t[1]+e.getHeight()-16)/TILE_SIZE);
 		for(int x=xMin;x<=xMax;x++){
 			for(int y=yMin;y<=yMax;y++){
 				try{
