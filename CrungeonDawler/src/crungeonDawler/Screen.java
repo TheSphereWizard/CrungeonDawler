@@ -1,6 +1,7 @@
 package crungeonDawler;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -284,6 +285,9 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	}
     private void newGame(){
         lastTime = System.nanoTime();
+        for(Component c: this.getComponents()){
+        	c.setVisible(false);
+        }
         game=new Game(new Player("Test Player",new Actor("testSpriteSheetforActors",16,16)));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
 		gameState=GameState.PLAYING;
     }
