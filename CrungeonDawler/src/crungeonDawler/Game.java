@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -47,10 +48,8 @@ public class Game {
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX())+dungeon.getWidth()/2, (e.getY()-player.getY())+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
 		}
-//		dungeon.getGraphics().drawImage(getVisible(), 0, 0, null);
 		BufferedImage vis = getVisible();
-//		System.out.println("w"+Color.WHITE.getRGB());
-//		System.out.println(Color.black.getRGB());
+
 		for(int x=0;x<dungeon.getWidth();x++){
 			for(int y=0;y<dungeon.getHeight();y++){
 				if(vis.getRGB(x, y)!=-1){
@@ -58,103 +57,91 @@ public class Game {
 				}
 			}
 		}
+//		dungeon.getGraphics().drawImage(vis, 0, 0, null);
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 	}
 	public BufferedImage getVisible() {
 		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_3BYTE_BGR); 
 		Graphics2D g = (Graphics2D)dungeon.getGraphics();
-		g.setStroke(new BasicStroke(12,2,2));
+		ArrayList<int[]> poly = new ArrayList<int[]>();
 		g.translate(-player.x+dungeon.getWidth()/2, -player.y+dungeon.getHeight()/2);
-		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/120){
+		int[] cen = new int[]{player.x+8,player.y+8};
+		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/100){
 			double xrange = Math.cos(theta)*player.lengthOfLineOfSight*pixelTileWidth;
 			double yrange = Math.sin(theta)*player.lengthOfLineOfSight*pixelTileWidth;
 			double m = Math.tan(theta);
 			ArrayList<double[]> p = new ArrayList<double[]>();
-			int[] testcenter = new int[]{(int)((player.x)/pixelTileWidth)*pixelTileWidth,(int)((player.y)/pixelTileWidth)*pixelTileWidth};
+//			int[] testcenter = new int[]{(int)((player.x)/pixelTileWidth)*pixelTileWidth,(int)((player.y)/pixelTileWidth)*pixelTileWidth};
 //			g.setColor(Color.white);
 //			for(int i=-10;i<11;i++){
 //				g.drawLine(testcenter[0]-10*pixelTileWidth, testcenter[1]+i*pixelTileWidth, testcenter[0]+10*pixelTileWidth, testcenter[1]+i*pixelTileWidth);
 //				g.drawLine(testcenter[0]+i*pixelTileWidth, testcenter[1]-10*pixelTileWidth, testcenter[0]+i*pixelTileWidth, testcenter[1]+10*pixelTileWidth);
 //			}
-			int[] cen = new int[]{player.x+8,player.y+8};
-			for(double i=0;Math.abs(i)<Math.abs(xrange);i+=Math.signum(xrange)*pixelTileWidth){
+			
+			for(double i=0;Math.abs(i)<Math.abs(xrange*1.5);i+=Math.signum(xrange)*pixelTileWidth){
 				p.add(new double[]{i-cen[0]%16, m*(i-cen[0]%16+8)});
 			}
-			for(int i=0;Math.abs(i)<Math.abs(yrange);i+=Math.signum(yrange)*pixelTileWidth){
+			for(int i=0;Math.abs(i)<Math.abs(yrange*1.5);i+=Math.signum(yrange)*pixelTileWidth){
 				p.add(new double[]{(i-cen[1]%16+8)/m,i-cen[1]%16});
 			}
-			p=MergeSort(p);
+			p=MergeSortbydistance(p);
 			for(int i=0;i<p.size();i++){
-				if(Math.sqrt(Math.pow(p.get(i)[0],2)+Math.pow(p.get(i)[1], 2))>pixelTileWidth*(player.lengthOfLineOfSight+1)){
+				if(Math.sqrt(Math.pow(p.get(i)[0],2)+Math.pow(p.get(i)[1], 2))>Math.sqrt(Math.pow(xrange,2)+Math.pow(yrange, 2))){
 					p.remove(i);
 					i--;
 				}
 			}
-			
-			
-			//////////////////
-			//EVERYTHING BEYOND THIS POINT DOESN"T WORK
-			
-			
-			
 			///////////////////////////////////////////////////////////////
 			///////////////////////////////////////////////////////////////////
 			//THIS CODE TRIES TO FIGURE OUT WHAT BOXES NEED TO BE CHECKED FOR EACH GRID LINE INTERSECTION
 			//I HAVE NO IDEA HOW THE MATH SHOULD ACTUALLY BE DONE AND THIS IS ONE OF THE LARGE SOURCES OF TERRIBLENESS
-			
-			
-			//also a is always 0
 			ArrayList<int[]> a = new ArrayList<int[]>();
 			for(int i=0;i<p.size();i++){
 				if(p.get(i)[0]-(int)p.get(i)[0]==0d){
 //					if(!arraycontains(a,new int[]{Read.roundto(p.get(i)[0]+8,16),Read.roundto(p.get(i)[1]+8,16)}))
-//					System.out.println(Read.roundto(p.get(i)[0]+8,16)+" "+Read.roundto(p.get(i)[1]+8,16));
 						a.add(new int[]{Read.roundto(p.get(i)[0]+8,16),Read.roundto(p.get(i)[1]+8,16)});
 				}else{
 //					if(!arraycontains(a,new int[]{Read.roundto(p.get(i)[0]+8,16),Read.roundto(p.get(i)[1]+8,16)}))
 						a.add(new int[]{Read.roundto(p.get(i)[0]+8,16),Read.roundto(p.get(i)[1]+8,16)});
 				}
 			}
-			//////////////////////////////////////////
-			//////////////////////////////////////////
-			
-			
 			boolean hitwall=false;
 			int i=0;
 			out:
-			for(;i<a.size();i++){
+			for(;i<a.size()-1;i++){
 //				System.out.println((a.get(i)[0]/pixelTileWidth+" "+Read.roundto(player.x, 16)/pixelTileWidth));
 //				System.out.println((a.get(i)[0]+Read.roundto(player.x, 16))/pixelTileWidth+" "+(a.get(i)[1]+Read.roundto(player.y, 16))/pixelTileWidth);
 				//needs to have low wall be transparent
-				if(Read.contains(player.invalidtiles,currentLevel.levellayout[(a.get(i)[0]+Read.roundto(player.x, 16))/pixelTileWidth][(a.get(i)[1]+Read.roundto(player.y, 16))/pixelTileWidth])){
+				if(Read.contains(new int[]{0,14},currentLevel.levellayout[(a.get(i)[0]+Read.roundto(player.x, 16))/pixelTileWidth][(a.get(i)[1]+Read.roundto(player.y, 16))/pixelTileWidth])){
 					hitwall=true;
 					break out;
 				}
 			}
-			g.setColor(new Color(255,255,255));
+			//should also not hit wall if last one is in wall
+			//////////////////////////////////////////
+			//////////////////////////////////////////
 			
 			if(hitwall){
-				g.drawLine(cen[0],cen[1],cen[0]+(int)(p.get(i)[0]),cen[1]+(int)(p.get(i)[1]));
-//				g.drawLine(cen[0], cen[1], (int)(cen[0]+xrange),(int)(cen[1]+yrange));
-			}else{
-				g.drawLine(cen[0], cen[1], (int)(cen[0]+xrange),(int)(cen[1]+yrange));
-			}
-//			g.setColor(Color.blue);
-//			for(int j=0;j<a.size();j++){
-//				g.fillRect((int)(testcenter[0]+a.get(j)[0]), (int)(testcenter[1]+a.get(j)[1]), 16, 16);
-//			}
-//			for(int j=0;j<p.size();j++){
 //				g.setColor(new Color(255,255,255));
-//				g.drawLine(cen[0],cen[1],cen[0]+(int)(p.get(j)[0]),cen[1]+(int)(p.get(j)[1]));
-//				
-//				g.setColor(Color.blue);
-//				g.drawOval(cen[0]+(int)(p.get(j)[0])-1,cen[1]+(int)(p.get(j)[1])-1, 2, 2);
-//			}
-			
-			
-			//using that information draw the line to go into the hitbox of but not through walls.
-			//so far points are not circular, need to make it so that if all points hit nothing line is not drawn to point instead drawn all
+//				g.drawLine(cen[0],cen[1],cen[0]+(int)(p.get(i)[0]),cen[1]+(int)(p.get(i)[1]));
+				poly.add(new int[]{(int)(p.get(i)[0]),(int)(p.get(i)[1])});
+				//Hey as opposed to hitting the wall and drawing  apoint why not add bounds of wall
+			}else{
+//				g.setColor(new Color(255,255,255));
+//				g.drawLine(cen[0], cen[1], (int)(cen[0]+xrange),(int)(cen[1]+yrange));
+				poly.add(new int[]{(int)(xrange),(int)(yrange)});
+			}
 		}
+		//also try ordering all of these points by theta before drawing
+		poly=MergeSortbyangle(poly);
+		Polygon polygon = new Polygon();
+		for(int[] r : poly){
+			System.out.println(r[0]+" "+r[1]+"   "+Math.atan2(r[1], r[0]));
+			polygon.addPoint(r[0], r[1]);
+		}
+		System.out.println("");
+		g.translate(cen[0], cen[1]);
+		g.fillPolygon(polygon);
 		return dungeon;
 	}
 	
@@ -166,7 +153,40 @@ public class Game {
 		}
 		return false;
 	}
-	private ArrayList<double[]> MergeSort(ArrayList<double[]> m) {
+	private ArrayList<int[]> MergeSortbyangle(ArrayList<int[]> m) {
+		if (m.size() <= 1)
+			return m;
+		ArrayList<int[]> left = new ArrayList<int[]>();
+		ArrayList<int[]> right = new ArrayList<int[]>();
+	    for (int i=0;i<m.size();i++){
+	        if (i < (m.size())/2)
+	            left.add(m.get(i));
+	        else
+	        	right.add(m.get(i));
+	    }
+	    left =MergeSortbyangle(left);
+	    right = MergeSortbyangle(right);
+	    ArrayList<int[]> result = new ArrayList<int[]>();
+	    while (!left.isEmpty()&&!right.isEmpty())
+	        if (atan0to2pi(left.get(0)) >= atan0to2pi(right.get(0))){
+	            result.add(left.remove(0));
+	        }else{
+	        	result.add(right.remove(0));
+	        }
+	    while (!left.isEmpty())
+	    	result.add(left.remove(0));
+	    while (!right.isEmpty())
+	    	result.add(right.remove(0));        	
+	    return result;
+	}
+	public double atan0to2pi(int[] p){
+		double t = Math.atan2(p[0], p[1]);
+		if(t<0){
+			t+=2*Math.PI;
+		}
+		return t;
+	}
+	private ArrayList<double[]> MergeSortbydistance(ArrayList<double[]> m) {
 		if (m.size() <= 1)
 			return m;
 		ArrayList<double[]> left = new ArrayList<double[]>();
@@ -177,8 +197,8 @@ public class Game {
 	        else
 	        	right.add(m.get(i));
 	    }
-	    left = MergeSort(left);
-	    right = MergeSort(right);
+	    left = MergeSortbydistance(left);
+	    right = MergeSortbydistance(right);
 	    ArrayList<double[]> result = new ArrayList<double[]>();
 	    while (!left.isEmpty()&&!right.isEmpty())
 	        if (Math.sqrt(Math.pow(left.get(0)[0], 2)+Math.pow(left.get(0)[1], 2)) <= Math.sqrt(Math.pow(right.get(0)[0], 2)+Math.pow(right.get(0)[1], 2))){
