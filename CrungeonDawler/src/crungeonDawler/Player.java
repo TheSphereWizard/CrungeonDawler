@@ -4,6 +4,6 @@ public class Player extends Creature{
 	public Player(String name, Actor actor) {
 		super(name, actor);
 	}
-	int lengthOfLineOfSight =3;
+	int lengthOfLineOfSight =7;
 	
 }
