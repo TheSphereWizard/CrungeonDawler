@@ -15,14 +15,6 @@ public class Read {
 	//in order:							   red,orange,yellow,    lime,light turquoise,turquoise,  rose,/*white,*/   Indigo,lavender,   brown,dark red,    black,grey 50%,grey 25%,    Green,  purple,  gold,light yellow,blue-grey
 	static int defaultID = 0;//also used for the Void
 	static int voidRGB = -1;
-	static int ColortoID(Color col){
-		for(int i=0;i<colorID.length;i++){
-			if(colorRGB[i]==col.getRGB()){
-				return colorID[i];
-			}
-		}
-		return defaultID;
-	}
 	static int roundto(double round, int to){
 		return ((int)(round/to))*to;
 	}
@@ -33,6 +25,15 @@ public class Read {
 			}
 		}
 		return false;
+	}
+	//read RGB take component divide by 127, convreting to trinary then to decimal
+	static int ColortoID(Color col){
+		for(int i=0;i<colorID.length;i++){
+			if(colorRGB[i]==col.getRGB()){
+				return colorID[i];
+			}
+		}
+		return defaultID;
 	}
 	private static int IDtoColor(int id) {
 		for(int i=0;i<colorRGB.length;i++){

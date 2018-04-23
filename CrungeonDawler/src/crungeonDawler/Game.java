@@ -414,9 +414,11 @@ public class Game {
 	Game(Player p){
 		player=p;
 		currentLevel =new Level(400,400,"testSpriteSheetforActors");
+		
 		allEntities.add(p);
-		player.x=(int) (25*pixelTileWidth);
-		player.y=(int) (25*pixelTileWidth);
+		allEntities.addAll(currentLevel.spawnmobs());
+		player.x=(int) (200*pixelTileWidth);
+		player.y=(int) (200*pixelTileWidth);
 	}
 	int slowdown=0;
 	int slowdownfactor=1;

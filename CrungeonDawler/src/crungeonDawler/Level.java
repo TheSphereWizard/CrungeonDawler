@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
@@ -46,5 +48,9 @@ public class Level {
 	}
 	BufferedImage Void(){
 		return voidtile;
+	}
+	public ArrayList<Entity> spawnmobs() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

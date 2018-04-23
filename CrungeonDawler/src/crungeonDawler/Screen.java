@@ -42,7 +42,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	public static final long secInNanosec = 1000000000L;
 	public static final long milisecInNanosec = 1000000000L;
 
-	private final int GAME_FPS = 60;
+	private final int GAME_FPS = 10;
 	private final long GAME_UPDATE_PERIOD = secInNanosec / GAME_FPS;
 	private long lastTime;
 
