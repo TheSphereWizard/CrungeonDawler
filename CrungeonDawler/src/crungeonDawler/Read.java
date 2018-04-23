@@ -23,6 +23,9 @@ public class Read {
 		}
 		return defaultID;
 	}
+	static int roundto(double round, int to){
+		return ((int)(round/to))*to;
+	}
 	static boolean contains(int[] r,int w){
 		for(int i : r){
 			if (w==i){
