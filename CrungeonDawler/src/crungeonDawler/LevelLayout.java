@@ -108,6 +108,7 @@ public class LevelLayout {
 							}
 						}
 					}
+					nextroomid++;
 				}
 			}
 			r=rotate(r);
