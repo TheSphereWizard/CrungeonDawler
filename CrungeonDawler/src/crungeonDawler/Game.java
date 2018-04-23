@@ -48,8 +48,8 @@ public class Game {
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-8)+dungeon.getWidth()/2, (e.getY()-player.getY()-8)+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
 		}
-		BufferedImage vis = getVisible3();
-
+//		BufferedImage vis = getVisible();
+//
 //		for(int x=0;x<dungeon.getWidth();x++){
 //			for(int y=0;y<dungeon.getHeight();y++){
 //				if(vis.getRGB(x, y)!=-1){
@@ -57,7 +57,7 @@ public class Game {
 //				}
 //			}
 //		}
-		dungeon.getGraphics().drawImage(vis, 0, 0, null);
+//		dungeon.getGraphics().drawImage(vis, 0, 0, null);
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 	}
 	public BufferedImage getVisible3(){
@@ -271,9 +271,9 @@ public class Game {
 			if(hitwall){
 //				g.setColor(new Color(255,255,255));
 //				g.drawLine(cen[0],cen[1],cen[0]+(int)(p.get(i)[0]),cen[1]+(int)(p.get(i)[1]));
-//				poly.add(new int[]{(int)(p.get(i)[0]),(int)(p.get(i)[1])});
-//				poly.add(new int[]{a.get(i)[0]-8,a.get(i)[1]-8});
-				g.drawOval((int)p.get(i)[0], (int)p.get(i)[1], 2, 2);
+				poly.add(new int[]{(int)(p.get(i)[0]),(int)(p.get(i)[1])});
+				poly.add(new int[]{a.get(i)[0]-8,a.get(i)[1]-8});
+//				g.drawOval((int)p.get(i)[0], (int)p.get(i)[1], 2, 2);
 				//Hey as opposed to hitting the wall and drawing  apoint why not add bounds of wall
 			}else{
 				g.setColor(new Color(255,255,255,128));
@@ -409,6 +409,7 @@ public class Game {
 	Game(Player p){
 		player=p;
 		currentLevel =new Level(50,50,"testSpriteSheetforActors");
+		Read.outputroom(currentLevel.roomids, "test");
 		allEntities.add(p);
 		player.x=(int) (25*pixelTileWidth);
 		player.y=(int) (25*pixelTileWidth);
@@ -416,6 +417,9 @@ public class Game {
 	int slowdown=0;
 	int slowdownfactor=1;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
+		for(Entity e :allEntities){
+			tryLegalMovement(e,new int[]{e.vx,e.vy});
+		}
 		if(keyPressed[37/*left*/]){
 			if(slowdown%slowdownfactor==0)
 				tryLegalMovement(player,new int[]{-1,0});
