@@ -28,7 +28,7 @@ public class Game {
 		g2d.fillRect(Screen.frameWidth/3,Screen.frameHeight/3,Screen.frameWidth/3,Screen.frameHeight/3);
 	}
 	public static final int pixelTileWidth =16;
-	public static final int renderdist = 20;
+	public static final int renderdist = 30;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
 		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<currentLevel.width&&x<player.getX()/pixelTileWidth+renderdist+1;x++){
@@ -42,6 +42,11 @@ public class Game {
 			}
 		}
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
+		g2d.setColor(Color.RED);
+		g2d.drawString(String.valueOf(getCurrentRoom()), 20, 20);
+	}
+	public int getCurrentRoom() {
+		return currentLevel.roomids[player.getX()/pixelTileWidth][player.getY()/pixelTileWidth];
 	}
 	public int[][] getVisible() {
 		/*ArrayList<int[]> visibletiles = new ArrayList<int[]>();
@@ -110,7 +115,7 @@ public class Game {
 	}
 	Game(Player p){
 		player=p;
-		currentLevel =new Level(100,100,"testSpriteSheetforActors");
+		currentLevel =new Level(400,400,"testSpriteSheetforActors");
 		allEntities.add(p);
 		player.x=50*pixelTileWidth;
 		player.y=50*pixelTileWidth;
