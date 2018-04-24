@@ -3,15 +3,20 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class LevelLayout {
-	public static void main(String[] tf){
-		LevelLayout level=new LevelLayout(100,100);
-		Read.outputroom(level.level, "map output");
-	}
+//	public static void main(String[] tf){
+//		LevelLayout level=new LevelLayout(100,100);
+//		Read.outputroom(level.level, "map output");
+//	}
 	//Doors don't have lower wall on it
 	//some doors to edge are not closed
-	int[] opaquetiles = new int[]{0,14};
+	int[] opaquetiles = new int[]{0,1};
+	static final int voidID = 0;
+	static final int wallID = 1;
 	static final int doorID = 2;
 	static final int placeddoorID = 3;
+	static final int floorID=4;
+	static final int lowwallID = 5;
+	static final int monsterID = 6;
 	static ArrayList<int[][]> allroomdesigns =new ArrayList<int[][]>();
 	int[][] level;
 	int[][] roomids;
@@ -49,8 +54,8 @@ public class LevelLayout {
 			for(int j=0;j<level[i].length;j++){
 				if(level[i][j]==placeddoorID){
 					try{
-						if(!((level[i-1][j]==8&&level[i+1][j]==8)||(level[i][j-1]==8&&level[i][j+1]==8))){
-							level[i][j]=14;
+						if(!((level[i-1][j]==floorID&&level[i+1][j]==floorID)||(level[i][j-1]==floorID&&level[i][j+1]==floorID))){
+							level[i][j]=wallID;
 						}
 					}catch(IndexOutOfBoundsException e){}
 				}
@@ -58,10 +63,10 @@ public class LevelLayout {
 		}
 		for(int i=0;i<level.length;i++){
 			for(int j=0;j<level[i].length;j++){
-				if(level[i][j]==14){
+				if(level[i][j]==wallID){
 					try{
-						if(level[i][j+1]==8){
-							level[i][j+1]=10;
+						if(level[i][j+1]==floorID){
+							level[i][j+1]=lowwallID;
 						}
 					}catch(IndexOutOfBoundsException e){}
 				}
@@ -85,7 +90,7 @@ public class LevelLayout {
 				for(int i=0;i<r.length;i++){
 					for(int j=0;j<r[i].length;j++){
 						try{
-							if(!(level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==Read.defaultID||level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==r[i][j]||r[i][j]==Read.defaultID)){
+							if(!(level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==0||level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==r[i][j]||r[i][j]==0)){
 								ok=false;
 							}
 						}

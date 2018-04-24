@@ -44,7 +44,7 @@ public class Game {
 		}
 		
 		for(Entity e : allEntities){
-			if(Math.abs(e.getX()-player.getX())<renderdist&& Math.abs(e.getY()-player.getY())<renderdist){
+			if(Math.abs(e.getX()-player.getX())<renderdist*pixelTileWidth&& Math.abs(e.getY()-player.getY())<renderdist*pixelTileWidth){
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-8)+dungeon.getWidth()/2, (e.getY()-player.getY()-8)+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
 		}
@@ -296,15 +296,7 @@ public class Game {
 		g.drawPolygon(polygon);
 		return dungeon;
 	}
-	
-	private boolean arraycontains(ArrayList<int[]> a, int[] w) {
-		for(int[] i : a){
-			if (w.equals(i)){
-				return true;
-			}
-		}
-		return false;
-	}
+
 	private ArrayList<int[]> MergeSortbyangle(ArrayList<int[]> m) {
 		if (m.size() <= 1)
 			return m;
@@ -365,16 +357,16 @@ public class Game {
 	    return result;
 	}
 	private Image getImageFromTileID(int id) {
-		if(id==0){
+		if(id==LevelLayout.voidID){
 			return currentLevel.Void();
 		}
-		if(id==14){
+		if(id==LevelLayout.wallID){
 			return currentLevel.Wall();
 		}
-		if(id==8||id==3/*this is the door id*/){
+		if(id==LevelLayout.floorID||id==LevelLayout.placeddoorID/*this is the door id*/){
 			return currentLevel.Floor();
 		}
-		if(id==10){
+		if(id==LevelLayout.lowwallID){
 			return currentLevel.lowWall();
 		}
 		return null;
@@ -414,11 +406,20 @@ public class Game {
 	Game(Player p){
 		player=p;
 		currentLevel =new Level(400,400,"testSpriteSheetforActors");
+		addEntity(p,200,200);
+		p.vx=0;
+		p.vy=0;
 		
-		allEntities.add(p);
-		allEntities.addAll(currentLevel.spawnmobs());
-		player.x=(int) (200*pixelTileWidth);
-		player.y=(int) (200*pixelTileWidth);
+		for(int[] r :currentLevel.spawnmobs()){
+			addEntity(new Monster("test",new Actor("testSpriteSheetforActors",16,16)),r[0],r[1]);
+		}
+	}
+	void addEntity(Entity e, int x, int y){
+		e.x=x*16;
+		e.y=y*16;
+		e.vx=(int) (Math.random()*4-1);
+		e.vy=(int) (Math.random()*4-1);
+		allEntities.add(e);
 	}
 	int slowdown=0;
 	int slowdownfactor=1;
@@ -468,6 +469,12 @@ public class Game {
 				}
 			}
 		}
+		for(Entity other : allEntities)
+			if(other!=e)
+				if(Math.abs(e.x+t[0]-other.x)<16&Math.abs(e.y+t[1]-other.y)<16){
+//					tryLegalMovement(other, new int[]{-t[0],-t[1]});//if only this didn't recurse
+					return false;
+				}
 		return true;
 	}
 }

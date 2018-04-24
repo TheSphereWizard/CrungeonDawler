@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Read {
-	static int[] colorRGB = new int[]{-1237980,-32985, -3584,-4856291,       -6694422,-16735512,-20791,/*   -1,*/-12629812,-3620889,-4621737,-7864299,-16777216,-8421505,-3947581,-14503604,-6075996,-14066,    -1055568,-9399618};
-	static int[] colorID = new int[]{2        ,     3,     4,       5,              6,        7,     8,/*    9,*/       10,      11,      12,      13,       14,      15,      16,       17,      18,    19,          20,      21};
-	//in order:							   red,orange,yellow,    lime,light turquoise,turquoise,  rose,/*white,*/   Indigo,lavender,   brown,dark red,    black,grey 50%,grey 25%,    Green,  purple,  gold,light yellow,blue-grey
-	static int defaultID = 0;//also used for the Void
-	static int voidRGB = -1;
+//	static int[] colorRGB = new int[]{-1237980,-32985, -3584,-4856291,       -6694422,-16735512,-20791,/*   -1,*/-12629812,-3620889,-4621737,-7864299,-16777216,-8421505,-3947581,-14503604,-6075996,-14066,    -1055568,-9399618};
+//	static int[] colorID = new int[]{2        ,     3,     4,       5,              6,        7,     8,/*    9,*/       10,      11,      12,      13,       14,      15,      16,       17,      18,    19,          20,      21};
+//	//in order:							   red,orange,yellow,    lime,light turquoise,turquoise,  rose,/*white,*/   Indigo,lavender,   brown,dark red,    black,grey 50%,grey 25%,    Green,  purple,  gold,light yellow,blue-grey
+//	static int defaultID = 0;//also used for the Void
+//	static int voidRGB = -1;
 	static int roundto(double round, int to){
 		return ((int)(round/to))*to;
 	}
@@ -28,20 +28,16 @@ public class Read {
 	}
 	//read RGB take component divide by 127, convreting to trinary then to decimal
 	static int ColortoID(Color col){
-		for(int i=0;i<colorID.length;i++){
-			if(colorRGB[i]==col.getRGB()){
-				return colorID[i];
-			}
-		}
-		return defaultID;
+		int r=col.getRed()/127;
+		int g=col.getGreen()/127;
+		int b=col.getBlue()/127;
+		return r*9+g*3+b;
 	}
 	private static int IDtoColor(int id) {
-		for(int i=0;i<colorRGB.length;i++){
-			if(colorID[i]==id){
-				return colorRGB[i];
-			}
-		}
-		return voidRGB;
+		int r=id%3;
+		int g=id%9/3;
+		int b=id/9;
+		return new Color(r*127,g*127,b*127).getRGB();
 	}
 	static int[][] readcsvfile(File f){
 		try {

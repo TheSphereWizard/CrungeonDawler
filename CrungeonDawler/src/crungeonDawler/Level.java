@@ -49,8 +49,16 @@ public class Level {
 	BufferedImage Void(){
 		return voidtile;
 	}
-	public ArrayList<Entity> spawnmobs() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<int[]> spawnmobs() {
+		ArrayList<int[]> r = new ArrayList<int[]>();
+		for(int x=0;x<width;x++){
+			for(int y=0;y<height;y++){
+				if(levellayout[x][y]==LevelLayout.monsterID){
+					levellayout[x][y]=LevelLayout.floorID;
+					r.add(new int[]{x,y});
+				}
+			}
+		}
+		return r;
 	}
 }

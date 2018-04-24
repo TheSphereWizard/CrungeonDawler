@@ -6,7 +6,7 @@ public abstract class Entity {
 	String name;
 	int x,y;
 	int vx,vy;
-	int[] invalidtiles = new int[]{0,14,10};
+	int[] invalidtiles = new int[]{0,LevelLayout.wallID,LevelLayout.lowwallID};
 	public Entity(String name, Actor actor){
 		this.name = name;
 		this.actor = actor;
@@ -16,16 +16,6 @@ public abstract class Entity {
 	}
 	public int getY(){
 		return y;
-	}
-	public void updateXY(double tStep){
-		this.x += vx*tStep;
-		this.y += vy*tStep;
-	}
-	public void setX(int x){
-		this.x = x;
-	}
-	public void setY(int y){
-		this.y = y;
 	}
 	public void setVX(int vx){
 		this.vx = vx;
