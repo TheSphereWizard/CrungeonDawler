@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import AI.StraightLineAI;
+
 public class Game {
 	Level currentLevel;
 	Player player;
@@ -411,20 +413,19 @@ public class Game {
 		p.vy=0;
 		
 		for(int[] r :currentLevel.spawnmobs()){
-			addEntity(new Monster("test",new Actor("testSpriteSheetforActors",16,16)),r[0],r[1]);
+			addEntity(new Monster("test",new Actor("testSpriteSheetforActors",16,16), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 		}
 	}
 	void addEntity(Entity e, int x, int y){
 		e.x=x*16;
 		e.y=y*16;
-		e.vx=(int) (Math.random()*4-1);
-		e.vy=(int) (Math.random()*4-1);
 		allEntities.add(e);
 	}
 	int slowdown=0;
 	int slowdownfactor=1;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(Entity e :allEntities){
+			e.update(player, null, abouttocollide(e));
 			tryLegalMovement(e,new int[]{e.vx,e.vy});
 		}
 		if(keyPressed[37/*left*/]){
@@ -444,6 +445,30 @@ public class Game {
 				tryLegalMovement(player,new int[]{0,1});
 		}
 		slowdown++;
+	}
+	private int[] abouttocollide(Entity e) {
+		int[] ret = new int[]{0,0};
+		for(int x=0;x<e.getWidth();x++){
+			for(int y=0;y<e.getHeight();y++){
+				if(currentLevel.levellayout[(e.getX()-1)/16+x/16][e.getY()/16+y/16]==LevelLayout.wallID)
+					ret[0]++;
+				if(currentLevel.levellayout[e.getX()/16+x/16+1][e.getY()/16+y/16]==LevelLayout.wallID)
+					ret[0]++;
+				if(currentLevel.levellayout[e.getX()/16+x/16][(e.getY()-1)/16+y/16]==LevelLayout.lowwallID)
+					ret[1]++;
+				if(currentLevel.levellayout[e.getX()/16+x/16][(e.getY()-1)/16+y/16]==LevelLayout.wallID)
+					ret[1]++;
+				if(currentLevel.levellayout[e.getX()/16+x/16][e.getY()/16+y/16+1]==LevelLayout.wallID)
+					ret[1]++;
+			}	
+		}
+		for(Entity other : allEntities)
+			if(other!=e)
+				if(Math.abs(e.x+e.vx-other.x-other.vx)<16&Math.abs(e.y+e.x-other.y-other.vy)<16){
+					ret[0]+=0;
+					ret[1]+=1;
+				}
+		return ret;
 	}
 	void tryLegalMovement(Entity e, int[] translation){
 		if(legalMovement(e, translation)){
