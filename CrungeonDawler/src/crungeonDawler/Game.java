@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import AI.ShooterAI;
 import AI.StraightLineAI;
 import AI.TowardsPlayerAI;
 import AI.WanderingAI;
@@ -47,7 +48,8 @@ public class Game {
 			}
 		}
 		
-		for(Entity e : allEntities){
+		for(int i=0;i<allEntities.size();i++){
+			Entity e = allEntities.get(i);
 			if(Math.abs(e.getX()-player.getX())<renderdist*pixelTileWidth&& Math.abs(e.getY()-player.getY())<renderdist*pixelTileWidth){
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
@@ -417,22 +419,47 @@ public class Game {
 		for(int[] r :currentLevel.spawnmobs()){
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
-			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
+//			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
+			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new ShooterAI(3,5,30)),r[0],r[1]);
 		}
 	}
-	void addEntity(Entity e, int x, int y){
+	private void addEntity(Entity e, int x, int y){
 		e.x=x*pixelTileWidth;
 		e.y=y*pixelTileWidth;
 		allEntities.add(e);
 	}
+	private ArrayList<Entity> lateradd = new ArrayList<Entity>();
+	public void addEntityLater(Entity e, int x, int y){
+		e.x=x*pixelTileWidth;
+		e.y=y*pixelTileWidth;
+		lateradd.add(e);
+	}
+	private void addLaterEntities(){
+		for(Entity e :lateradd){
+			allEntities.add(e);
+		}
+	}
+	private ArrayList<Entity> laterremove = new ArrayList<Entity>();
+	public void removeEntityLater(Entity e){
+		laterremove.add(e);
+	}
+	private void removeLaterEntities(){
+		for(Entity e :laterremove){
+			allEntities.add(e);
+		}
+	}
+	
 	int slowdown=0;
 	int slowdownfactor=1;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
-		for(Entity e :allEntities){
+		for(int i=0;i<allEntities.size();i++){
+			Entity e = allEntities.get(i);
 			e.update(player, null, abouttocollide(e));
 			tryLegalMovement(e,new int[]{0,e.vy});
 			tryLegalMovement(e,new int[]{e.vx,0});
 		}
+		addLaterEntities();
+		removeLaterEntities();
 		if(keyPressed[37/*left*/]){
 			if(slowdown%slowdownfactor==0)
 				tryLegalMovement(player,new int[]{-4,0});
@@ -510,10 +537,12 @@ public class Game {
 //					Player pre=(Player)other;
 //					Player prers=(Player)e;
 //				}catch(Exception E){tryer=false;}
-//				if(tryer)
+				
 				if(Math.abs(e.x+t[0]-other.x)<pixelTileWidth&Math.abs(e.y+t[1]-other.y)<pixelTileWidth){
 //					tryLegalMovement(other, new int[]{-t[0],-t[1]});//if only this didn't recurse
-					return false;
+					if(e.collides&other.collides)
+						return false;
+					e.oncollide(other);
 				}
 			}
 		return true;

@@ -4,10 +4,8 @@ import crungeonDawler.Entity;
 import crungeonDawler.Player;
 
 public class WanderingAI extends AI{
-	int vx, vy, speed;
-	public WanderingAI(int vx, int vy, int speed){
-		this.vx=vx;
-		this.vy=vy;
+	int vx=0, vy=0, speed;
+	public WanderingAI(int speed){
 		this.speed=speed;
 	}
 	public void updateentitiy(Entity self, Player p, Entity lastcollided, int[] directionofwall) {

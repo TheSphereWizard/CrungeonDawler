@@ -11,5 +11,8 @@ public abstract class Creature extends Entity{
 	public Creature(String name, Actor actor,AI ai) {
 		super(name, actor,ai);
 	}
+	public Creature(String name, Actor actor, AI ai, boolean b) {
+		super(name, actor,ai,b);
+	}
 	
 }

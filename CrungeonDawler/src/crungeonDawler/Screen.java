@@ -47,7 +47,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	private long lastTime;
 
 
-	private Game game;
+	public static Game game;
 	private class MyDispatcher implements KeyEventDispatcher {
 	    public boolean dispatchKeyEvent(KeyEvent e) {
 	        if (e.getID() == KeyEvent.KEY_PRESSED) {
