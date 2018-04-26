@@ -20,7 +20,7 @@ public class Game {
 	Level currentLevel;
 	Player player;
 	public ArrayList<Entity> allEntities =new ArrayList<Entity>();
-	final int TILE_SIZE = 16;
+	final int TILE_SIZE = pixelTileWidth;
 	private Image tileSet;
 	private Image decorationSet;
 
@@ -32,8 +32,8 @@ public class Game {
 		g2d.setColor(new Color(75,75,75,255));
 		g2d.fillRect(Screen.frameWidth/3,Screen.frameHeight/3,Screen.frameWidth/3,Screen.frameHeight/3);
 	}
-	public static final int pixelTileWidth =16;
-	public static final int renderdist = 30;
+	public static final int pixelTileWidth =32;
+	public static final int renderdist = 15;
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 		//Hey Just want to note that the black lines flashing onto the screen
 		//only appear moving left or up, never down or right
@@ -41,13 +41,13 @@ public class Game {
 		BufferedImage dungeon = new BufferedImage(pixelTileWidth*renderdist*2,pixelTileWidth*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
 		for(int x=Math.max(player.getX()/pixelTileWidth-renderdist,0);x<currentLevel.width&&x<player.getX()/pixelTileWidth+renderdist+1;x++){
 			for(int y=Math.max(player.getY()/pixelTileWidth-renderdist,0);y<currentLevel.height&&y<player.getY()/pixelTileWidth+renderdist+1;y++){
-				dungeon.getGraphics().drawImage(getImageFromTileID(currentLevel.levellayout[x][y]),x*pixelTileWidth-player.getX()-8+dungeon.getWidth()/2,y*pixelTileWidth-player.getY()-8+dungeon.getHeight()/2, pixelTileWidth, pixelTileWidth,null);
+				dungeon.getGraphics().drawImage(getImageFromTileID(currentLevel.levellayout[x][y]),x*pixelTileWidth-player.getX()-pixelTileWidth/2+dungeon.getWidth()/2,y*pixelTileWidth-player.getY()-pixelTileWidth/2+dungeon.getHeight()/2, pixelTileWidth, pixelTileWidth,null);
 			}
 		}
 		
 		for(Entity e : allEntities){
 			if(Math.abs(e.getX()-player.getX())<renderdist*pixelTileWidth&& Math.abs(e.getY()-player.getY())<renderdist*pixelTileWidth){
-				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-8)+dungeon.getWidth()/2, (e.getY()-player.getY()-8)+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
+				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
 			}
 		}
 //		BufferedImage vis = getVisible();
@@ -55,7 +55,7 @@ public class Game {
 //		for(int x=0;x<dungeon.getWidth();x++){
 //			for(int y=0;y<dungeon.getHeight();y++){
 //				if(vis.getRGB(x, y)!=-1){
-//					dungeon.setRGB(x, y, -16777216);
+//					dungeon.setRGB(x, y, -pixelTileWidth7772pixelTileWidth);
 //				}
 //			}
 //		}
@@ -72,10 +72,10 @@ public class Game {
 		Graphics2D g = (Graphics2D)dungeon.getGraphics();
 		ArrayList<int[]> poly = new ArrayList<int[]>();
 		int[] realcenter = new int[]{player.x,player.y};
-		int[] roundedcenter = new int[]{(int)((player.x+8)/pixelTileWidth)*pixelTileWidth+8,(int)((player.y+8)/pixelTileWidth)*pixelTileWidth+8};
+		int[] roundedcenter = new int[]{(int)((player.x+pixelTileWidth/2)/pixelTileWidth)*pixelTileWidth+pixelTileWidth/2,(int)((player.y+pixelTileWidth/2)/pixelTileWidth)*pixelTileWidth+pixelTileWidth/2};
 		g.translate(-player.x+dungeon.getWidth()/2, -player.y+dungeon.getHeight()/2);
 		
-		g.drawRect(roundedcenter[0]-16,roundedcenter[1]-16, 16, 16);
+		g.drawRect(roundedcenter[0]-pixelTileWidth,roundedcenter[1]-pixelTileWidth, pixelTileWidth, pixelTileWidth);
 		
 		for(int x=-player.lengthOfLineOfSight;x<=player.lengthOfLineOfSight;x++){
 			for(int y=-player.lengthOfLineOfSight;y<=player.lengthOfLineOfSight;y++){
@@ -99,7 +99,7 @@ public class Game {
 		Graphics2D g = (Graphics2D)dungeon.getGraphics();
 		ArrayList<int[]> poly = new ArrayList<int[]>();
 		int[] realcenter = new int[]{player.x,player.y};
-		int[] roundedcenter = new int[]{(int)((player.x+8)/pixelTileWidth)*pixelTileWidth+8,(int)((player.y+8)/pixelTileWidth)*pixelTileWidth+8};
+		int[] roundedcenter = new int[]{(int)((player.x+pixelTileWidth/2)/pixelTileWidth)*pixelTileWidth+pixelTileWidth/2,(int)((player.y+pixelTileWidth/2)/pixelTileWidth)*pixelTileWidth+pixelTileWidth/2};
 		g.translate(-player.x+dungeon.getWidth()/2, -player.y+dungeon.getHeight()/2);
 		
 		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/107){
@@ -117,7 +117,7 @@ public class Game {
 			
 			ArrayList<double[]> yintersections = new ArrayList<double[]>();
 			for(double i=0;Math.abs(i)<Math.abs(xrange);i+=Math.signum(xrange)*pixelTileWidth){
-				yintersections.add(new double[]{i-realcenter[0]%16+8, m*(i-realcenter[0]%16+8)});
+				yintersections.add(new double[]{i-realcenter[0]%pixelTileWidth+pixelTileWidth/2, m*(i-realcenter[0]%pixelTileWidth+pixelTileWidth/2)});
 			}
 			for(int i=0;i<yintersections.size();i++){
 				if(Math.sqrt(Math.pow(yintersections.get(i)[0],2)+Math.pow(yintersections.get(i)[1], 2))>Math.sqrt(Math.pow(xrange,2)+Math.pow(yrange, 2))){
@@ -128,21 +128,21 @@ public class Game {
 			yintersections=MergeSortbydistance(yintersections);
 			ArrayList<int[]> yroundings = new ArrayList<int[]>();
 			for(int i=0;i<yintersections.size();i++){
-				int[] y= new int[]{Read.roundto(yintersections.get(i)[0],16),Read.roundto(yintersections.get(i)[1]+8,16)};
+				int[] y= new int[]{Read.roundto(yintersections.get(i)[0],pixelTileWidth),Read.roundto(yintersections.get(i)[1]+pixelTileWidth/2,pixelTileWidth)};
 				if(yintersections.get(i)[0]<0){
 					y[0]-=32;
 				}
 				if(yintersections.get(i)[1]<0){
 					y[1]-=32;
 				}else{
-					y[1]-=16;
+					y[1]-=pixelTileWidth;
 				}
 				yroundings.add(y);
 
 			}
 			ArrayList<double[]> xintersections = new ArrayList<double[]>();
 			for(int i=0;Math.abs(i)<Math.abs(yrange);i+=Math.signum(yrange)*pixelTileWidth){
-				xintersections.add(new double[]{(i-realcenter[1]%16+8)/m,i-realcenter[1]%16+8});
+				xintersections.add(new double[]{(i-realcenter[1]%pixelTileWidth+pixelTileWidth/2)/m,i-realcenter[1]%pixelTileWidth+pixelTileWidth/2});
 			}
 			for(int i=0;i<xintersections.size();i++){
 				if(Math.sqrt(Math.pow(xintersections.get(i)[0],2)+Math.pow(xintersections.get(i)[1], 2))>Math.sqrt(Math.pow(xrange,2)+Math.pow(yrange, 2))){
@@ -153,13 +153,13 @@ public class Game {
 			xintersections=MergeSortbydistance(xintersections);
 			ArrayList<int[]> xroundings = new ArrayList<int[]>();
 			for(int i=0;i<xintersections.size();i++){
-				int[] y= new int[]{Read.roundto(xintersections.get(i)[0]+8,16),Read.roundto(xintersections.get(i)[1],16)};
+				int[] y= new int[]{Read.roundto(xintersections.get(i)[0]+pixelTileWidth/2,pixelTileWidth),Read.roundto(xintersections.get(i)[1],pixelTileWidth)};
 				y[0]-=32;
 				if(xintersections.get(i)[1]<0){
 					y[1]-=32;
 				}
-				if(roundedcenter[1]==realcenter[1]+16&xintersections.get(i)[0]<0){
-					y[1]-=16;
+				if(roundedcenter[1]==realcenter[1]+pixelTileWidth&xintersections.get(i)[0]<0){
+					y[1]-=pixelTileWidth;
 				}
 				xroundings.add(y);
 			}
@@ -173,7 +173,7 @@ public class Game {
 			for(;i<xintersections.size() + yintersections.size();i++){
 				if(i%2==0){
 					try{
-						if(Read.contains(player.invalidtiles,currentLevel.levellayout[(int) ((xintersections.get(i)[0]+Read.roundto(player.x, 16))/pixelTileWidth)][(int) ((xintersections.get(i)[1]+Read.roundto(player.y, 16))/pixelTileWidth)])){
+						if(Read.contains(player.invalidtiles,currentLevel.levellayout[(int) ((xintersections.get(i)[0]+Read.roundto(player.x, pixelTileWidth))/pixelTileWidth)][(int) ((xintersections.get(i)[1]+Read.roundto(player.y, pixelTileWidth))/pixelTileWidth)])){
 							whathappened=1;
 							break out;
 						}
@@ -181,7 +181,7 @@ public class Game {
 					x++;
 				}else{
 					try{
-						if(Read.contains(player.invalidtiles,currentLevel.levellayout[(int) ((yintersections.get(i)[0]+Read.roundto(player.x, 16))/pixelTileWidth)][(int) ((yintersections.get(i)[1]+Read.roundto(player.y, 16))/pixelTileWidth)])){
+						if(Read.contains(player.invalidtiles,currentLevel.levellayout[(int) ((yintersections.get(i)[0]+Read.roundto(player.x, pixelTileWidth))/pixelTileWidth)][(int) ((yintersections.get(i)[1]+Read.roundto(player.y, pixelTileWidth))/pixelTileWidth)])){
 							whathappened=2;
 							break out;
 						}
@@ -193,10 +193,10 @@ public class Game {
 //				g.setColor(new Color(255,255,255));
 //				g.drawLine(cen[0],cen[1],cen[0]+(int)(p.get(i)[0]),cen[1]+(int)(p.get(i)[1]));
 //				poly.add(new int[]{(int)(p.get(i)[0]),(int)(p.get(i)[1])});
-//				poly.add(new int[]{a.get(i)[0]-8,a.get(i)[1]-8});
-//				g.setColor(new Color(255,255,255,128));
+//				poly.add(new int[]{a.get(i)[0]-pixelTileWidth/2,a.get(i)[1]-pixelTileWidth/2});
+//				g.setColor(new Color(255,255,255,12pixelTileWidth/2));
 //				g.drawLine(realcenter[0], realcenter[1], (int)(realcenter[0]+xrange),(int)(realcenter[1]+yrange));
-				poly.add(new int[]{(int)(xrange-16),(int)(yrange-16)});
+				poly.add(new int[]{(int)(xrange-pixelTileWidth),(int)(yrange-pixelTileWidth)});
 			}else{
 				if(whathappened==1){
 					g.drawOval((int)xintersections.get(x)[0], (int)xintersections.get(x)[1], 2, 2);
@@ -223,7 +223,7 @@ public class Game {
 		Graphics2D g = (Graphics2D)dungeon.getGraphics();
 		ArrayList<int[]> poly = new ArrayList<int[]>();
 		g.translate(-player.x+dungeon.getWidth()/2, -player.y+dungeon.getHeight()/2);
-		int[] cen = new int[]{player.x+8,player.y+8};
+		int[] cen = new int[]{player.x+pixelTileWidth/2,player.y+pixelTileWidth/2};
 		int[] testcenter = new int[]{(int)((player.x)/pixelTileWidth)*pixelTileWidth,(int)((player.y)/pixelTileWidth)*pixelTileWidth};
 		for(double theta=0;theta<Math.PI*2;theta+=Math.PI*2/100){
 			double xrange = Math.cos(theta)*player.lengthOfLineOfSight*pixelTileWidth;
@@ -234,10 +234,10 @@ public class Game {
 
 			
 			for(double i=0;Math.abs(i)<Math.abs(xrange*2);i+=Math.signum(xrange)*pixelTileWidth){
-				p.add(new double[]{i-cen[0]%16+8, m*(i-cen[0]%16+8)});
+				p.add(new double[]{i-cen[0]%pixelTileWidth+pixelTileWidth/2, m*(i-cen[0]%pixelTileWidth+pixelTileWidth/2)});
 			}
 			for(int i=0;Math.abs(i)<Math.abs(yrange*2);i+=Math.signum(yrange)*pixelTileWidth){
-				p.add(new double[]{(i-cen[1]%16+8)/m,i-cen[1]%16+8});
+				p.add(new double[]{(i-cen[1]%pixelTileWidth+pixelTileWidth/2)/m,i-cen[1]%pixelTileWidth+pixelTileWidth/2});
 			}
 			p=MergeSortbydistance(p);
 			
@@ -248,11 +248,11 @@ public class Game {
 			ArrayList<int[]> a = new ArrayList<int[]>();
 			for(int i=0;i<p.size();i++){
 				if(p.get(i)[0]-(int)p.get(i)[0]==0d){
-//					if(!arraycontains(a,new int[]{Read.roundto(p.get(i)[0]+8,16),Read.roundto(p.get(i)[1]+8,16)}))
-						a.add(new int[]{Read.roundto(p.get(i)[0],16),Read.roundto(p.get(i)[1],16)});
+//					if(!arraycontains(a,new int[]{Read.roundto(p.get(i)[0]+pixelTileWidth/2,pixelTileWidth),Read.roundto(p.get(i)[1]+pixelTileWidth/2,pixelTileWidth)}))
+						a.add(new int[]{Read.roundto(p.get(i)[0],pixelTileWidth),Read.roundto(p.get(i)[1],pixelTileWidth)});
 				}else{
-//					if(!arraycontains(a,new int[]{Read.roundto(p.get(i)[0]+8,16),Read.roundto(p.get(i)[1]+8,16)}))
-						a.add(new int[]{Read.roundto(p.get(i)[0],16),Read.roundto(p.get(i)[1],16)});
+//					if(!arraycontains(a,new int[]{Read.roundto(p.get(i)[0]+pixelTileWidth/2,pixelTileWidth),Read.roundto(p.get(i)[1]+pixelTileWidth/2,pixelTileWidth)}))
+						a.add(new int[]{Read.roundto(p.get(i)[0],pixelTileWidth),Read.roundto(p.get(i)[1],pixelTileWidth)});
 				}
 			}
 			boolean hitwall=false;
@@ -265,7 +265,7 @@ public class Game {
 				
 			for(;i<a.size();i++){
 				try{
-					if(Read.contains(player.invalidtiles,currentLevel.levellayout[(a.get(i)[0]+Read.roundto(player.x, 16))/pixelTileWidth][(a.get(i)[1]+Read.roundto(player.y, 16))/pixelTileWidth])){
+					if(Read.contains(player.invalidtiles,currentLevel.levellayout[(a.get(i)[0]+Read.roundto(player.x, pixelTileWidth))/pixelTileWidth][(a.get(i)[1]+Read.roundto(player.y, pixelTileWidth))/pixelTileWidth])){
 						hitwall=true;
 						break out;
 					}
@@ -279,13 +279,13 @@ public class Game {
 //				g.setColor(new Color(255,255,255));
 //				g.drawLine(cen[0],cen[1],cen[0]+(int)(p.get(i)[0]),cen[1]+(int)(p.get(i)[1]));
 				poly.add(new int[]{(int)(p.get(i)[0]),(int)(p.get(i)[1])});
-				poly.add(new int[]{a.get(i)[0]-8,a.get(i)[1]-8});
+				poly.add(new int[]{a.get(i)[0]-pixelTileWidth/2,a.get(i)[1]-pixelTileWidth/2});
 //				g.drawOval((int)p.get(i)[0], (int)p.get(i)[1], 2, 2);
 				//Hey as opposed to hitting the wall and drawing  apoint why not add bounds of wall
 			}else{
 				g.setColor(new Color(255,255,255,128));
 				g.drawLine(cen[0], cen[1], (int)(cen[0]+xrange),(int)(cen[1]+yrange));
-				poly.add(new int[]{(int)(xrange-16),(int)(yrange-16)});
+				poly.add(new int[]{(int)(xrange-pixelTileWidth),(int)(yrange-pixelTileWidth)});
 				
 			}
 		}
@@ -407,18 +407,18 @@ public class Game {
 	}
 	Game(Player p){
 		player=p;
-		currentLevel =new Level(400,400,"testSpriteSheetforActors");
+		currentLevel =new Level(400,400,"testSpriteSheetforActors2");
 		addEntity(p,200,200);
 		p.vx=0;
 		p.vy=0;
 		
 		for(int[] r :currentLevel.spawnmobs()){
-			addEntity(new Monster("test",new Actor("testSpriteSheetforActors",16,16), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
+			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 		}
 	}
 	void addEntity(Entity e, int x, int y){
-		e.x=x*16;
-		e.y=y*16;
+		e.x=x*pixelTileWidth;
+		e.y=y*pixelTileWidth;
 		allEntities.add(e);
 	}
 	int slowdown=0;
@@ -430,19 +430,19 @@ public class Game {
 		}
 		if(keyPressed[37/*left*/]){
 			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{-1,0});
+				tryLegalMovement(player,new int[]{-2,0});
 		}
 		if(keyPressed[38/*up*/]){
 			if((slowdown%slowdownfactor)==0)
-				tryLegalMovement(player,new int[]{0,-1});
+				tryLegalMovement(player,new int[]{0,-2});
 		}
 		if(keyPressed[39/*right*/]){
 			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{1,0});
+				tryLegalMovement(player,new int[]{2,0});
 		}
 		if(keyPressed[40/*down*/]){
 			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{0,1});
+				tryLegalMovement(player,new int[]{0,2});
 		}
 		slowdown++;
 	}
@@ -450,23 +450,27 @@ public class Game {
 		int[] ret = new int[]{0,0};
 		for(int x=0;x<e.getWidth();x++){
 			for(int y=0;y<e.getHeight();y++){
-				if(currentLevel.levellayout[(e.getX()-1)/16+x/16][e.getY()/16+y/16]==LevelLayout.wallID)
+				if(currentLevel.levellayout[(e.getX()-1)/pixelTileWidth+x/pixelTileWidth][e.getY()/pixelTileWidth+y/pixelTileWidth]==LevelLayout.wallID)
 					ret[0]++;
-				if(currentLevel.levellayout[e.getX()/16+x/16+1][e.getY()/16+y/16]==LevelLayout.wallID)
+				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth+1][e.getY()/pixelTileWidth+y/pixelTileWidth]==LevelLayout.wallID)
 					ret[0]++;
-				if(currentLevel.levellayout[e.getX()/16+x/16][(e.getY()-1)/16+y/16]==LevelLayout.lowwallID)
+				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth][(e.getY()-1)/pixelTileWidth+y/pixelTileWidth]==LevelLayout.lowwallID)
 					ret[1]++;
-				if(currentLevel.levellayout[e.getX()/16+x/16][(e.getY()-1)/16+y/16]==LevelLayout.wallID)
+				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth][(e.getY()-1)/pixelTileWidth+y/pixelTileWidth]==LevelLayout.wallID)
 					ret[1]++;
-				if(currentLevel.levellayout[e.getX()/16+x/16][e.getY()/16+y/16+1]==LevelLayout.wallID)
+				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth][e.getY()/pixelTileWidth+y/pixelTileWidth+1]==LevelLayout.wallID)
 					ret[1]++;
 			}	
 		}
+		//will not always collide on entities
+		//also fails on exact corners
 		for(Entity other : allEntities)
 			if(other!=e)
-				if(Math.abs(e.x+e.vx-other.x-other.vx)<16&Math.abs(e.y+e.x-other.y-other.vy)<16){
-					ret[0]+=0;
-					ret[1]+=1;
+				if(Math.abs(e.x+e.vx-other.x)<pixelTileWidth&Math.abs(e.y+e.vy-other.y)<pixelTileWidth){
+					if(e.x-other.x<e.y-other.y)
+						ret[0]+=1;
+					else
+						ret[1]+=1;
 				}
 		return ret;
 	}
@@ -479,9 +483,9 @@ public class Game {
 
 	boolean legalMovement(Entity e, int[] t){
 		int xMin = (int) Math.floor((double)(e.getX()+t[0])/TILE_SIZE);
-		int xMax = (int) Math.ceil ((double)(e.getX()+t[0]+e.getWidth ()-16)/TILE_SIZE);
+		int xMax = (int) Math.ceil ((double)(e.getX()+t[0]+e.getWidth ()-pixelTileWidth)/TILE_SIZE);
 		int yMin = (int) Math.floor((double)(e.getY()+t[1])/TILE_SIZE);
-		int yMax = (int) Math.ceil ((double)(e.getY()+t[1]+e.getHeight()-16)/TILE_SIZE);
+		int yMax = (int) Math.ceil ((double)(e.getY()+t[1]+e.getHeight()-pixelTileWidth)/TILE_SIZE);
 		for(int x=xMin;x<=xMax;x++){
 			for(int y=yMin;y<=yMax;y++){
 				try{
@@ -496,7 +500,7 @@ public class Game {
 		}
 		for(Entity other : allEntities)
 			if(other!=e)
-				if(Math.abs(e.x+t[0]-other.x)<16&Math.abs(e.y+t[1]-other.y)<16){
+				if(Math.abs(e.x+t[0]-other.x)<pixelTileWidth&Math.abs(e.y+t[1]-other.y)<pixelTileWidth){
 //					tryLegalMovement(other, new int[]{-t[0],-t[1]});//if only this didn't recurse
 					return false;
 				}

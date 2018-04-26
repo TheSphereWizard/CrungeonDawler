@@ -17,8 +17,8 @@ public class Level {
 	BufferedImage wall;
 	BufferedImage lowwall;//idk what to callit
 	BufferedImage voidtile;
-	final static int tilewidth=16;
-	final static int tileheight=16;
+	final static int tilewidth=Game.pixelTileWidth;
+	final static int tileheight=Game.pixelTileWidth;
 	Level(int width, int height, String RoomSpritepath){
 		this.width=width;
 		this.height=height;
@@ -31,8 +31,8 @@ public class Level {
 			spritesheet = ImageIO.read(spriteSheetFile);
 		} catch (IOException e) {System.out.println("Error"+(1/0));
 		}
-		floor=spritesheet.getSubimage(0, 0, 16, 16);;
-		wall=spritesheet.getSubimage(0, 1*tileheight, tilewidth, 16);;
+		floor=spritesheet.getSubimage(0, 0, Game.pixelTileWidth, Game.pixelTileWidth);;
+		wall=spritesheet.getSubimage(0, 1*tileheight, tilewidth, Game.pixelTileWidth);;
 		lowwall=spritesheet.getSubimage(0, 2*tileheight, tilewidth, tileheight);;//idk what to callit
 		voidtile=spritesheet.getSubimage(0, 3*tileheight, tilewidth, tileheight);;
 			

@@ -14,8 +14,8 @@ public class Actor {
 	private BufferedImage spriteSheet;
 	private int currentAnim=0;
 	private double currentFrame=0;
-	private int width=16;
-	private int height=16;
+	private int width=Game.pixelTileWidth;
+	private int height=Game.pixelTileWidth;
 	public Actor(String path,int w,int h){
 		File spriteSheetFile = new File("resources/ActorSpriteSheets/"+path+".png");
 		try {
