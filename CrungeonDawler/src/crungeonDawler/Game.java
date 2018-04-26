@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import AI.StraightLineAI;
+import AI.TowardsPlayerAI;
+import AI.WanderingAI;
 
 public class Game {
 	Level currentLevel;
@@ -413,7 +415,9 @@ public class Game {
 		p.vy=0;
 		
 		for(int[] r :currentLevel.spawnmobs()){
-			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
+//			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
+//			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
+			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
 		}
 	}
 	void addEntity(Entity e, int x, int y){
@@ -426,23 +430,24 @@ public class Game {
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(Entity e :allEntities){
 			e.update(player, null, abouttocollide(e));
-			tryLegalMovement(e,new int[]{e.vx,e.vy});
+			tryLegalMovement(e,new int[]{0,e.vy});
+			tryLegalMovement(e,new int[]{e.vx,0});
 		}
 		if(keyPressed[37/*left*/]){
 			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{-2,0});
+				tryLegalMovement(player,new int[]{-4,0});
 		}
 		if(keyPressed[38/*up*/]){
 			if((slowdown%slowdownfactor)==0)
-				tryLegalMovement(player,new int[]{0,-2});
+				tryLegalMovement(player,new int[]{0,-4});
 		}
 		if(keyPressed[39/*right*/]){
 			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{2,0});
+				tryLegalMovement(player,new int[]{4,0});
 		}
 		if(keyPressed[40/*down*/]){
 			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{0,2});
+				tryLegalMovement(player,new int[]{0,4});
 		}
 		slowdown++;
 	}
@@ -499,11 +504,18 @@ public class Game {
 			}
 		}
 		for(Entity other : allEntities)
-			if(other!=e)
+			if(other!=e){
+//				boolean tryer=true;
+//				try{
+//					Player pre=(Player)other;
+//					Player prers=(Player)e;
+//				}catch(Exception E){tryer=false;}
+//				if(tryer)
 				if(Math.abs(e.x+t[0]-other.x)<pixelTileWidth&Math.abs(e.y+t[1]-other.y)<pixelTileWidth){
 //					tryLegalMovement(other, new int[]{-t[0],-t[1]});//if only this didn't recurse
 					return false;
 				}
+			}
 		return true;
 	}
 }
