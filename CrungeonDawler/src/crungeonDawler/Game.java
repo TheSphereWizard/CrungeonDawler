@@ -411,8 +411,8 @@ public class Game {
 	}
 	Game(Player p){
 		player=p;
-		currentLevel =new Level(400,400,"testSpriteSheetforActors2");
-		addEntity(p,200,200);
+		currentLevel =new Level(200,200,"testSpriteSheetforActors2");
+		addEntity(p,100,100);
 		p.vx=0;
 		p.vy=0;
 		

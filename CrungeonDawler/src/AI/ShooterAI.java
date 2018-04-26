@@ -24,6 +24,7 @@ public class ShooterAI extends AI{
 			vy=-(int) (tempy*speed/diff);
 			self.setVX(vx);
 			self.setVY(vy);
+			
 		}else{
 			if(dist>range){
 				vx=(int) (tempx*speed/diff);
@@ -37,7 +38,7 @@ public class ShooterAI extends AI{
 		}
 		if(Math.abs(dist-range)<Game.pixelTileWidth*2){//p.getX()-self.getX(),p.getY()-self.getY()
 			if(slow==0){
-//				Screen.game.addEntityLater(new Monster("Arrow", new Actor("testSpriteSheetforActors2",32,32),new NullAI(),false), self.getX()/32, self.getY()/32);
+				Screen.game.addEntityLater(new Monster("Arrow", new Actor("testSpriteSheetforActors2",32,32),new NullAI(),false), self.getX()/32, self.getY()/32);
 			}
 			slow++;
 			slow%=(refresh*8);
