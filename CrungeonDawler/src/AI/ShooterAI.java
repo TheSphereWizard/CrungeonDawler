@@ -46,7 +46,7 @@ public class ShooterAI extends AI{
 				Class<? extends Entity> clazz = projectile.getClass();
 				try {
 					Constructor<?> ctor = clazz.getConstructor(String.class,Actor.class,AI.class,boolean.class);
-					Entity object = (Entity) ctor.newInstance(self.name+" bullet",projectile.actor,new ArrowAI((p.getX()+8-self.getX())/16,(p.getY()+8-self.getY())/16),false);
+					Entity object = (Entity) ctor.newInstance(self.name+" bullet",projectile.actor,new ArrowAI((p.getX()+8-self.getX())/16,(p.getY()+8-self.getY())/16,self),false);
 					Screen.game.addEntity(object, self.getX()/32, self.getY()/32);
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -421,7 +421,7 @@ public class Game {
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
-			Entity arrow=new Monster("Arrow", new Actor("terriblelazyball",32,32),new ArrowAI(0,0),false);
+			Entity arrow=new Monster("Arrow", new Actor("terriblelazyball",32,32),new ArrowAI(0,0,null),false);
 			if(Math.random()*2<1)
 				addEntity(new Monster("test",new Actor("bulbasor",pixelTileWidth,pixelTileWidth), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 			else{
@@ -485,6 +485,9 @@ public class Game {
 				tryLegalMovement(player,new int[]{0,4});
 		}
 		slowdown++;
+		if(mousePressed[0]){
+			addEntity(new Monster("Arrow", new Actor("terriblelazyball",32,32),new ArrowAI(0,0,null),false),player.x,player.y);
+		}
 	}
 	private int[] abouttocollide(Entity e) {
 		int[] ret = new int[]{0,0};
