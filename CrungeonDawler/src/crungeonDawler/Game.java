@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import AI.ArrowAI;
 import AI.ShooterAI;
 import AI.StraightLineAI;
 import AI.TowardsPlayerAI;
@@ -411,7 +412,7 @@ public class Game {
 	}
 	Game(Player p){
 		player=p;
-		currentLevel =new Level(200,200,"testSpriteSheetforActors2");
+		currentLevel =new Level(200,200,"Tiles");
 		addEntity(p,100,100);
 		p.vx=0;
 		p.vy=0;
@@ -420,33 +421,40 @@ public class Game {
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
-			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new ShooterAI(3,5,30)),r[0],r[1]);
+			Entity arrow=new Monster("Arrow", new Actor("terriblelazyball",32,32),new ArrowAI(0,0),false);
+			if(Math.random()*2<1)
+				addEntity(new Monster("test",new Actor("bulbasor",pixelTileWidth,pixelTileWidth), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
+			else{
+				addEntity(new Monster("test",new Actor("charizard",pixelTileWidth,pixelTileWidth), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
+				
+			}
 		}
 	}
-	private void addEntity(Entity e, int x, int y){
+	public void addEntity(Entity e, int x, int y){
 		e.x=x*pixelTileWidth;
 		e.y=y*pixelTileWidth;
 		allEntities.add(e);
 	}
-	private ArrayList<Entity> lateradd = new ArrayList<Entity>();
-	public void addEntityLater(Entity e, int x, int y){
-		e.x=x*pixelTileWidth;
-		e.y=y*pixelTileWidth;
-		lateradd.add(e);
-	}
-	private void addLaterEntities(){
-		for(Entity e :lateradd){
-			allEntities.add(e);
-		}
-	}
+//	private ArrayList<Entity> lateradd = new ArrayList<Entity>();
+//	public void addEntityLater(Entity e, int x, int y){
+//		e.x=x*pixelTileWidth;
+//		e.y=y*pixelTileWidth;
+//		lateradd.add(e);
+//	}
+//	private void addLaterEntities(){
+//		for(Entity e :lateradd){
+//			allEntities.add(e);
+//		}
+//	}
 	private ArrayList<Entity> laterremove = new ArrayList<Entity>();
 	public void removeEntityLater(Entity e){
 		laterremove.add(e);
 	}
 	private void removeLaterEntities(){
 		for(Entity e :laterremove){
-			allEntities.add(e);
+			allEntities.remove(e);
 		}
+		laterremove.clear();
 	}
 	
 	int slowdown=0;
@@ -458,7 +466,7 @@ public class Game {
 			tryLegalMovement(e,new int[]{0,e.vy});
 			tryLegalMovement(e,new int[]{e.vx,0});
 		}
-		addLaterEntities();
+//		addLaterEntities();
 		removeLaterEntities();
 		if(keyPressed[37/*left*/]){
 			if(slowdown%slowdownfactor==0)

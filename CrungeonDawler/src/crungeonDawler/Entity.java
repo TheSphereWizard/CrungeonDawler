@@ -4,10 +4,10 @@ import java.awt.Image;
 import AI.AI;
 
 public abstract class Entity {
-	Actor actor;
-	String name;
-	int x,y;
-	int vx,vy;
+	public Actor actor;
+	public String name;
+	public int x, y;
+	public int vx,vy;
 	AI ai;
 	int[] invalidtiles = new int[]{0,LevelLayout.wallID,LevelLayout.lowwallID};
 	boolean collides=true;
@@ -38,7 +38,7 @@ public abstract class Entity {
 		ai.updateentitiy(this,p,lastcollided, directionofwall);
 	}
 	public void oncollide(Entity other){
-		ai.oncollide(other);
+		ai.oncollide(this,other);
 	}
 	public Image getSprite(){
 		return actor.getSprite(vx, vy);

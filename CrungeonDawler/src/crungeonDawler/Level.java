@@ -31,10 +31,10 @@ public class Level {
 			spritesheet = ImageIO.read(spriteSheetFile);
 		} catch (IOException e) {System.out.println("Error"+(1/0));
 		}
-		floor=spritesheet.getSubimage(0, 0, Game.pixelTileWidth, Game.pixelTileWidth);;
-		wall=spritesheet.getSubimage(0, 1*tileheight, tilewidth, Game.pixelTileWidth);;
-		lowwall=spritesheet.getSubimage(0, 2*tileheight, tilewidth, tileheight);;//idk what to callit
-		voidtile=spritesheet.getSubimage(0, 3*tileheight, tilewidth, tileheight);;
+		floor=spritesheet.getSubimage(0, 0, Game.pixelTileWidth, Game.pixelTileWidth);
+		lowwall=spritesheet.getSubimage(0, 1*tileheight, tilewidth, tileheight);//idk what to callit
+		wall=spritesheet.getSubimage(0, 2*tileheight, tilewidth, Game.pixelTileWidth);
+		voidtile=spritesheet.getSubimage(0, 3*tileheight, tilewidth, tileheight);
 			
 	}
 	BufferedImage Wall(){
