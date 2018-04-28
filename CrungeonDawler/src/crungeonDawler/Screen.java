@@ -288,7 +288,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
         for(Component c: this.getComponents()){
         	c.setVisible(false);
         }
-        game=new Game(new Player("Test Player",new Actor("Charizardbutnotreallycharmander",Game.pixelTileWidth,Game.pixelTileWidth)));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
+        game=new Game(new Player("Test Player",new Actor("Bulbasor3",Game.pixelTileWidth,Game.pixelTileWidth,false)));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name
 		gameState=GameState.PLAYING;
     }
 	private Point mousePosition() {

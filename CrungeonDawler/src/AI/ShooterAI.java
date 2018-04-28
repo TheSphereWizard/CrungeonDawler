@@ -1,12 +1,10 @@
 package AI;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import crungeonDawler.Actor;
 import crungeonDawler.Entity;
 import crungeonDawler.Game;
-import crungeonDawler.Monster;
 import crungeonDawler.Player;
 import crungeonDawler.Screen;
 

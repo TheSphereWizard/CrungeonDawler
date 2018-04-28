@@ -16,9 +16,6 @@ import javax.imageio.ImageIO;
 
 import AI.ArrowAI;
 import AI.ShooterAI;
-import AI.StraightLineAI;
-import AI.TowardsPlayerAI;
-import AI.WanderingAI;
 
 public class Game {
 	Level currentLevel;
@@ -52,7 +49,7 @@ public class Game {
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
 			if(Math.abs(e.getX()-player.getX())<renderdist*pixelTileWidth&& Math.abs(e.getY()-player.getY())<renderdist*pixelTileWidth){
-				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2,e.getWidth(),e.getHeight(), null);
+				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2, null);
 			}
 		}
 //		BufferedImage vis = getVisible();
@@ -303,7 +300,6 @@ public class Game {
 		g.drawPolygon(polygon);
 		return dungeon;
 	}
-
 	private ArrayList<int[]> MergeSortbyangle(ArrayList<int[]> m) {
 		if (m.size() <= 1)
 			return m;
@@ -413,6 +409,7 @@ public class Game {
 	Game(Player p){
 		player=p;
 		currentLevel =new Level(200,200,"Tiles");
+		Read.outputroom(currentLevel.levellayout, "map output");
 		addEntity(p,100,100);
 		p.vx=0;
 		p.vy=0;
@@ -421,13 +418,11 @@ public class Game {
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
-			Entity arrow=new Monster("Arrow", new Actor("terriblelazyball",32,32),new ArrowAI(0,0,null),false);
+			Entity arrow=new Monster("Arrow", new Actor("charizard",32,32,true),new ArrowAI(0,0,null),false);
 			if(Math.random()*2<1)
-				addEntity(new Monster("test",new Actor("bulbasor",pixelTileWidth,pixelTileWidth), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
-			else{
-				addEntity(new Monster("test",new Actor("charizard",pixelTileWidth,pixelTileWidth), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
-				
-			}
+				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
+			else
+				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 		}
 	}
 	public void addEntity(Entity e, int x, int y){
@@ -460,6 +455,7 @@ public class Game {
 	int slowdown=0;
 	int slowdownfactor=1;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
+		
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
 			e.update(player, null, abouttocollide(e));
@@ -468,25 +464,31 @@ public class Game {
 		}
 //		addLaterEntities();
 		removeLaterEntities();
+		player.vx=0;
+		player.vy=0;
 		if(keyPressed[37/*left*/]){
-			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{-4,0});
+//			if(slowdown%slowdownfactor==0)
+//				tryLegalMovement(player,new int[]{-4,0});
+			player.vx-=4;
 		}
 		if(keyPressed[38/*up*/]){
-			if((slowdown%slowdownfactor)==0)
-				tryLegalMovement(player,new int[]{0,-4});
+//			if((slowdown%slowdownfactor)==0)
+//				tryLegalMovement(player,new int[]{0,-4});
+			player.vy-=4;
 		}
 		if(keyPressed[39/*right*/]){
-			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{4,0});
+//			if(slowdown%slowdownfactor==0)
+//				tryLegalMovement(player,new int[]{4,0});
+			player.vx+=4;
 		}
 		if(keyPressed[40/*down*/]){
-			if(slowdown%slowdownfactor==0)
-				tryLegalMovement(player,new int[]{0,4});
+//			if(slowdown%slowdownfactor==0)
+//				tryLegalMovement(player,new int[]{0,4});
+			player.vy+=4;
 		}
 		slowdown++;
 		if(mousePressed[0]){
-			addEntity(new Monster("Arrow", new Actor("terriblelazyball",32,32),new ArrowAI(0,0,null),false),player.x,player.y);
+			addEntity(new Monster("Arrow", new Actor("terriblelazyball",32,32,true),new ArrowAI(0,0,null),false),player.x,player.y);
 		}
 	}
 	private int[] abouttocollide(Entity e) {

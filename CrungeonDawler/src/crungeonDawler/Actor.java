@@ -1,12 +1,11 @@
 package crungeonDawler;
 
-
-import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -16,7 +15,9 @@ public class Actor {
 	private double currentFrame=0;
 	private int width=Game.pixelTileWidth;
 	private int height=Game.pixelTileWidth;
-	public Actor(String path,int w,int h){
+	public double theta=-Math.PI/2;
+	private boolean rotatable;
+	public Actor(String path,int w,int h,boolean rotatable){
 		File spriteSheetFile = new File("resources/ActorSpriteSheets/"+path+".png");
 		try {
 			spriteSheet = ImageIO.read(spriteSheetFile);
@@ -24,11 +25,24 @@ public class Actor {
 		}
 		width = w;
 		height = h;
+		this.rotatable=rotatable;
+	}
+	void updateAngle(int vx,int vy){
+		if(vx!=0||vy!=0)
+			theta=Math.atan2(vy, vx);
 	}
 	public Image getSprite(int vx,int vy){
-		currentFrame += .1;
-		currentFrame %= 4;
-		return spriteSheet.getSubimage(((int) currentAnim)*width, ((int) currentFrame)*height, width, height);
+		updateAngle(vx,vy);
+		if(rotatable){
+			AffineTransform  t = AffineTransform.getRotateInstance(theta+Math.PI/2,width/2,height/2);
+			AffineTransformOp op = new AffineTransformOp(t,AffineTransformOp.TYPE_BILINEAR);
+			return op.filter(spriteSheet.getSubimage(0, 0, width, height), null);
+		}else{
+			currentFrame += .1;
+			currentFrame %= 3;
+			int anglenum = (int) (theta/Math.PI*4+4)%8;
+			return spriteSheet.getSubimage(((int) currentAnim)*width+anglenum*width, ((int) currentFrame)*height, width, height);
+		}
 	}
 	public int getWidth(){
 		return width;

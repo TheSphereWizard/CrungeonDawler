@@ -59,6 +59,7 @@ public class LevelLayout {
 						}
 					}catch(IndexOutOfBoundsException e){}
 				}
+				
 			}
 		}
 		for(int i=0;i<level.length;i++){
