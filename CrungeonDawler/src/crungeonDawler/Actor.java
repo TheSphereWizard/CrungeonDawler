@@ -10,13 +10,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Actor {
-	private BufferedImage spriteSheet;
+	public BufferedImage spriteSheet;
 	private int currentAnim=0;
 	private double currentFrame=0;
 	private int width=Game.pixelTileWidth;
 	private int height=Game.pixelTileWidth;
 	public double theta=-Math.PI/2;
-	private boolean rotatable;
+	public boolean rotatable;
+	public Actor(BufferedImage i,int w,int h,boolean rotatable){
+		spriteSheet =i;
+		width = w;
+		height = h;
+		this.rotatable=rotatable;
+	}
 	public Actor(String path,int w,int h,boolean rotatable){
 		File spriteSheetFile = new File("resources/ActorSpriteSheets/"+path+".png");
 		try {

@@ -69,9 +69,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 		this.addMouseListener(this);
         
         gameState = GameState.STARTUP;
-        
         Thread gameThread = new Thread() {
-            @Override
             public void run(){
                 GameLoop();
             }
@@ -81,7 +79,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	}
 	//things that actually do things
 	public void mousePressed(MouseEvent e) {
-		
+		mousePressed[e.getButton()-1] = true;
 	}
 	public void mouseReleased(MouseEvent e) {
 		mousePressed[e.getButton()-1] = false;

@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 
 import AI.ArrowAI;
 import AI.ShooterAI;
+import AI.StraightLineAI;
 
 public class Game {
 	Level currentLevel;
@@ -418,7 +419,7 @@ public class Game {
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
-			Entity arrow=new Monster("Arrow", new Actor("charizard",32,32,true),new ArrowAI(0,0,null),false);
+			Entity arrow=new Monster("Arrow", new Actor("arrow",32,32,true),new ArrowAI(0,0,StraightLineAI.Behavior.REFLECT,null),false);
 			if(Math.random()*2<1)
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 			else
@@ -426,8 +427,8 @@ public class Game {
 		}
 	}
 	public void addEntity(Entity e, int x, int y){
-		e.x=x*pixelTileWidth;
-		e.y=y*pixelTileWidth;
+		e.x=x*pixelTileWidth+pixelTileWidth/2;
+		e.y=y*pixelTileWidth+pixelTileWidth/2;
 		allEntities.add(e);
 	}
 //	private ArrayList<Entity> lateradd = new ArrayList<Entity>();
@@ -452,8 +453,10 @@ public class Game {
 		laterremove.clear();
 	}
 	
-	int slowdown=0;
-	int slowdownfactor=1;
+	int keyslowdown=0;
+	int keyslowdownfactor=1;
+	int mouseslowdown=0;
+	int mouseslowdownfactor=10;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		
 		for(int i=0;i<allEntities.size();i++){
@@ -467,56 +470,68 @@ public class Game {
 		player.vx=0;
 		player.vy=0;
 		if(keyPressed[37/*left*/]){
-//			if(slowdown%slowdownfactor==0)
+			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{-4,0});
 			player.vx-=4;
 		}
 		if(keyPressed[38/*up*/]){
-//			if((slowdown%slowdownfactor)==0)
+			if((keyslowdown%keyslowdownfactor)==0)
 //				tryLegalMovement(player,new int[]{0,-4});
 			player.vy-=4;
 		}
 		if(keyPressed[39/*right*/]){
-//			if(slowdown%slowdownfactor==0)
+			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{4,0});
 			player.vx+=4;
 		}
 		if(keyPressed[40/*down*/]){
-//			if(slowdown%slowdownfactor==0)
+			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{0,4});
 			player.vy+=4;
 		}
-		slowdown++;
+		keyslowdown++;
+		mouseslowdown++;
 		if(mousePressed[0]){
-			addEntity(new Monster("Arrow", new Actor("terriblelazyball",32,32,true),new ArrowAI(0,0,null),false),player.x,player.y);
+			if(mouseslowdown%mouseslowdownfactor==1)
+				addEntity(new Monster("PlayerArrow", new Actor("arrow",32,32,true),new ArrowAI((mousePosition.x-Screen.frameWidth/2)/20,(mousePosition.y-Screen.frameHeight/2)/20,StraightLineAI.Behavior.REFLECT,player),false),player.x/32,player.y/32);
+		}else{
+			mouseslowdown=0;
 		}
+		
 	}
 	private int[] abouttocollide(Entity e) {
 		int[] ret = new int[]{0,0};
-		for(int x=0;x<e.getWidth();x++){
-			for(int y=0;y<e.getHeight();y++){
-				if(currentLevel.levellayout[(e.getX()-1)/pixelTileWidth+x/pixelTileWidth][e.getY()/pixelTileWidth+y/pixelTileWidth]==LevelLayout.wallID)
-					ret[0]++;
-				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth+1][e.getY()/pixelTileWidth+y/pixelTileWidth]==LevelLayout.wallID)
-					ret[0]++;
-				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth][(e.getY()-1)/pixelTileWidth+y/pixelTileWidth]==LevelLayout.lowwallID)
-					ret[1]++;
-				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth][(e.getY()-1)/pixelTileWidth+y/pixelTileWidth]==LevelLayout.wallID)
-					ret[1]++;
-				if(currentLevel.levellayout[e.getX()/pixelTileWidth+x/pixelTileWidth][e.getY()/pixelTileWidth+y/pixelTileWidth+1]==LevelLayout.wallID)
-					ret[1]++;
-			}	
+		int xMin = (int) Math.floor((double)(e.getX()+e.vx)/TILE_SIZE);
+		int xMax = (int) Math.ceil ((double)(e.getX()+e.vx+e.getWidth ()-pixelTileWidth)/TILE_SIZE);
+		int yMin = (int) Math.floor((double)(e.getY()+e.vy)/TILE_SIZE);
+		int yMax = (int) Math.ceil ((double)(e.getY()+e.vy+e.getHeight()-pixelTileWidth)/TILE_SIZE);
+		for(int x=xMin;x<=xMax;x++){
+			for(int y=yMin;y<=yMax;y++){
+				try{
+					if(Read.contains(e.invalidtiles, currentLevel.levellayout[x][y])){
+						ret[0]+=x;
+						ret[1]+=y;
+					}
+				}
+				catch(Exception ex){
+					ret[0]+=x;
+					ret[1]+=y;
+				}
+			}
 		}
+//		if(e.name.equals("PlayerArrow")){
+//			System.out.println(ret[0]+" "+ret[1]);
+//		}
 		//will not always collide on entities
 		//also fails on exact corners
-		for(Entity other : allEntities)
-			if(other!=e)
-				if(Math.abs(e.x+e.vx-other.x)<pixelTileWidth&Math.abs(e.y+e.vy-other.y)<pixelTileWidth){
-					if(e.x-other.x<e.y-other.y)
-						ret[0]+=1;
-					else
-						ret[1]+=1;
-				}
+//		for(Entity other : allEntities)
+//			if(other!=e)
+//				if(Math.abs(e.x+e.vx-other.x)<pixelTileWidth&Math.abs(e.y+e.vy-other.y)<pixelTileWidth){
+//					if(e.x-other.x<e.y-other.y)
+//						ret[0]+=1;
+//					else
+//						ret[1]+=1;
+//				}
 		return ret;
 	}
 	void tryLegalMovement(Entity e, int[] translation){

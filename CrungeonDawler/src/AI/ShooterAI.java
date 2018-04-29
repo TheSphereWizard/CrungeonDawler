@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import crungeonDawler.Actor;
 import crungeonDawler.Entity;
 import crungeonDawler.Game;
+import crungeonDawler.Monster;
 import crungeonDawler.Player;
 import crungeonDawler.Screen;
 
@@ -29,7 +30,7 @@ public class ShooterAI extends AI{
 			self.setVY(vy);
 			
 		}else{
-			if(dist>range){
+			if(dist>range+5&dist<range*3){
 				vx=(int) (tempx*speed/diff);
 				vy=(int) (tempy*speed/diff);
 				self.setVX(vx);
@@ -44,7 +45,11 @@ public class ShooterAI extends AI{
 				Class<? extends Entity> clazz = projectile.getClass();
 				try {
 					Constructor<?> ctor = clazz.getConstructor(String.class,Actor.class,AI.class,boolean.class);
-					Entity object = (Entity) ctor.newInstance(self.name+" bullet",projectile.actor,new ArrowAI((p.getX()+8-self.getX())/16,(p.getY()+8-self.getY())/16,self),false);
+					
+					Monster m = (Monster) projectile;//This is just temporary testing code for different projectile 
+					ArrowAI r = (ArrowAI)projectile.ai;//behaviors and should be done not this way later -Note to self
+					
+					Entity object = (Entity) ctor.newInstance(self.name+" bullet",new Actor(projectile.actor.spriteSheet,projectile.getWidth(),projectile.getHeight(),projectile.actor.rotatable),new ArrowAI((p.getX()+8-self.getX())/16,(p.getY()+8-self.getY())/16,r.behaviortype,self),false);
 					Screen.game.addEntity(object, self.getX()/32, self.getY()/32);
 				} catch (Exception e) {
 					e.printStackTrace();

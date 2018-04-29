@@ -8,7 +8,7 @@ public abstract class Entity {
 	public String name;
 	public int x, y;
 	public int vx,vy;
-	AI ai;
+	public AI ai;
 	int[] invalidtiles = new int[]{0,LevelLayout.wallID,LevelLayout.lowwallID};
 	boolean collides=true;
 	public Entity(String name, Actor actor,AI ai){
