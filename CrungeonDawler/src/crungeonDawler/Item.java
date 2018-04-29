@@ -1,142 +1,21 @@
 package crungeonDawler;
 
+import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Random;
 
 public class Item {
-	final String[] rarePrefixes = {"Agony","Apocalypse","Armageddon","Beast","Behemoth",
-								   "Blight","Blood","Bramble","Brimstone","Brood","Carrion",
-								   "Cataclysm","Chimeric","Corpse","Corruption","Damnation",
-								   "Death","Demon","Dire","Dragon","Dread","Doom","Dusk",
-								   "Eagle","Empyrean","Fate","Foe","Gale","Ghoul","Gloom",
-								   "Glyph","Golem","Grim","Hate","Havoc","Honour","Horror",
-								   "Hypnotic","Kraken","Loath","Maelstrom","Mind","Miracle",
-								   "Morbid","Oblivion","Onslaught","Pain","Pandemonium",
-								   "Phoenix","Plague","Rage","Rapture","Rune","Skull","Sol",
-								   "Soul","Sorrow","Spirit","Storm","Tempest","Torment",
-								   "Vengeance","Victory","Viper","Vortex","Woe","Wrath"};
-	final String[][] rareSuffixes = {//axes
-									 {"Bane","Beak","Bite","Butcher","Edge","Etcher","Gnash",
-									  "Hunger","Mangler","Rend","Roar","Sever","Slayer","Song",
-									  "Spawn","Splitter","Sunder","Thirst"},
-									 //maces
-									 {"Bane","Mangler","Roar","Batter","Blast","Blow","Blunt",
-									  "Brand","Breaker","Burst","Crack","Crusher","Grinder",
-									  "Knell","Ram","Ruin","Shatter","Smasher","Star","Thresher",
-									  "Wreck"},
-									 //scepters
-									 {"Star","Smasher","Ram","Knell","Grinder","Crusher",
-									  "Crack","Breaker","Blow","Roar","Bane","Weaver",
-									  "Spell","Song","Gnarl","Cry","Chant","Call"},
-									 //swords
-									 {"Bane","Song","Thirst","Stinger","Spiker","Spike",
-									  "Slicer","Skewer","Sever","Scratch","Scalpel","Saw",
-									  "Razor","Needle","Impaler","Hunger","Gutter","Fang",
-									  "Edge","Bite","Beak","Barb"},
-									 //daggers
-									 {"Bane","Barb","Bite","Edge","Etcher","Fang","Gutter",
-									  "Hunger","Impaler","Needle","Razor","Scalpel","Scratch",
-									  "Sever","Skewer","Slicer","Song","Spike","Stinger","Thirst"},
-									 //bows
-									 {"Arch","Bane","Barrage","Blast","Branch","Breeze","Fletch",
-									  "Guide","Horn","Mark","Nock","Rain","Reach","Siege","Song",
-									  "Stinger","Strike","Thirst","Thunder","Twine","Volley","Wind",
-									  "Wing"},
-									 //wands
-									 {"Bane","Barb","Bite","Branch","Call","Chant","Charm","Cry",
-									  "Edge","Gnarl","Goad","Needle","Scratch","Song","Spell",
-									  "Spire","Thirst","Weaver"},
-									 //shields
-									 {"Aegis","Badge","Barrier","Bastion","Bulwark","Duty",
-									  "Emblem","Fend","Guard"," Mark"," Refuge"," Rock"," Rook",
-									  "Sanctuary","Span","Tower","Watch","Wing"},
-									 //armor
-									 {"Carapace","Cloak","Coat","Curtain","Guardian","Hide","Jack",
-									  "Keep","Mantle","Pelt","Salvation","Sanctuary","Shell",
-									  "Shelter","Shroud","Skin","Suit","Veil","Ward","Wrap"},
-									 //helmets
-									 {"Brow","Corona","Cowl","Crest","Crown","Dome","Glance",
-									  "Guardian","Halo","Horn","Keep","Peak","Salvation","Shelter",
-									  "Star","Veil","Visage","Visor","Ward"},
-									 //gloves
-									 {"Caress","Claw","Clutches","Fingers","Fist","Grasp","Grip",
-									  "Hand","Hold","Knuckle","Mitts","Nails","Palm","Paw","Talons",
-									  "Touch","Vise"},
-									 //boots
-									 {"Dash","Goad","Hoof","League","March","Pace","Road","Slippers",
-									  "Sole","Span","Spark","Spur","Stride","Track","Trail","Tread",
-									  "Urge"},
-									 //amulets
-									 {"Beads","Braid","Charm","Choker","Clasp","Collar","Idol",
-									  "Gorget","Heart","Locket","Medallion","Noose","Pendant",
-									  "Rosary","Scarab","Talisman","Torc"},
-									 //rings
-									 {"Band","Circle","Coil","Eye","Finger","Grasp","Grip","Gyre",
-									  "Hold","Knot","Knuckle","Loop","Nail","Spiral","Turn","Twirl",
-									  "Whorl"},
-									 //belts
-									 {"Bind","Bond","Buckle","Clasp","Cord","Girdle","Harness","Lash",
-									  "Leash","Lock","Locket","Shackle","Snare","Strap","Tether",
-									  "Thread","Trap","Twine"}
-									};
-	final String[] qualityNames = {"Worthless","Broken","","Superior","Perfect","Heroic","Mythic","Demonic"};
-	int slot;int rarity;int quality;int level;
-	boolean identified;
-	int[] size;
-	int[] slots;
-	Gem[] socketed;
-	int[][] links;
-	String name;
-	String rarePrefix;
-	ArrayList<Modifier> mods;
-	Dictionary<String, Integer> stats;Dictionary<String, Integer> reqs;
-	public Item(String name,int slot,int rarity,int[] size,int level){
-		Random r = new Random();
-		this.quality = r.nextInt(256);
-		this.size = size;
-		this.slot = slot;
-		this.rarity = rarity;
-		this.name = name;
-		this.rarePrefix = rarePrefixes[r.nextInt(rarePrefixes.length)]+" "+rareSuffixes[slot][r.nextInt(rareSuffixes[slot].length)];
-	}
-	public int getStat(String stat){
-		int ans;
-		if(stats.get(stat).equals(null)){
-			ans = 0;
-		}
-		else {
-			ans = stats.get(stat);
-		}
-		for(Modifier m : mods){
-			if(m.getStat().equals(stat)) {
-				ans+=m.value;
-			}
-		}
-		return ans;
-	}
-	public String getName(){
-		ArrayList<String> prefixes = new ArrayList<String>();
-		ArrayList<String> suffixes = new ArrayList<String>();
-		prefixes.add(qualityNames[quality/32]);
-		if(rarity<2) {
-			for(Modifier m:mods){
-				if(m.prefix()) {
-					prefixes.add(m.getText());
-				}
-				else {
-					suffixes.add(m.getText());
-				}
-			}
-		}
-		else {
-			prefixes.add(rarePrefix);
-		}
-		return String.join(" ", prefixes)+" "+name+" "+String.join(" ", suffixes);
-	}
-	public static void main(String[] args) {
-		Item i = new Item("Rusted Sword", 3, 2, new int[2], 500);
-		System.out.println(i.getName());
-	}
+	//player should have an inventory... holds items 
+	//needs to have the ability to select items, need more UI for that
 	
+	ArrayList<Modifier> modifiers;
+	ArrayList<Gem> gems;
+	Effect effect;
+	ItemIdentity identity;
+	Item(Effect e,ItemIdentity r){//maybe pass in player as owner, but not if enemies will hold items
+		effect=e;
+		identity=r;
+	}
+	public void causeEffect(Entity caster, Point Mouse){
+//		Effect.dothing();???
+	}
 }
