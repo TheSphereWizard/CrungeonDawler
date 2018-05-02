@@ -39,6 +39,10 @@ public class Actor {
 	}
 	public Image getSprite(int vx,int vy){
 		updateAngle(vx,vy);
+		if(vx==0&&vy==0){
+			currentFrame=0;
+			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, 0, width, height);
+		}
 		if(rotatable){
 			AffineTransform  t = AffineTransform.getRotateInstance(theta+Math.PI/2,width/2,height/2);
 			AffineTransformOp op = new AffineTransformOp(t,AffineTransformOp.TYPE_BILINEAR);
@@ -46,8 +50,7 @@ public class Actor {
 		}else{
 			currentFrame += .1;
 			currentFrame %= 3;
-			int anglenum = (int) (theta/Math.PI*4+4)%8;
-			return spriteSheet.getSubimage(((int) currentAnim)*width+anglenum*width, ((int) currentFrame)*height, width, height);
+			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, ((int) currentFrame)*height, width, height);
 		}
 	}
 	public int getWidth(){
@@ -55,5 +58,8 @@ public class Actor {
 	}
 	public int getHeight(){
 		return height;
+	}
+	public int getFacing(){
+		return (int) (theta/Math.PI*4+4)%8;
 	}
 }

@@ -28,7 +28,9 @@ public abstract class Entity {
 	public int getY(){
 		return y;
 	}
-	
+	public int getFacing(){
+		return actor.getFacing();
+	}
 	public void setVX(int vx){
 		this.vx = vx;
 	}
@@ -49,5 +51,7 @@ public abstract class Entity {
 	}
 	public int getHeight(){
 		return actor.getHeight();
+	}
+	public void onInteract() {
 	}
 }
