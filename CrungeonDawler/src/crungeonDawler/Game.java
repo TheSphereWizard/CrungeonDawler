@@ -414,7 +414,6 @@ public class Game {
 		addEntity(p,100,100);
 		p.vx=0;
 		p.vy=0;
-		
 		for(int[] r :currentLevel.spawnmobs()){
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
@@ -457,6 +456,8 @@ public class Game {
 	int keyslowdownfactor=1;
 	int mouseslowdown=0;
 	int mouseslowdownfactor=10;
+	int interactslowdown=0;
+	int interactslowdownfactor=20;
 	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		
 		for(int i=0;i<allEntities.size();i++){
@@ -488,6 +489,19 @@ public class Game {
 			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{0,4});
 			player.vy+=4;
+		}
+		if(keyPressed[6758]){
+			if(interactslowdown%interactslowdownfactor==0){
+				for(int i=0;i<allEntities.size();i++){
+					int[] cen = new int[]{player.x+Game.pixelTileWidth/2,player.y+Game.pixelTileWidth/2};
+					Entity e = allEntities.get(i);
+					int anglenum = player.getFacing();
+					double theta = anglenum-4*Math.PI/4;
+					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
+						e.onInteract();
+					}
+				}
+			}
 		}
 		keyslowdown++;
 		mouseslowdown++;

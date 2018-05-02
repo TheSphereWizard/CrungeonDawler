@@ -28,6 +28,7 @@ public abstract class Entity {
 	public int getY(){
 		return y;
 	}
+	
 	public void setVX(int vx){
 		this.vx = vx;
 	}
