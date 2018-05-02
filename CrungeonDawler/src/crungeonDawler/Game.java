@@ -414,8 +414,8 @@ public class Game {
 		addEntity(p,100,100);
 		p.vx=0;
 		p.vy=0;
-		
-		for(int[] r :currentLevel.spawnmobs()){
+		currentLevel.spawnmobs();
+		/*for(int[] r :currentLevel.spawnmobs()){
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
@@ -424,7 +424,7 @@ public class Game {
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 			else
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
-		}
+		}*/
 	}
 	public void addEntity(Entity e, int x, int y){
 		e.x=x*pixelTileWidth+pixelTileWidth/2;
@@ -469,25 +469,28 @@ public class Game {
 		removeLaterEntities();
 		player.vx=0;
 		player.vy=0;
-		if(keyPressed[37/*left*/]){
+		if(keyPressed[65/*left*/]){
 			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{-4,0});
 			player.vx-=4;
 		}
-		if(keyPressed[38/*up*/]){
+		if(keyPressed[87/*up*/]){
 			if((keyslowdown%keyslowdownfactor)==0)
 //				tryLegalMovement(player,new int[]{0,-4});
 			player.vy-=4;
 		}
-		if(keyPressed[39/*right*/]){
+		if(keyPressed[68/*right*/]){
 			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{4,0});
 			player.vx+=4;
 		}
-		if(keyPressed[40/*down*/]){
+		if(keyPressed[83/*down*/]){
 			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{0,4});
 			player.vy+=4;
+		}
+		if(keyPressed[81/*Q*/]){
+			System.out.println(player.getFacing());
 		}
 		keyslowdown++;
 		mouseslowdown++;

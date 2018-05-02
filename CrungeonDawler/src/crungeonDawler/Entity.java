@@ -28,6 +28,9 @@ public abstract class Entity {
 	public int getY(){
 		return y;
 	}
+	public int getFacing(){
+		return actor.getFacing();
+	}
 	public void setVX(int vx){
 		this.vx = vx;
 	}
