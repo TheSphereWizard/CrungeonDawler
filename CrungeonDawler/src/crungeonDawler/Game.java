@@ -497,8 +497,8 @@ public class Game {
 				for(int i=0;i<allEntities.size();i++){
 					int[] cen = new int[]{player.x+Game.pixelTileWidth/2,player.y+Game.pixelTileWidth/2};
 					Entity e = allEntities.get(i);
-					int anglenum = player.getFacing();
-					double theta = anglenum-4*Math.PI/4;
+					
+					
 					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
 						e.onInteract();
 					}
