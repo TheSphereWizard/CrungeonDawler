@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import AI.ArrowAI;
+import AI.NullAI;
 import AI.ShooterAI;
 import AI.StraightLineAI;
 
@@ -367,7 +368,7 @@ public class Game {
 		if(id==LevelLayout.wallID){
 			return currentLevel.Wall();
 		}
-		if(id==LevelLayout.floorID||id==LevelLayout.placeddoorID/*this is the door id*/){
+		if(id==LevelLayout.floorID||id==LevelLayout.placeLeftDoorID||id==LevelLayout.placeRightDoorID/*this is the door id*/){
 			return currentLevel.Floor();
 		}
 		if(id==LevelLayout.lowwallID){
@@ -426,6 +427,14 @@ public class Game {
 			else
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 		}*/
+		for(int[] r : currentLevel.spawndoors()){
+			if(r[2]==0){
+				addEntity(new DoorLeft("Door",new Actor("Door",64,64,true),new NullAI()),r[0],r[1]);
+			}else{
+				addEntity(new DoorRight("Door",new Actor("Door",64,64,true),new NullAI()),r[0],r[1]);
+			}
+		}
+		
 	}
 	public void addEntity(Entity e, int x, int y){
 		e.x=x*pixelTileWidth+pixelTileWidth/2;
@@ -499,9 +508,9 @@ public class Game {
 					Entity e = allEntities.get(i);
 					
 					
-					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
+//					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
 						e.onInteract();
-					}
+//					}
 				}
 			}
 		}
@@ -582,7 +591,7 @@ public class Game {
 //					Player prers=(Player)e;
 //				}catch(Exception E){tryer=false;}
 				
-				if(Math.abs(e.x+t[0]-other.x)<pixelTileWidth&Math.abs(e.y+t[1]-other.y)<pixelTileWidth){
+				if (!(e.x+t[0]+e.getWidth()<other.x || other.x+other.getWidth()<e.x+t[0] || e.y+t[1]+e.getHeight()<other.y || other.y+other.getHeight()<e.y+t[1])){
 //					tryLegalMovement(other, new int[]{-t[0],-t[1]});//if only this didn't recurse
 					if(e.collides&other.collides)
 						return false;
