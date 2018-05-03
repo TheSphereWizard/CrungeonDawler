@@ -38,7 +38,8 @@ public class Actor {
 			theta=Math.atan2(vy, vx);
 	}
 	public Image getSprite(int vx,int vy){
-		updateAngle(vx,vy);
+		if(!manualrotate)
+			updateAngle(vx,vy);
 		if(vx==0&&vy==0){
 			currentFrame=0;
 			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, 0, width, height);
@@ -53,6 +54,7 @@ public class Actor {
 			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, ((int) currentFrame)*height, width, height);
 		}
 	}
+	boolean manualrotate=false;
 	public int getWidth(){
 		return width;
 	}
