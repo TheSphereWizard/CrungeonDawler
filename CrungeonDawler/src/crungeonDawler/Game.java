@@ -18,6 +18,7 @@ import AI.ArrowAI;
 import AI.NullAI;
 import AI.ShooterAI;
 import AI.StraightLineAI;
+import ui.Screen;
 
 public class Game {
 	Level currentLevel;
@@ -54,6 +55,13 @@ public class Game {
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2, null);
 			}
 		}
+		int playerTileX = ((player.getX())/pixelTileWidth)*pixelTileWidth+dungeon.getWidth()/2-16;
+		int playerTileY = ((player.getY())/pixelTileWidth)*pixelTileWidth+dungeon.getHeight()/2-16;
+		Graphics g = dungeon.getGraphics();
+		g.setColor(Color.PINK);
+		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
+		g.setColor(Color.BLACK);
+		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
 //		BufferedImage vis = getVisible();
 //
 //		for(int x=0;x<dungeon.getWidth();x++){
@@ -408,7 +416,7 @@ public class Game {
 		}
 		return false;
 	}
-	Game(Player p){
+	public Game(Player p){
 		player=p;
 		currentLevel =new Level(200,200,"Tiles");
 		Read.outputroom(currentLevel.levellayout, "map output");
@@ -469,8 +477,7 @@ public class Game {
 	int mouseslowdownfactor=10;
 	int interactslowdown=0;
 	int interactslowdownfactor=20;
-	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
-		
+	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
 			e.update(player, null, abouttocollide(e));
