@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import AI.ArrowAI;
 import AI.ShooterAI;
 import AI.StraightLineAI;
+import ui.Screen;
 
 public class Game {
 	Level currentLevel;
@@ -414,7 +415,7 @@ public class Game {
 		}
 		return false;
 	}
-	Game(Player p){
+	public Game(Player p){
 		player=p;
 		currentLevel =new Level(200,200,"Tiles");
 		Read.outputroom(currentLevel.levellayout, "map output");
@@ -467,8 +468,7 @@ public class Game {
 	int mouseslowdownfactor=10;
 	int interactslowdown=0;
 	int interactslowdownfactor=20;
-	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
-		
+	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
 			e.update(player, null, abouttocollide(e));

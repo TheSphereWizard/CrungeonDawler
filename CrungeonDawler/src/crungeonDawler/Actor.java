@@ -38,17 +38,18 @@ public class Actor {
 			theta=Math.atan2(vy, vx);
 	}
 	public Image getSprite(int vx,int vy){
-		if(!manualrotate)
+		if(!manualrotate){
 			updateAngle(vx,vy);
-		if(vx==0&&vy==0){
-			currentFrame=0;
-			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, 0, width, height);
 		}
 		if(rotatable){
 			AffineTransform  t = AffineTransform.getRotateInstance(theta+Math.PI/2,width/2,height/2);
 			AffineTransformOp op = new AffineTransformOp(t,AffineTransformOp.TYPE_BILINEAR);
 			return op.filter(spriteSheet.getSubimage(0, 0, width, height), null);
 		}else{
+			if(vx==0&&vy==0){
+				currentFrame=0;
+				return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, 0, width, height);
+			}
 			currentFrame += .1;
 			currentFrame %= 3;
 			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, ((int) currentFrame)*height, width, height);

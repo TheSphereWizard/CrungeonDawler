@@ -2,7 +2,7 @@ package AI;
 
 import crungeonDawler.Entity;
 import crungeonDawler.Player;
-import crungeonDawler.Screen;
+import ui.Screen;
 
 public class ArrowAI extends StraightLineAI{
 	int age =0;
