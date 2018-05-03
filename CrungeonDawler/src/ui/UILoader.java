@@ -34,25 +34,26 @@ public class UILoader {
 		return ui;
 	}
 	private void handleElement(Node n){
-		String type = ((Element)n).getAttribute("type"); 
+		String type = ((Element)n).getAttribute("type");
+		Component nComponent;
 		if(type.equals("panel")){
-			JPanel nPanel = new JPanel();
-			ui.add(nPanel);
+			nComponent = new JPanel();
 		}
 		else if(type.equals("button")){
-			JButton nButton = new JButton();
+			nComponent = new JButton();
 		}
 		else if(type.equals("label")){
-			JLabel nLabel = new JLabel();
+			nComponent = new JLabel();
 		}
+		//need to add actual classes for meter and minimap, and probably for images as well
 		else if(type.equals("image")){
-			
+			nComponent = new JPanel();
 		}
 		else if(type.equals("meter")){
-			
+			nComponent = new JPanel();
 		}
 		else if(type.equals("miniMap")){
-			
+			nComponent = new JPanel();
 		}
 
 		NodeList nChildren = n.getChildNodes();
