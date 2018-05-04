@@ -58,4 +58,21 @@ public class Level {
 		}
 		return r;
 	}
+	public ArrayList<int[]> spawndoors() {
+		ArrayList<int[]> r = new ArrayList<int[]>();
+		for(int x=0;x<width;x++){
+			for(int y=0;y<height;y++){
+				
+				if(levellayout[x][y]==LevelLayout.placeLeftDoorID){
+					levellayout[x][y]=LevelLayout.floorID;
+					r.add(new int[]{x,y,0});
+				}
+				if(levellayout[x][y]==LevelLayout.placeRightDoorID){
+					levellayout[x][y]=LevelLayout.floorID;
+					r.add(new int[]{x,y,1});
+				}
+			}
+		}
+		return r;
+	}
 }

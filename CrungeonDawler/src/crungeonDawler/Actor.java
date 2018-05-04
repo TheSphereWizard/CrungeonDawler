@@ -52,6 +52,10 @@ public class Actor {
 			}
 			currentFrame += .1;
 			currentFrame %= 3;
+			if(vx==0&&vy==0){
+				currentFrame=0;
+				return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, 0, width, height);
+			}
 			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, ((int) currentFrame)*height, width, height);
 		}
 	}
