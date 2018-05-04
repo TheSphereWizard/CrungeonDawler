@@ -25,19 +25,23 @@ public class UILoader {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
-			NodeList n = doc.getChildNodes();
-			for(int i=0;i<n.getLength();i++){
-				Node nNode = n.item(i);
-				
+			NodeList nNodes = doc.getChildNodes();
+			for(int i=0;i<nNodes.getLength();i++){
+				Node nNode = nNodes.item(i);
+				handleElement(nNode);
 			}
 		}catch(Exception e){e.printStackTrace();}
 		return ui;
 	}
 	private void handleElement(Node n){
 		String type = ((Element)n).getAttribute("type");
-		Component nComponent;
+		Component nComponent = null;
 		if(type.equals("panel")){
 			nComponent = new JPanel();
+			NodeList nChildren = n.getChildNodes();
+			for(int i=0;i<nChildren.getLength();i++){
+				handleElement(nChildren.item(i),(JPanel) nComponent);
+			}
 		}
 		else if(type.equals("button")){
 			nComponent = new JButton();
@@ -50,15 +54,39 @@ public class UILoader {
 			nComponent = new JPanel();
 		}
 		else if(type.equals("meter")){
-			nComponent = new JPanel();
+			nComponent = new JMeter(0,"");
 		}
 		else if(type.equals("miniMap")){
 			nComponent = new JPanel();
 		}
-
-		NodeList nChildren = n.getChildNodes();
-		for(int i=0;i<nChildren.getLength();i++){
-			handleElement(nChildren.item(i));
+		ui.add(nComponent);
+	}
+	private void handleElement(Node n,JPanel pComponent){
+		String type = ((Element)n).getAttribute("type");
+		Component nComponent = null;
+		if(type.equals("panel")){
+			nComponent = new JPanel();
+			pComponent.add(nComponent);
+			NodeList nChildren = n.getChildNodes();
+			for(int i=0;i<nChildren.getLength();i++){
+				handleElement(nChildren.item(i),(JPanel)nComponent);
+			}
+		}
+		else if(type.equals("button")){
+			nComponent = new JButton();
+		}
+		else if(type.equals("label")){
+			nComponent = new JLabel();
+		}
+		//need to add actual class for minimap, and probably for images as well
+		else if(type.equals("image")){
+			nComponent = new JPanel();
+		}
+		else if(type.equals("meter")){
+			nComponent = new JMeter(0,"");
+		}
+		else if(type.equals("miniMap")){
+			nComponent = new JPanel();
 		}
 	}
 }
