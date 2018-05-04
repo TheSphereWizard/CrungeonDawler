@@ -376,7 +376,7 @@ public class Game {
 		if(id==LevelLayout.wallID){
 			return currentLevel.Wall();
 		}
-		if(id==LevelLayout.floorID||id==LevelLayout.placeLeftDoorID||id==LevelLayout.placeRightDoorID/*this is the door id*/){
+		if(id==LevelLayout.floorID){
 			return currentLevel.Floor();
 		}
 		if(id==LevelLayout.lowwallID){
@@ -423,7 +423,7 @@ public class Game {
 		addEntity(p,100,100);
 		p.vx=0;
 		p.vy=0;
-		currentLevel.spawnmobs();
+		currentLevel.spawnMobs();
 		/*for(int[] r :currentLevel.spawnmobs()){
 >>>>>>> branch 'master' of https://github.com/TheSphereWizard/CrungeonDawler
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
@@ -434,19 +434,18 @@ public class Game {
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 			else
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
-		}*/
-		for(int[] r : currentLevel.spawndoors()){
+		}*/	
+		for(int[] r :currentLevel.spawnDoors()){
 			if(r[2]==0){
-				addEntity(new DoorLeft("Door",new Actor("Door",64,64,true),new NullAI()),r[0],r[1]);
+				addEntity(new Door(false),r[0],r[1]);
 			}else{
-				addEntity(new DoorRight("Door",new Actor("Door",64,64,true),new NullAI()),r[0],r[1]);
+				addEntity(new Door(true),r[0],r[1]);
 			}
 		}
-		
 	}
 	public void addEntity(Entity e, int x, int y){
-		e.x=x*pixelTileWidth+pixelTileWidth/2;
-		e.y=y*pixelTileWidth+pixelTileWidth/2;
+		e.x=x*pixelTileWidth;
+		e.y=y*pixelTileWidth;
 		allEntities.add(e);
 	}
 //	private ArrayList<Entity> lateradd = new ArrayList<Entity>();

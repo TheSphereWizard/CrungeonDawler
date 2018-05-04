@@ -2,6 +2,7 @@ package crungeonDawler;
 import java.awt.Image;
 
 import AI.AI;
+import AI.NullAI;
 
 public abstract class Entity {
 	public Actor actor;
@@ -21,6 +22,11 @@ public abstract class Entity {
 		this.actor = actor;
 		this.ai= ai;
 		this.collides=collides;
+	}
+	public Entity(String name, DoorActor doorActor, NullAI ai) {
+		this.name = name;
+		this.actor = doorActor;
+		this.ai= ai;
 	}
 	public int getX(){
 		return x;

@@ -12,17 +12,11 @@ public class LevelLayout {
 	int[] opaquetiles = new int[]{0,1};
 	static final int voidID = 0;
 	static final int wallID = 1;
-//	static final int doorID = 2;
-//	static final int placeddoorID = 3;
+	static final int doorID = 2;
+	static final int placeddoorID = 3;
 	static final int floorID=4;
 	static final int lowwallID = 5;
 	static final int monsterID = 6;
-	
-	static final int RightDoorID = 9;
-	static final int LeftDoorID = 10;
-	
-	static final int placeRightDoorID = 11;
-	static final int placeLeftDoorID = 12;
 	
 	static ArrayList<int[][]> allroomdesigns =new ArrayList<int[][]>();
 	int[][] level;
@@ -31,18 +25,18 @@ public class LevelLayout {
 	LevelLayout(int width, int height){
 		this.width=width;
 		this.height=height;
-		allroomdesigns.clear();//Roomdesigns
-		for(File f : new File("resources/TEST").listFiles()){
+		allroomdesigns.clear();//
+		for(File f : new File("resources/Roomdesigns").listFiles()){
 			allroomdesigns.add(Read.readimagefile(f));
 		}
 		level = new int[width][height];
 		roomids = new int[width][height];
-		level[width/2][height/2]=LeftDoorID;
+		level[width/2][height/2]=doorID;
 		while(!done()){
 			ArrayList<int[]> doors = new ArrayList<int[]>();
 			for(int i=0;i<level.length;i++){
 				for(int j=0;j<level[i].length;j++){
-					if(level[i][j]==LeftDoorID||level[i][j]==RightDoorID){
+					if(level[i][j]==doorID){
 						doors.add(new int[]{i,j});
 					}
 				}
@@ -54,12 +48,12 @@ public class LevelLayout {
 				int[][] fr = rooms.remove((int)(Math.random()*rooms.size()));
 				roomplaced=placeroom(fr,level,roomids,nextdoor);
 			}
-			level[nextdoor[0]][nextdoor[1]]+=2;
+			level[nextdoor[0]][nextdoor[1]]=placeddoorID;
 		}
 		
 		for(int i=0;i<level.length;i++){
 			for(int j=0;j<level[i].length;j++){
-				if(level[i][j]==placeLeftDoorID||level[i][j]==placeRightDoorID){
+				if(level[i][j]==placeddoorID){
 					try{
 						if(!((level[i-1][j]==floorID&&level[i+1][j]==floorID)||(level[i][j-1]==floorID&&level[i][j+1]==floorID))){
 							level[i][j]=wallID;
@@ -88,7 +82,7 @@ public class LevelLayout {
 			ArrayList<int[]> doors = new ArrayList<int[]>();
 			for(int i=0;i<r.length;i++){
 				for(int j=0;j<r[i].length;j++){
-					if(r[i][j]==LeftDoorID||r[i][j]==RightDoorID){
+					if(r[i][j]==doorID){
 						doors.add(new int[]{i,j});
 					}
 				}
@@ -99,11 +93,7 @@ public class LevelLayout {
 					for(int j=0;j<r[i].length;j++){
 						try{
 							if(!(level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==0||level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==r[i][j]||r[i][j]==0)){
-								if(!(r[i][j]==LeftDoorID&&level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==RightDoorID)){
-									if(!(r[i][j]==RightDoorID&&level[placeon[0]-f[0]+i][placeon[1]-f[1]+j]==LeftDoorID)){
-										ok=false;
-									}
-								}
+								ok=false;
 							}
 						}
 						catch(ArrayIndexOutOfBoundsException e){ok=false;}
@@ -153,7 +143,7 @@ public class LevelLayout {
 	private boolean done() {
 		for(int i=0;i<level.length;i++){
 			for(int j=0;j<level.length;j++){
-				if(level[i][j]==LeftDoorID||level[i][j]==RightDoorID){
+				if(level[i][j]==doorID){
 					return false;
 				}
 			}
