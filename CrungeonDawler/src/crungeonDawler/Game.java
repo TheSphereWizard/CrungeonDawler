@@ -55,13 +55,13 @@ public class Game {
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2, null);
 			}
 		}
-		int playerTileX = ((player.getX())/pixelTileWidth)*pixelTileWidth+dungeon.getWidth()/2-16;
-		int playerTileY = ((player.getY())/pixelTileWidth)*pixelTileWidth+dungeon.getHeight()/2-16;
-		Graphics g = dungeon.getGraphics();
-		g.setColor(Color.PINK);
-		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
-		g.setColor(Color.BLACK);
-		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
+//		int playerTileX = ((player.getX())/pixelTileWidth)*pixelTileWidth+dungeon.getWidth()/2-16;
+//		int playerTileY = ((player.getY())/pixelTileWidth)*pixelTileWidth+dungeon.getHeight()/2-16;
+//		Graphics g = dungeon.getGraphics();
+//		g.setColor(Color.PINK);
+//		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
+//		g.setColor(Color.BLACK);
+//		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
 //		BufferedImage vis = getVisible();
 //
 //		for(int x=0;x<dungeon.getWidth();x++){

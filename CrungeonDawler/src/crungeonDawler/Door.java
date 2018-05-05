@@ -20,9 +20,9 @@ public class Door extends Entity{
 			}
 		}else{
 			if(p.y<this.y){
-				actor.change=-1;
-			}else{
 				actor.change=1;
+			}else{
+				actor.change=-1;
 			}
 		}
 	}
