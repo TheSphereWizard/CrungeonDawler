@@ -58,6 +58,6 @@ public abstract class Entity {
 	public int getHeight(){
 		return actor.getHeight();
 	}
-	public void onInteract() {
+	public void onInteract(Player p) {
 	}
 }
