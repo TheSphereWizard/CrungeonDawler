@@ -17,6 +17,7 @@ public class LevelLayout {
 	static final int floorID=4;
 	static final int lowwallID = 5;
 	static final int monsterID = 6;
+	
 	static ArrayList<int[][]> allroomdesigns =new ArrayList<int[][]>();
 	int[][] level;
 	int[][] roomids;
@@ -24,7 +25,7 @@ public class LevelLayout {
 	LevelLayout(int width, int height){
 		this.width=width;
 		this.height=height;
-		allroomdesigns.clear();
+		allroomdesigns.clear();//
 		for(File f : new File("resources/Roomdesigns").listFiles()){
 			allroomdesigns.add(Read.readimagefile(f));
 		}

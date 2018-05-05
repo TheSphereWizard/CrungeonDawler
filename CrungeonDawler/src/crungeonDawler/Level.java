@@ -46,13 +46,32 @@ public class Level {
 	BufferedImage Void(){
 		return voidtile;
 	}
-	public ArrayList<int[]> spawnmobs() {
+	public ArrayList<int[]> spawnMobs() {
 		ArrayList<int[]> r = new ArrayList<int[]>();
 		for(int x=0;x<width;x++){
 			for(int y=0;y<height;y++){
 				if(levellayout[x][y]==LevelLayout.monsterID){
 					levellayout[x][y]=LevelLayout.floorID;
 					r.add(new int[]{x,y});
+				}
+			}
+		}
+		return r;
+	}
+	public ArrayList<int[]> spawnDoors() {
+		ArrayList<int[]> r = new ArrayList<int[]>();
+		for(int x=0;x<width;x++){
+			for(int y=0;y<height;y++){
+				if(levellayout[x][y]==LevelLayout.placeddoorID){
+					levellayout[x][y]=LevelLayout.floorID;
+					if(levellayout[x+1][y]==LevelLayout.placeddoorID){
+						levellayout[x+1][y]=LevelLayout.floorID;
+						r.add(new int[]{x,y,0});
+					}else{
+						levellayout[x][y+1]=LevelLayout.floorID;
+						r.add(new int[]{x,y,1});
+					}
+					
 				}
 			}
 		}

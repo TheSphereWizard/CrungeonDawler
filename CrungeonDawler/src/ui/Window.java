@@ -1,4 +1,4 @@
-package crungeonDawler;
+package ui;
 
 import javax.swing.JFrame;
 
@@ -12,8 +12,6 @@ public class Window extends JFrame{
 		Window.frame=this;
 		this.setSize(width, height);
 		this.add(new Screen());
-//        this.setUndecorated(true);
-//        this.setExtendedState(this.MAXIMIZED_BOTH);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}

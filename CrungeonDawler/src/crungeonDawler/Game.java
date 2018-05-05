@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import AI.ArrowAI;
+import AI.NullAI;
 import AI.ShooterAI;
 import AI.StraightLineAI;
+import ui.Screen;
 
 public class Game {
 	Level currentLevel;
@@ -53,6 +55,13 @@ public class Game {
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2, null);
 			}
 		}
+		int playerTileX = ((player.getX())/pixelTileWidth)*pixelTileWidth+dungeon.getWidth()/2-16;
+		int playerTileY = ((player.getY())/pixelTileWidth)*pixelTileWidth+dungeon.getHeight()/2-16;
+		Graphics g = dungeon.getGraphics();
+		g.setColor(Color.PINK);
+		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
+		g.setColor(Color.BLACK);
+		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
 //		BufferedImage vis = getVisible();
 //
 //		for(int x=0;x<dungeon.getWidth();x++){
@@ -367,7 +376,7 @@ public class Game {
 		if(id==LevelLayout.wallID){
 			return currentLevel.Wall();
 		}
-		if(id==LevelLayout.floorID||id==LevelLayout.placeddoorID/*this is the door id*/){
+		if(id==LevelLayout.floorID){
 			return currentLevel.Floor();
 		}
 		if(id==LevelLayout.lowwallID){
@@ -407,15 +416,16 @@ public class Game {
 		}
 		return false;
 	}
-	Game(Player p){
+	public Game(Player p){
 		player=p;
 		currentLevel =new Level(200,200,"Tiles");
 		Read.outputroom(currentLevel.levellayout, "map output");
 		addEntity(p,100,100);
 		p.vx=0;
 		p.vy=0;
-		
-		for(int[] r :currentLevel.spawnmobs()){
+		currentLevel.spawnMobs();
+		/*for(int[] r :currentLevel.spawnmobs()){
+>>>>>>> branch 'master' of https://github.com/TheSphereWizard/CrungeonDawler
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new StraightLineAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),true)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new WanderingAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
 //			addEntity(new Monster("test",new Actor("testSpriteSheetforActors2",pixelTileWidth,pixelTileWidth), new TowardsPlayerAI((int) (Math.random()*4-1),(int) (Math.random()*4-1),3)),r[0],r[1]);
@@ -424,11 +434,18 @@ public class Game {
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 			else
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
+		}*/	
+		for(int[] r :currentLevel.spawnDoors()){
+			if(r[2]==0){
+				addEntity(new Door(false),r[0],r[1]);
+			}else{
+				addEntity(new Door(true),r[0],r[1]);
+			}
 		}
 	}
 	public void addEntity(Entity e, int x, int y){
-		e.x=x*pixelTileWidth+pixelTileWidth/2;
-		e.y=y*pixelTileWidth+pixelTileWidth/2;
+		e.x=x*pixelTileWidth;
+		e.y=y*pixelTileWidth;
 		allEntities.add(e);
 	}
 //	private ArrayList<Entity> lateradd = new ArrayList<Entity>();
@@ -457,8 +474,9 @@ public class Game {
 	int keyslowdownfactor=1;
 	int mouseslowdown=0;
 	int mouseslowdownfactor=10;
-	void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
-		
+	int interactslowdown=0;
+	int interactslowdownfactor=20;
+	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
 			e.update(player, null, abouttocollide(e));
@@ -469,25 +487,38 @@ public class Game {
 		removeLaterEntities();
 		player.vx=0;
 		player.vy=0;
-		if(keyPressed[37/*left*/]){
+		if(keyPressed[65/*left*/]){
 			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{-4,0});
 			player.vx-=4;
 		}
-		if(keyPressed[38/*up*/]){
+		if(keyPressed[87/*up*/]){
 			if((keyslowdown%keyslowdownfactor)==0)
 //				tryLegalMovement(player,new int[]{0,-4});
 			player.vy-=4;
 		}
-		if(keyPressed[39/*right*/]){
+		if(keyPressed[68/*right*/]){
 			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{4,0});
 			player.vx+=4;
 		}
-		if(keyPressed[40/*down*/]){
+		if(keyPressed[83/*down*/]){
 			if(keyslowdown%keyslowdownfactor==0)
 //				tryLegalMovement(player,new int[]{0,4});
 			player.vy+=4;
+		}
+		if(keyPressed[81/*Q*/]){
+			if(interactslowdown%interactslowdownfactor==0){
+				for(int i=0;i<allEntities.size();i++){
+					int[] cen = new int[]{player.x+Game.pixelTileWidth/2,player.y+Game.pixelTileWidth/2};
+					Entity e = allEntities.get(i);
+					
+					
+//					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
+						e.onInteract();
+//					}
+				}
+			}
 		}
 		keyslowdown++;
 		mouseslowdown++;
@@ -566,7 +597,7 @@ public class Game {
 //					Player prers=(Player)e;
 //				}catch(Exception E){tryer=false;}
 				
-				if(Math.abs(e.x+t[0]-other.x)<pixelTileWidth&Math.abs(e.y+t[1]-other.y)<pixelTileWidth){
+				if (!(e.x+t[0]+e.getWidth()<other.x || other.x+other.getWidth()<e.x+t[0] || e.y+t[1]+e.getHeight()<other.y || other.y+other.getHeight()<e.y+t[1])){
 //					tryLegalMovement(other, new int[]{-t[0],-t[1]});//if only this didn't recurse
 					if(e.collides&other.collides)
 						return false;

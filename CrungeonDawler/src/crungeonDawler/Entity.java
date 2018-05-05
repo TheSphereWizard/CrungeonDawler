@@ -2,6 +2,7 @@ package crungeonDawler;
 import java.awt.Image;
 
 import AI.AI;
+import AI.NullAI;
 
 public abstract class Entity {
 	public Actor actor;
@@ -22,11 +23,19 @@ public abstract class Entity {
 		this.ai= ai;
 		this.collides=collides;
 	}
+	public Entity(String name, DoorActor doorActor, NullAI ai) {
+		this.name = name;
+		this.actor = doorActor;
+		this.ai= ai;
+	}
 	public int getX(){
 		return x;
 	}
 	public int getY(){
 		return y;
+	}
+	public int getFacing(){
+		return actor.getFacing();
 	}
 	public void setVX(int vx){
 		this.vx = vx;
@@ -48,5 +57,7 @@ public abstract class Entity {
 	}
 	public int getHeight(){
 		return actor.getHeight();
+	}
+	public void onInteract() {
 	}
 }

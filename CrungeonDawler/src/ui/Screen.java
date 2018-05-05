@@ -1,4 +1,4 @@
-package crungeonDawler;
+package ui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -21,12 +21,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import crungeonDawler.Actor;
+import crungeonDawler.Game;
+import crungeonDawler.Player;
 
 public class Screen extends JPanel implements /*KeyListener,*/MouseListener,ActionListener{
 
@@ -46,7 +51,8 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	private final long GAME_UPDATE_PERIOD = secInNanosec / GAME_FPS;
 	private long lastTime;
 
-
+	private ArrayList<Component> menuUI;
+	private ArrayList<Component> gameUI;
 	public static Game game;
 	private class MyDispatcher implements KeyEventDispatcher {
 	    public boolean dispatchKeyEvent(KeyEvent e) {
@@ -269,6 +275,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 		{
 		case PLAYING:
 			game.Draw(g2d, mousePosition());
+			
 			break;
 		case MENU:
 			game.DrawMenu(g2d,mousePosition());

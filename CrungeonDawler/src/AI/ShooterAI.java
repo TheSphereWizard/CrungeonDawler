@@ -7,7 +7,7 @@ import crungeonDawler.Entity;
 import crungeonDawler.Game;
 import crungeonDawler.Monster;
 import crungeonDawler.Player;
-import crungeonDawler.Screen;
+import ui.Screen;
 
 public class ShooterAI extends AI{
 	int vx=0, vy=0, speed, range, refresh, slow=0;

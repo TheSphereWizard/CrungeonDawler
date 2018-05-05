@@ -13,8 +13,8 @@ public class Actor {
 	public BufferedImage spriteSheet;
 	private int currentAnim=0;
 	private double currentFrame=0;
-	private int width=Game.pixelTileWidth;
-	private int height=Game.pixelTileWidth;
+	public int width=Game.pixelTileWidth;
+	public int height=Game.pixelTileWidth;
 	public double theta=-Math.PI/2;
 	public boolean rotatable;
 	public Actor(BufferedImage i,int w,int h,boolean rotatable){
@@ -38,22 +38,35 @@ public class Actor {
 			theta=Math.atan2(vy, vx);
 	}
 	public Image getSprite(int vx,int vy){
-		updateAngle(vx,vy);
+		if(!manualrotate){
+			updateAngle(vx,vy);
+		}
 		if(rotatable){
 			AffineTransform  t = AffineTransform.getRotateInstance(theta+Math.PI/2,width/2,height/2);
 			AffineTransformOp op = new AffineTransformOp(t,AffineTransformOp.TYPE_BILINEAR);
 			return op.filter(spriteSheet.getSubimage(0, 0, width, height), null);
 		}else{
+			if(vx==0&&vy==0){
+				currentFrame=0;
+				return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, 0, width, height);
+			}
 			currentFrame += .1;
 			currentFrame %= 3;
-			int anglenum = (int) (theta/Math.PI*4+4)%8;
-			return spriteSheet.getSubimage(((int) currentAnim)*width+anglenum*width, ((int) currentFrame)*height, width, height);
+			if(vx==0&&vy==0){
+				currentFrame=0;
+				return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, 0, width, height);
+			}
+			return spriteSheet.getSubimage(((int) currentAnim)*width+getFacing()*width, ((int) currentFrame)*height, width, height);
 		}
 	}
+	boolean manualrotate=false;
 	public int getWidth(){
 		return width;
 	}
 	public int getHeight(){
 		return height;
+	}
+	public int getFacing(){
+		return (int) (theta/Math.PI*4+4)%8;
 	}
 }
