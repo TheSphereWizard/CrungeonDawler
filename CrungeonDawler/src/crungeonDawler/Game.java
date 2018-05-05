@@ -516,9 +516,9 @@ public class Game {
 					Entity e = allEntities.get(i);
 					
 					
-//					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
+					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
 						e.onInteract(player);
-//					}
+					}
 				}
 			}
 		}

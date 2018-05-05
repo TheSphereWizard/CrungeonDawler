@@ -13,13 +13,13 @@ public class Door extends Entity{
 	int change=1;
 	public void onInteract(Player p){
 		if(vertical){
-			if(p.x<this.x){
+			if(p.x<this.x+16){
 				actor.change=-1;
 			}else{
 				actor.change=1;
 			}
 		}else{
-			if(p.y<this.y){
+			if(p.y<this.y+16){
 				actor.change=1;
 			}else{
 				actor.change=-1;
