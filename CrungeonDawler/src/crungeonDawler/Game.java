@@ -55,13 +55,13 @@ public class Game {
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-pixelTileWidth/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-pixelTileWidth/2)+dungeon.getHeight()/2, null);
 			}
 		}
-		int playerTileX = ((player.getX())/pixelTileWidth)*pixelTileWidth+dungeon.getWidth()/2-16;
-		int playerTileY = ((player.getY())/pixelTileWidth)*pixelTileWidth+dungeon.getHeight()/2-16;
-		Graphics g = dungeon.getGraphics();
-		g.setColor(Color.PINK);
-		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
-		g.setColor(Color.BLACK);
-		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
+//		int playerTileX = ((player.getX())/pixelTileWidth)*pixelTileWidth+dungeon.getWidth()/2-16;
+//		int playerTileY = ((player.getY())/pixelTileWidth)*pixelTileWidth+dungeon.getHeight()/2-16;
+//		Graphics g = dungeon.getGraphics();
+//		g.setColor(Color.PINK);
+//		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
+//		g.setColor(Color.BLACK);
+//		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
 //		BufferedImage vis = getVisible();
 //
 //		for(int x=0;x<dungeon.getWidth();x++){
@@ -420,7 +420,7 @@ public class Game {
 		player=p;
 		currentLevel =new Level(200,200,"Tiles");
 		Read.outputroom(currentLevel.levellayout, "map output");
-		addEntity(p,100,100);
+		addEntity(p,105,100);
 		p.vx=0;
 		p.vy=0;
 		currentLevel.spawnMobs();
@@ -437,9 +437,11 @@ public class Game {
 		}*/	
 		for(int[] r :currentLevel.spawnDoors()){
 			if(r[2]==0){
-				addEntity(new Door(false),r[0],r[1]);
+				addEntity(new Door(false,new DoorActor("Door",false)),r[0],r[1]);
 			}else{
-				addEntity(new Door(true),r[0],r[1]);
+				Entity e =new Door(true,new DoorActor("Door",true));
+				addEntity(e,r[0],r[1]);
+				e.x-=16;
 			}
 		}
 	}
@@ -475,7 +477,7 @@ public class Game {
 	int mouseslowdown=0;
 	int mouseslowdownfactor=10;
 	int interactslowdown=0;
-	int interactslowdownfactor=20;
+	int interactslowdownfactor=10;
 	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
@@ -514,14 +516,15 @@ public class Game {
 					Entity e = allEntities.get(i);
 					
 					
-//					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
-						e.onInteract();
-//					}
+					if(e.x<cen[0]&&cen[0]<e.x+e.getWidth()&&e.y<cen[1]&&cen[1]<e.y+e.getHeight()){
+						e.onInteract(player);
+					}
 				}
 			}
 		}
 		keyslowdown++;
 		mouseslowdown++;
+		interactslowdown++;
 		if(mousePressed[0]){
 			if(mouseslowdown%mouseslowdownfactor==1)
 				addEntity(new Monster("PlayerArrow", new Actor("arrow",32,32,true),new ArrowAI((mousePosition.x-Screen.frameWidth/2)/20,(mousePosition.y-Screen.frameHeight/2)/20,StraightLineAI.Behavior.REFLECT,player),false),player.x/32,player.y/32);
@@ -591,17 +594,28 @@ public class Game {
 		}
 		for(Entity other : allEntities)
 			if(other!=e){
-//				boolean tryer=true;
-//				try{
-//					Player pre=(Player)other;
-//					Player prers=(Player)e;
-//				}catch(Exception E){tryer=false;}
-				
-				if (!(e.x+t[0]+e.getWidth()<other.x || other.x+other.getWidth()<e.x+t[0] || e.y+t[1]+e.getHeight()<other.y || other.y+other.getHeight()<e.y+t[1])){
-//					tryLegalMovement(other, new int[]{-t[0],-t[1]});//if only this didn't recurse
-					if(e.collides&other.collides)
-						return false;
-					e.oncollide(other);
+				boolean isnotdoor=false;//You are a door until proven otherwise
+				try{
+					Door door=(Door)other;
+					if(door.vertical){
+						if (!(e.x+t[0]+e.getWidth()/4<other.x+16 || other.x+16+other.getWidth()/4<e.x+t[0] || e.y+t[1]+e.getHeight()/2<other.y || other.y+other.getHeight()/2<e.y+t[1])){
+							if(e.collides&other.collides)
+								return false;
+						}
+					}else{
+						if (!(e.x+t[0]+e.getWidth()/2<other.x+16 || other.x+16+other.getWidth()/2<e.x+t[0] || e.y+t[1]+e.getHeight()/4<other.y+16 || other.y+16+other.getHeight()/4<e.y+t[1])){
+							if(e.collides&other.collides)
+								return false;
+						}
+					}
+					
+				}catch(Exception E){isnotdoor=true;}
+				if(isnotdoor){
+					if (!(e.x+t[0]+e.getWidth()<other.x || other.x+other.getWidth()<e.x+t[0] || e.y+t[1]+e.getHeight()<other.y || other.y+other.getHeight()<e.y+t[1])){
+						if(e.collides&other.collides)
+							return false;
+						e.oncollide(other);
+					}
 				}
 			}
 		return true;
