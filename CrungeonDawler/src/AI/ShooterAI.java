@@ -15,7 +15,7 @@ public class ShooterAI extends AI{
 	public ShooterAI(int maxspeed, int range, int refresh,Entity projectile) {
 		this.speed=maxspeed;
 		this.refresh=refresh;
-		this.range=range*Game.pixelTileWidth;
+		this.range=range*Game.TILE_SIZE;
 		this.projectile = projectile;
 	}
 	public void updateentitiy(Entity self, Player p, Entity lastcollided, int[] directionofwall) {
@@ -40,7 +40,7 @@ public class ShooterAI extends AI{
 				self.setVY(0);
 			}
 		}
-		if(Math.abs(dist-range)<Game.pixelTileWidth*2){//
+		if(Math.abs(dist-range)<Game.TILE_SIZE*2){//
 			if(slow==0){
 				Class<? extends Entity> clazz = projectile.getClass();
 				try {

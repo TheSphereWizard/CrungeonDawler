@@ -13,8 +13,8 @@ public class Actor {
 	public BufferedImage spriteSheet;
 	private int currentAnim=0;
 	private double currentFrame=0;
-	public int width=Game.pixelTileWidth;
-	public int height=Game.pixelTileWidth;
+	public int width=Game.TILE_SIZE;
+	public int height=Game.TILE_SIZE;
 	public double theta=-Math.PI/2;
 	public boolean rotatable;
 	public Actor(BufferedImage i,int w,int h,boolean rotatable){

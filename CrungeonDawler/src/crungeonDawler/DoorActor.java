@@ -13,7 +13,7 @@ public class DoorActor extends Actor{
 	public BufferedImage spriteSheet;
 	boolean vertical;
 	public DoorActor(String path,boolean vertical){
-		super(path,Game.pixelTileWidth*2,Game.pixelTileWidth*2, false);
+		super(path,Game.TILE_SIZE*2,Game.TILE_SIZE*2, false);
 		File spriteSheetFile = new File("resources/ActorSpriteSheets/"+path+".png");
 		try {
 			spriteSheet = ImageIO.read(spriteSheetFile);
