@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,55 +29,32 @@ public class UILoader {
 			NodeList nNodes = doc.getChildNodes();
 			for(int i=0;i<nNodes.getLength();i++){
 				Node nNode = nNodes.item(i);
-				handleElement(nNode);
+				handleElement(nNode,null,w,h);
 			}
 		}catch(Exception e){e.printStackTrace();}
 		return ui;
 	}
-	private void handleElement(Node n){
+	private void handleElement(Node n,JPanel pComponent,int w,int h){
 		String type = ((Element)n).getAttribute("type");
+		String anchor = ((Element)n).getAttribute("anchor");
+		String xOffset = ((Element)n).getAttribute("xOffset");
+		String yOffset = ((Element)n).getAttribute("yOffset");
+		String width = ((Element)n).getAttribute("width");
+		String height = ((Element)n).getAttribute("height");
 		Component nComponent = null;
 		if(type.equals("panel")){
 			nComponent = new JPanel();
+			((JPanel) nComponent).setLayout(null);
 			NodeList nChildren = n.getChildNodes();
 			for(int i=0;i<nChildren.getLength();i++){
-				handleElement(nChildren.item(i),(JPanel) nComponent);
+				handleElement(nChildren.item(i),(JPanel) nComponent,nComponent.getWidth(),nComponent.getHeight());
 			}
 		}
 		else if(type.equals("button")){
-			nComponent = new JButton();
+			nComponent = new JButton(((Element)n).getAttribute("text"));
 		}
 		else if(type.equals("label")){
-			nComponent = new JLabel();
-		}
-		//need to add actual classes for meter and minimap, and probably for images as well
-		else if(type.equals("image")){
-			nComponent = new JPanel();
-		}
-		else if(type.equals("meter")){
-			nComponent = new JMeter(0,"");
-		}
-		else if(type.equals("miniMap")){
-			nComponent = new JPanel();
-		}
-		ui.add(nComponent);
-	}
-	private void handleElement(Node n,JPanel pComponent){
-		String type = ((Element)n).getAttribute("type");
-		Component nComponent = null;
-		if(type.equals("panel")){
-			nComponent = new JPanel();
-			pComponent.add(nComponent);
-			NodeList nChildren = n.getChildNodes();
-			for(int i=0;i<nChildren.getLength();i++){
-				handleElement(nChildren.item(i),(JPanel)nComponent);
-			}
-		}
-		else if(type.equals("button")){
-			nComponent = new JButton();
-		}
-		else if(type.equals("label")){
-			nComponent = new JLabel();
+			nComponent = new JLabel(((Element)n).getAttribute("text"));
 		}
 		//need to add actual class for minimap, and probably for images as well
 		else if(type.equals("image")){
@@ -88,5 +66,83 @@ public class UILoader {
 		else if(type.equals("miniMap")){
 			nComponent = new JPanel();
 		}
+		int cX;
+		int cY;
+		int cW;
+		int cH;
+		int dX;
+		int dY;
+		if(anchor.equals("UL")){
+			cX=0;
+			cY=0;
+			dX=1;
+			dY=1;
+		}
+		else if(anchor.equals("UR")){
+			cX=w;
+			cY=0;
+			dX=-1;
+			dY=1;
+		}
+		else if(anchor.equals("BL")){
+			cX=0;
+			cY=h;
+			dX=1;
+			dY=-1;
+		}
+		else if(anchor.equals("BR")){
+			cX=w;
+			cY=h;
+			dX=-1;
+			dY=-1;
+		}
+		else{
+			cX=0;
+			cY=0;
+			dX=1;
+			dY=1;
+		}
+		if(xOffset.endsWith("px")){
+			cX+=dX*Integer.valueOf(xOffset.substring(0, xOffset.length()-3));
+		}
+		else{
+			cX+=dX*Integer.valueOf(xOffset)*w/100;
+		}
+		if(yOffset.endsWith("px")){
+			cY+=dY*Integer.valueOf(yOffset.substring(0, yOffset.length()-3));
+		}
+		else{
+			cY+=dY*Integer.valueOf(yOffset)*h/100;
+		}
+		if(width.endsWith("px")){
+			cW=Integer.valueOf(width.substring(0, width.length()-3));
+		}
+		else{
+			cW=Integer.valueOf(width)*w/100;
+		}
+		if(height.endsWith("px")){
+			cH=Integer.valueOf(height.substring(0, height.length()-3));
+		}
+		else{
+			cH=Integer.valueOf(height)*h/100;
+		}
+		nComponent.setBounds(cX,cY,cW,cH);
+		if(pComponent.equals(null)){
+			ui.add(nComponent);
+		}
+		else{
+			pComponent.add(nComponent);
+		}	
+	}
+	public static void main(String[] args){
+		JFrame f = new JFrame();
+		f.setBounds(0, 0, 200, 200);
+		f.getContentPane().setLayout(null);
+		UILoader u = new UILoader();
+		ArrayList<Component> ui = u.loadUI("/git/CrungeonDawler/CrungeonDawler/resources/Interface/stupidUI.xml", 200,200);
+		for(Component c:ui){
+			f.getContentPane().add(c);
+		}
+		f.setVisible(true);
 	}
 }
