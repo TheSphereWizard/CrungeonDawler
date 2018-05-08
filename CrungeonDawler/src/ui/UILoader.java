@@ -26,7 +26,9 @@ public class UILoader {
 			NodeList nNodes = doc.getChildNodes();
 			for(int i=0;i<nNodes.getLength();i++){
 				Node nNode = nNodes.item(i);
-				handleElement(nNode,null,w,h);
+				if(nNode.getNodeType()==Node.ELEMENT_NODE){
+					handleElement(nNode,null,w,h);
+				}
 			}
 		}catch(Exception e){e.printStackTrace();}
 		return ui;
@@ -44,7 +46,10 @@ public class UILoader {
 			((JPanel) nComponent).setLayout(null);
 			NodeList nChildren = n.getChildNodes();
 			for(int i=0;i<nChildren.getLength();i++){
-				handleElement(nChildren.item(i),(JPanel) nComponent,nComponent.getWidth(),nComponent.getHeight());
+				Node nChild = nChildren.item(i);
+				if(nChild.getNodeType()==Node.ELEMENT_NODE){
+					handleElement(nChild,(JPanel) nComponent,nComponent.getWidth(),nComponent.getHeight());
+				}
 			}
 		}
 		else if(type.equals("button")){
@@ -100,31 +105,31 @@ public class UILoader {
 			dY=1;
 		}
 		if(xOffset.endsWith("px")){
-			cX+=dX*Integer.valueOf(xOffset.substring(0, xOffset.length()-3));
+			cX+=dX*Integer.valueOf(xOffset.substring(0, xOffset.length()-2));
 		}
 		else{
 			cX+=dX*Integer.valueOf(xOffset)*w/100;
 		}
 		if(yOffset.endsWith("px")){
-			cY+=dY*Integer.valueOf(yOffset.substring(0, yOffset.length()-3));
+			cY+=dY*Integer.valueOf(yOffset.substring(0, yOffset.length()-2));
 		}
 		else{
 			cY+=dY*Integer.valueOf(yOffset)*h/100;
 		}
 		if(width.endsWith("px")){
-			cW=Integer.valueOf(width.substring(0, width.length()-3));
+			cW=Integer.valueOf(width.substring(0, width.length()-2));
 		}
 		else{
 			cW=Integer.valueOf(width)*w/100;
 		}
 		if(height.endsWith("px")){
-			cH=Integer.valueOf(height.substring(0, height.length()-3));
+			cH=Integer.valueOf(height.substring(0, height.length()-2));
 		}
 		else{
 			cH=Integer.valueOf(height)*h/100;
 		}
 		nComponent.setBounds(cX,cY,cW,cH);
-		if(pComponent.equals(null)){
+		if(pComponent == null){
 			ui.add(nComponent);
 		}
 		else{
@@ -141,5 +146,6 @@ public class UILoader {
 			f.getContentPane().add(c);
 		}
 		f.setVisible(true);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }
