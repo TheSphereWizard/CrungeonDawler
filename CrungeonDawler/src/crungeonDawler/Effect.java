@@ -1,6 +1,8 @@
 package crungeonDawler;
 //import com.google.gson.*;
 
+import java.awt.Point;
+
 public class Effect {
 	static enum Type{DAMAGE,AOE,MODIFIER,SUMMON,COMPOUND};
 	private Type type;
@@ -32,6 +34,9 @@ public class Effect {
 	public Effect(Effect[] compound){
 		this.compound = compound;
 		type = Type.COMPOUND;
+	}
+	public static void doThing(Entity caster, Point mouse) {
+		
 	}
 	
 }

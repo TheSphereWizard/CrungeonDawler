@@ -55,6 +55,7 @@ public class Game {
 				e.x-=16;
 			}
 		}
+		addEntity(new Chest(new ChestActor("testChest")),107,100);
 	}
 	public void DrawMenu(Graphics2D g2d, Point mousePosition) {
 		Draw(g2d,mousePosition);

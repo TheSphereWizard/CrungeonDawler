@@ -11,11 +11,11 @@ public class Item {
 	ArrayList<Gem> gems;
 	Effect effect;
 	ItemIdentity identity;
-	Item(Effect e,ItemIdentity r){//maybe pass in player as owner, but not if enemies will hold items
+	Item(Actor a, Effect e,ItemIdentity r){//maybe pass in player as owner, but not if enemies will hold items
 		effect=e;
 		identity=r;
 	}
 	public void causeEffect(Entity caster, Point Mouse){
-//		Effect.dothing();???
+		Effect.doThing(caster, Mouse);
 	}
 }

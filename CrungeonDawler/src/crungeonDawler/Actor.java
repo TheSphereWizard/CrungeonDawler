@@ -16,13 +16,21 @@ public class Actor {
 	public int width=Game.TILE_SIZE;
 	public int height=Game.TILE_SIZE;
 	public double theta=-Math.PI/2;
-	public boolean rotatable;
+	public boolean rotatable=false;
+	public Actor(String path){
+		File spriteSheetFile = new File("resources/ActorSpriteSheets/"+path+".png");
+		try {
+			spriteSheet = ImageIO.read(spriteSheetFile);
+		} catch (IOException e) {System.out.println("Error"+(1/0));
+		}
+	}
 	public Actor(BufferedImage i,int w,int h,boolean rotatable){
 		spriteSheet =i;
 		width = w;
 		height = h;
 		this.rotatable=rotatable;
 	}
+	
 	public Actor(String path,int w,int h,boolean rotatable){
 		File spriteSheetFile = new File("resources/ActorSpriteSheets/"+path+".png");
 		try {

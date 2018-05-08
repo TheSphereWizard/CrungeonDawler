@@ -15,11 +15,8 @@ import org.w3c.dom.Element;
 import java.io.File;
 
 public class UILoader {
-	ArrayList<Component> ui;
-	public UILoader(){
-		ui = new ArrayList<Component>();
-	}
-	public ArrayList<Component> loadUI(String path,int w,int h){
+	static ArrayList<Component> ui= new ArrayList<Component>();
+	public static ArrayList<Component> loadUI(String path,int w,int h){
 		try{
 			File xmlFile = new File(path);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -34,7 +31,7 @@ public class UILoader {
 		}catch(Exception e){e.printStackTrace();}
 		return ui;
 	}
-	private void handleElement(Node n,JPanel pComponent,int w,int h){
+	private static void handleElement(Node n,JPanel pComponent,int w,int h){
 		String type = ((Element)n).getAttribute("type");
 		String anchor = ((Element)n).getAttribute("anchor");
 		String xOffset = ((Element)n).getAttribute("xOffset");
