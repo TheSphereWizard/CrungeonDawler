@@ -268,14 +268,17 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;        
 		Draw(g2d);
-		super.paintComponent(g2d);        
+	    for(Component c: this.getComponents()){
+		  g.translate(c.getX(), c.getY());
+		  c.paint(g);
+		  g.translate(-c.getX(), -c.getY());
+	    }
 	}
 	public void Draw(Graphics2D g2d) {
 		switch (gameState)
 		{
 		case PLAYING:
 			game.Draw(g2d, mousePosition());
-			
 			break;
 		case MENU:
 			game.DrawMenu(g2d,mousePosition());

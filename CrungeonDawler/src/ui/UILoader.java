@@ -43,6 +43,7 @@ public class UILoader {
 		Component nComponent = null;
 		if(type.equals("panel")){
 			nComponent = new JPanel();
+			((JPanel)(nComponent)).setOpaque(false);
 			((JPanel) nComponent).setLayout(null);
 			NodeList nChildren = n.getChildNodes();
 			for(int i=0;i<nChildren.getLength();i++){
