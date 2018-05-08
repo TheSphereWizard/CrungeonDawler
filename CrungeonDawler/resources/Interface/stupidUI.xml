@@ -1,4 +1,6 @@
-<c type="panel" width="100" height="100" xOffset="0" yOffset="0">
+<aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa type="panel" width="100" height="100" xOffset="10px" yOffset="10px">
 	<c type="button" text="hey" anchor="UL" xOffset="20px" yOffset="20px" width="20px" height="20px">
 	</c>
-</c>
+	<c type="button" text="hey" anchor="UL" xOffset="40px" yOffset="20px" width="20px" height="20px">
+	</c>
+</aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>

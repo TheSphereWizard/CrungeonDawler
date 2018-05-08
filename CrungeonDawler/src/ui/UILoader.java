@@ -37,7 +37,6 @@ public class UILoader {
 		return ui;
 	}
 	private void handleElement(Node n,JPanel pComponent,int w,int h){
-		Element e = (Element) n;
 		String type = ((Element)n).getAttribute("type");
 		String anchor = ((Element)n).getAttribute("anchor");
 		String xOffset = ((Element)n).getAttribute("xOffset");
@@ -109,25 +108,25 @@ public class UILoader {
 			dY=1;
 		}
 		if(xOffset.endsWith("px")){
-			cX+=dX*Integer.valueOf(xOffset.substring(0, xOffset.length()-3));
+			cX+=dX*Integer.valueOf(xOffset.substring(0, xOffset.length()-2));
 		}
 		else{
 			cX+=dX*Integer.valueOf(xOffset)*w/100;
 		}
 		if(yOffset.endsWith("px")){
-			cY+=dY*Integer.valueOf(yOffset.substring(0, yOffset.length()-3));
+			cY+=dY*Integer.valueOf(yOffset.substring(0, yOffset.length()-2));
 		}
 		else{
 			cY+=dY*Integer.valueOf(yOffset)*h/100;
 		}
 		if(width.endsWith("px")){
-			cW=Integer.valueOf(width.substring(0, width.length()-3));
+			cW=Integer.valueOf(width.substring(0, width.length()-2));
 		}
 		else{
 			cW=Integer.valueOf(width)*w/100;
 		}
 		if(height.endsWith("px")){
-			cH=Integer.valueOf(height.substring(0, height.length()-3));
+			cH=Integer.valueOf(height.substring(0, height.length()-2));
 		}
 		else{
 			cH=Integer.valueOf(height)*h/100;
@@ -150,5 +149,6 @@ public class UILoader {
 			f.getContentPane().add(c);
 		}
 		f.setVisible(true);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }
