@@ -29,12 +29,15 @@ public class UILoader {
 			NodeList nNodes = doc.getChildNodes();
 			for(int i=0;i<nNodes.getLength();i++){
 				Node nNode = nNodes.item(i);
-				handleElement(nNode,null,w,h);
+				if(nNode.getNodeType()==Node.ELEMENT_NODE){
+					handleElement(nNode,null,w,h);
+				}
 			}
 		}catch(Exception e){e.printStackTrace();}
 		return ui;
 	}
 	private void handleElement(Node n,JPanel pComponent,int w,int h){
+		Element e = (Element) n;
 		String type = ((Element)n).getAttribute("type");
 		String anchor = ((Element)n).getAttribute("anchor");
 		String xOffset = ((Element)n).getAttribute("xOffset");
@@ -47,7 +50,10 @@ public class UILoader {
 			((JPanel) nComponent).setLayout(null);
 			NodeList nChildren = n.getChildNodes();
 			for(int i=0;i<nChildren.getLength();i++){
-				handleElement(nChildren.item(i),(JPanel) nComponent,nComponent.getWidth(),nComponent.getHeight());
+				Node nChild = nChildren.item(i);
+				if(nChild.getNodeType()==Node.ELEMENT_NODE){
+					handleElement(nChild,(JPanel) nComponent,nComponent.getWidth(),nComponent.getHeight());
+				}
 			}
 		}
 		else if(type.equals("button")){
@@ -127,7 +133,7 @@ public class UILoader {
 			cH=Integer.valueOf(height)*h/100;
 		}
 		nComponent.setBounds(cX,cY,cW,cH);
-		if(pComponent.equals(null)){
+		if(pComponent == null){
 			ui.add(nComponent);
 		}
 		else{
