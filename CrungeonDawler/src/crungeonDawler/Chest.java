@@ -11,8 +11,11 @@ public class Chest extends Entity{
 	}
 	int change=1;
 	public void onInteract(Player p){
-		actor.change=-1;
-		//later code to drop items/ open inventory of chest
-		System.out.println("red");
+		if(actor.chestState==0){
+			actor.change=1;
+		}
+		if(actor.chestState==4){
+			actor.change=-1;
+		}
 	}
 }

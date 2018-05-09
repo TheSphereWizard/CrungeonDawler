@@ -3,9 +3,11 @@ package crungeonDawler;
 
 import java.awt.Point;
 
+import ui.Screen;
+
 public class Effect {
 	static enum Type{DAMAGE,AOE,MODIFIER,SUMMON,COMPOUND};
-	private Type type;
+	private static Type type;
 	private int damage;
 	private int radius;
 	private Effect effect;
@@ -35,8 +37,16 @@ public class Effect {
 		this.compound = compound;
 		type = Type.COMPOUND;
 	}
-	public static void doThing(Entity caster, Point mouse) {
-		
+	public void doThing(Entity caster, Point mouse, Entity target) {
+		//Really weird:
+		//Method should run on interact, when proj hits target
+		//Should be called when it hits target point (need new AI for this)
+		//so will not need mouse as will simply call on death of projectile
+		switch (type){
+		case SUMMON:
+			System.out.println(caster.x+" "+caster.y);
+			Screen.game.addEntity(summon, caster.x/32,caster.y/32);
+		}
 	}
 	
 }
