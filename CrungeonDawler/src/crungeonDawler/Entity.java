@@ -11,17 +11,10 @@ public abstract class Entity {
 	public int vx,vy;
 	public AI ai;
 	int[] invalidtiles = new int[]{0,LevelLayout.wallID,LevelLayout.lowwallID};
-	boolean collides=true;
 	public Entity(String name, Actor actor,AI ai){
 		this.name = name;
 		this.actor = actor;
 		this.ai= ai;
-	}
-	public Entity(String name, Actor actor,AI ai,boolean collides){
-		this.name = name;
-		this.actor = actor;
-		this.ai= ai;
-		this.collides=collides;
 	}
 	public Entity(String name, DoorActor doorActor, NullAI ai) {
 		this.name = name;

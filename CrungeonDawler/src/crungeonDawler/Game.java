@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 
 import AI.ArrowAI;
 import AI.NullAI;
+import AI.ProjectiletoPointAI;
 import AI.ShooterAI;
 import AI.StraightLineAI;
 import ui.Screen;
@@ -46,6 +47,7 @@ public class Game {
 			else
 				addEntity(new Monster("test",new Actor("bulbasor3",pixelTileWidth,pixelTileWidth,false), new ShooterAI(3,5,30,arrow)),r[0],r[1]);
 		}*/	
+		
 		for(int[] r :currentLevel.spawnDoors()){
 			if(r[2]==0){
 				addEntity(new Door(false,new DoorActor("Door",false)),r[0],r[1]);
@@ -65,7 +67,6 @@ public class Game {
 		g2d.setColor(new Color(75,75,75,255));
 		g2d.fillRect(Screen.frameWidth/3,Screen.frameHeight/3,Screen.frameWidth/3,Screen.frameHeight/3);
 	}
-	
 	public void Draw(Graphics2D g2d, Point mousePosition) {
 		BufferedImage dungeon = new BufferedImage(TILE_SIZE*renderdist*2,TILE_SIZE*renderdist*2,BufferedImage.TYPE_4BYTE_ABGR); 
 		for(int x=Math.max(player.getX()/TILE_SIZE-renderdist,0);x<currentLevel.width&&x<player.getX()/TILE_SIZE+renderdist+1;x++){
@@ -87,7 +88,19 @@ public class Game {
 //		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
 //		g.setColor(Color.BLACK);
 //		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
-
+		int[] cen = new int[]{player.x-Game.TILE_SIZE/2,player.y-Game.TILE_SIZE/2};
+		int x=Math.abs(player.actor.getFacing()-4);
+		int y=player.actor.getFacing()-4;
+		if(x==1||x==0)
+			cen[0]+=32;
+		if(x==3||x==4)
+			cen[0]-=32;
+		if(y>0)
+			cen[1]+=32;
+		if(y<0&y!=-4)
+			cen[1]-=32;
+		g2d.setColor(Color.RED);
+		dungeon.getGraphics().fillRect(cen[0]-player.x+dungeon.getWidth()/2,cen[1]-player.y+dungeon.getHeight()/2,32,32);
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 		g2d.setColor(Color.RED);
 		g2d.drawString(String.valueOf(getCurrentRoom()), 20, 20);
@@ -95,8 +108,6 @@ public class Game {
 	public int getCurrentRoom() {
 		return currentLevel.roomids[player.getX()/TILE_SIZE][player.getY()/TILE_SIZE];
 	}
-	
-
 	private Image getImageFromTileID(int id) {
 		if(id==LevelLayout.voidID){
 			return currentLevel.Void();
@@ -112,11 +123,9 @@ public class Game {
 		}
 		return null;
 	}
-
 	public void DrawGameOver(Graphics2D g2d, Point mousePosition) {
 
 	}
-
 	public void loadMapKit(String mapFile) {
 
 	}
@@ -136,15 +145,6 @@ public class Game {
 			e.printStackTrace();
 		}
 	}
-	boolean arraycontains(int[][] r,int w[]){
-		for(int[] i : r){
-			if (w.equals(i)){
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void addEntity(Entity e, int x, int y){
 		e.x=x*TILE_SIZE;
 		e.y=y*TILE_SIZE;
@@ -183,8 +183,13 @@ public class Game {
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
 			e.update(player, null, abouttocollide(e));
-			tryLegalMovement(e,new int[]{0,e.vy});
-			tryLegalMovement(e,new int[]{e.vx,0});
+			if(e.ai.slide){
+				tryLegalMovement(e,new int[]{0,e.vy});
+				tryLegalMovement(e,new int[]{e.vx,0});
+			}else{
+				tryLegalMovement(e,new int[]{e.vx,e.vy});
+			}
+			
 		}
 //		addLaterEntities();
 		removeLaterEntities();
@@ -211,7 +216,17 @@ public class Game {
 				for(int i=0;i<allEntities.size();i++){
 					int[] cen = new int[]{player.x+Game.TILE_SIZE/2,player.y+Game.TILE_SIZE/2};
 					Entity e = allEntities.get(i);
-					if(e.x-cen[0]<10&&cen[0]-(e.x+e.getWidth())<10&&e.y-cen[1]<10&&cen[1]-(e.y+e.getHeight())<10){
+					int x=Math.abs(player.actor.getFacing()-4);
+					int y=player.actor.getFacing()-4;
+					if(x==1||x==0)
+						cen[0]+=32;
+					if(x==3||x==4)
+						cen[0]-=32;
+					if(y>0)
+						cen[1]+=32;
+					if(y<0&y!=-4)
+						cen[1]-=32;
+					if(e.x-cen[0]<0&&cen[0]-(e.x+e.getWidth())<0&&e.y-cen[1]<0&&cen[1]-(e.y+e.getHeight())<0){
 						e.onInteract(player);
 					}
 				}
@@ -223,43 +238,21 @@ public class Game {
 		mouseslowdown++;
 		interactslowdown++;
 		if(mousePressed[0]){
-			if(mouseslowdown%mouseslowdownfactor==1)
-				addEntity(new Monster("PlayerArrow", new Actor("arrow",32,32,true),new ArrowAI((mousePosition.x-Screen.frameWidth/2)/20,(mousePosition.y-Screen.frameHeight/2)/20,StraightLineAI.Behavior.REFLECT,player),false),player.x/32,player.y/32);
+			if(mouseslowdown%mouseslowdownfactor==1){
+				mousePosition.translate(player.x-Screen.frameWidth/2, player.y-Screen.frameHeight/2);
+				Entity arrow=new Monster("Arrow", new Actor("arrow",32,32,true),new ArrowAI(0,0,StraightLineAI.Behavior.REFLECT,null,new Effect(0)));
+				Monster m =new Monster("test",new Actor("bulbasor3",TILE_SIZE,TILE_SIZE,false), new ShooterAI(3,5,30,arrow));
+				addEntity(new Monster("Playersummon", new Actor("arrow",32,32,true),new ProjectiletoPointAI(8,mousePosition,new Effect(1,m))),player.x/32,player.y/32);
+
+//				addEntity(new Monster("PlayerArrow", new Actor("arrow",32,32,true),new ArrowAI((mousePosition.x-Screen.frameWidth/2)/20,(mousePosition.y-Screen.frameHeight/2)/20,StraightLineAI.Behavior.REFLECT,player)),player.x/32,player.y/32);
+			}
 		}else{
-			mouseslowdown=0;
+		mouseslowdown=0;
 		}
 		
 	}
-	private int[] abouttocollide(Entity e) {
-		//This whole method is terrible and should be rewritten
-		int[] ret = new int[]{0,0};
-		int xMin = (int) Math.floor((double)(e.getX()+e.vx)/TILE_SIZE);
-		int xMax = (int) Math.ceil ((double)(e.getX()+e.vx+e.getWidth ()-TILE_SIZE)/TILE_SIZE);
-		int yMin = (int) Math.floor((double)(e.getY()+e.vy)/TILE_SIZE);
-		int yMax = (int) Math.ceil ((double)(e.getY()+e.vy+e.getHeight()-TILE_SIZE)/TILE_SIZE);
-		for(int x=xMin;x<=xMax;x++){
-			for(int y=yMin;y<=yMax;y++){
-				try{
-					if(Read.contains(e.invalidtiles, currentLevel.levellayout[x][y])){
-						ret[0]+=x;
-						ret[1]+=y;
-					}
-				}
-				catch(Exception ex){
-					ret[0]+=x;
-					ret[1]+=y;
-				}
-			}
-		}
-//		for(Entity other : allEntities)
-//			if(other!=e)
-//				if(Math.abs(e.x+e.vx-other.x)<pixelTileWidth&Math.abs(e.y+e.vy-other.y)<pixelTileWidth){
-//					if(e.x-other.x<e.y-other.y)
-//						ret[0]+=1;
-//					else
-//						ret[1]+=1;
-//				}
-		return ret;
+	private int[] abouttocollide(Entity e) {//Needs to indicate whether a wall is in the pos or negitive x or y direction.
+		return new int[]{0,0};
 	}
 	void tryLegalMovement(Entity e, int[] translation){
 		if(legalMovement(e, translation)){
@@ -291,12 +284,12 @@ public class Game {
 					Door door=(Door)other;
 					if(door.vertical){
 						if (!(e.x+t[0]+e.getWidth()/4<other.x+16 || other.x+16+other.getWidth()/4<e.x+t[0] || e.y+t[1]+e.getHeight()/2<other.y || other.y+other.getHeight()/2<e.y+t[1])){
-							if(e.collides&other.collides)
+							if(e.ai.collides&other.ai.collides)
 								return false;
 						}
 					}else{
 						if (!(e.x+t[0]+e.getWidth()/2<other.x+16 || other.x+16+other.getWidth()/2<e.x+t[0] || e.y+t[1]+e.getHeight()/4<other.y+16 || other.y+16+other.getHeight()/4<e.y+t[1])){
-							if(e.collides&other.collides)
+							if(e.ai.collides&other.ai.collides)
 								return false;
 						}
 					}
@@ -304,7 +297,7 @@ public class Game {
 				}catch(Exception E){isnotdoor=true;}
 				if(isnotdoor){
 					if (!(e.x+t[0]+e.getWidth()<other.x || other.x+other.getWidth()<e.x+t[0] || e.y+t[1]+e.getHeight()<other.y || other.y+other.getHeight()<e.y+t[1])){
-						if(e.collides&other.collides)
+						if(e.ai.collides&other.ai.collides)
 							return false;
 						e.oncollide(other);
 					}

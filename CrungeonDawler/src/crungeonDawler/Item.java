@@ -16,6 +16,6 @@ public class Item {
 		identity=r;
 	}
 	public void causeEffect(Entity caster, Point Mouse){
-		Effect.doThing(caster, Mouse);
+//		Effect.doThing(caster, Mouse);
 	}
 }
