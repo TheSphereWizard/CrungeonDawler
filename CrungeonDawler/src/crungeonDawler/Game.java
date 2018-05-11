@@ -146,7 +146,7 @@ public class Game {
 	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
-			e.update(player, null, abouttocollide(e));
+			e.update(player);
 			if(e.ai.slide){
 				tryLegalMovement(e,new int[]{0,e.vy});
 				tryLegalMovement(e,new int[]{e.vx,0});
@@ -204,9 +204,9 @@ public class Game {
 		if(mousePressed[0]){
 			if(mouseslowdown%mouseslowdownfactor==1){
 				mousePosition.translate(player.x-Screen.frameWidth/2, player.y-Screen.frameHeight/2);
-				Entity arrow=new Monster("Arrow", new Actor("arrow",32,32,true),new ArrowAI(0,0,StraightLineAI.Behavior.REFLECT,null,new Effect(0)));
-				Monster m =new Monster("test",new Actor("bulbasor3",TILE_SIZE,TILE_SIZE,false), new ShooterAI(3,5,30,arrow));
-				addEntity(new Monster("Playersummon", new Actor("arrow",32,32,true),new ProjectiletoPointAI(8,mousePosition,new Effect(1,m))),player.x/32,player.y/32);
+//				Entity arrow=new Monster("Arrow", new Actor("arrow",32,32,true),new ArrowAI(0,0,StraightLineAI.Behavior.STICK,null,new Effect(0)));
+//				Monster m =new Monster("test",new Actor("bulbasor3",TILE_SIZE,TILE_SIZE,false), new ShooterAI(3,5,30,arrow));
+				addEntity(new Monster("Playersummon", new Actor("arrow",32,32,true),new ProjectiletoPointAI(8,mousePosition)),player.x/32,player.y/32);
 
 //				addEntity(new Monster("PlayerArrow", new Actor("arrow",32,32,true),new ArrowAI((mousePosition.x-Screen.frameWidth/2)/20,(mousePosition.y-Screen.frameHeight/2)/20,StraightLineAI.Behavior.REFLECT,player)),player.x/32,player.y/32);
 			}
@@ -214,9 +214,6 @@ public class Game {
 		mouseslowdown=0;
 		}
 		
-	}
-	private int[] abouttocollide(Entity e) {//Needs to indicate whether a wall is in the pos or negitive x or y direction.
-		return new int[]{0,0};
 	}
 	void tryLegalMovement(Entity e, int[] translation){
 		if(legalMovement(e, translation)){

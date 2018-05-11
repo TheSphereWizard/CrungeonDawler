@@ -60,7 +60,6 @@ public class Effect {
 	public void doThing(Entity target) throws Exception {
 		switch (type){
 		case DAMAGE:
-			String noerror="hi";
 //			target.dealDamage(damage,type);
 		case AOE:
 			for(Entity e : Screen.game.allEntities){
@@ -69,7 +68,6 @@ public class Effect {
 				}
 			}
 		case MODIFIER:
-			String noerror2="hows life?";
 //			target.addModifier(modifier);
 		case SUMMON:
 			throw new Exception("invalid effect type");
