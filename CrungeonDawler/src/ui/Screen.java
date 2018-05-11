@@ -51,8 +51,8 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	private final long GAME_UPDATE_PERIOD = secInNanosec / GAME_FPS;
 	private long lastTime;
 
-	private ArrayList<Component> menuUI;
-	private ArrayList<Component> gameUI;
+	private ArrayList<Component> menuUI = new ArrayList<Component>();
+	private ArrayList<Component> gameUI = new ArrayList<Component>();
 	public static Game game;
 	private class MyDispatcher implements KeyEventDispatcher {
 	    public boolean dispatchKeyEvent(KeyEvent e) {
@@ -266,19 +266,20 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	}
 
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;        
 		Draw(g2d);
-	    for(Component c: this.getComponents()){
-		  g.translate(c.getX(), c.getY());
-		  c.paint(g);
-		  g.translate(-c.getX(), -c.getY());
-	    }
 	}
 	public void Draw(Graphics2D g2d) {
 		switch (gameState)
 		{
 		case PLAYING:
 			game.Draw(g2d, mousePosition());
+		    for(Component c: gameUI){
+				  g2d.translate(c.getX(), c.getY());
+				  c.paint(g2d);
+				  g2d.translate(-c.getX(), -c.getY());
+			    }
 			break;
 		case MENU:
 			game.DrawMenu(g2d,mousePosition());
@@ -288,6 +289,11 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 			break;
 		case MAIN_MENU:
 			g2d.drawImage(backg, 0, 0, this.getWidth(), this.getHeight(), null);
+		    for(Component c: menuUI){
+				  g2d.translate(c.getX(), c.getY());
+				  c.paint(g2d);
+				  g2d.translate(-c.getX(), -c.getY());
+			    }
 			break;
 		}
 	}
