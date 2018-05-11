@@ -16,11 +16,6 @@ public abstract class Entity {
 		this.actor = actor;
 		this.ai= ai;
 	}
-	public Entity(String name, DoorActor doorActor, NullAI ai) {
-		this.name = name;
-		this.actor = doorActor;
-		this.ai= ai;
-	}
 	public int getX(){
 		return x;
 	}
@@ -52,5 +47,6 @@ public abstract class Entity {
 		return actor.getHeight();
 	}
 	public void onInteract(Player p) {
+		ai.onInteract(p);
 	}
 }

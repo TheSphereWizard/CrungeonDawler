@@ -3,12 +3,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class LevelLayout {
-//	public static void main(String[] tf){
-//		LevelLayout level=new LevelLayout(100,100);
-//		Read.outputroom(level.level, "map output");
-//	}
-	//Doors don't have lower wall on it
-	//some doors to edge are not closed
 	int[] opaquetiles = new int[]{0,1};
 	static final int voidID = 0;
 	static final int wallID = 1;
