@@ -11,7 +11,7 @@ public class Item {
 	ArrayList<Gem> gems;
 	Effect effect;
 	ItemIdentity identity;
-	Item(Actor a, Effect e,ItemIdentity r){//maybe pass in player as owner, but not if enemies will hold items
+	Item(Actor a, boolean ranged,Effect e,ItemIdentity r){//maybe pass in player as owner, but not if enemies will hold items
 		effect=e;
 		identity=r;
 	}

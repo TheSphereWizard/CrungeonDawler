@@ -17,4 +17,5 @@ public class TowardsPlayerAI extends AI{
 		self.setVX(vx);
 		self.setVY(vy);
 	}
+	public void updateentitiy(Entity self, Player p) {}
 }

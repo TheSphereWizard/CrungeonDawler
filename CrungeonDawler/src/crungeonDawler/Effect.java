@@ -19,7 +19,7 @@ public class Effect {
 		this.damage = damage;
 		type = Type.DAMAGE;
 	}
-	public Effect(int radius, Effect effect){//test
+	public Effect(int radius, Effect effect){
 		this.radius = radius;
 		this.effect = effect;
 		type = Type.AOE;
@@ -37,16 +37,47 @@ public class Effect {
 		this.compound = compound;
 		type = Type.COMPOUND;
 	}
-	public void doThing(Entity caster, Point mouse, Entity target) {
-		//Really weird:
-		//Method should run on interact, when proj hits target
-		//Should be called when it hits target point (need new AI for this)
-		//so will not need mouse as will simply call on death of projectile
+	public void doThing(Point target) throws Exception {
 		switch (type){
+		case DAMAGE:
+			throw new Exception("invalid effect type");
+		case AOE:
+			for(Entity e : Screen.game.allEntities){
+				if(Math.sqrt(Math.pow(target.x-e.x-e.getWidth()/2, 2)+Math.pow(target.y-e.y-e.getHeight()/2, 2))<radius){
+					doThing(e);
+				}
+			}
+		case MODIFIER:
+			throw new Exception("invalid effect type");
 		case SUMMON:
-			System.out.println(caster.x+" "+caster.y);
-			Screen.game.addEntity(summon, caster.x/32,caster.y/32);
+			Screen.game.addEntity(summon, target.x/32,target.y/32);
+		case COMPOUND:
+			for(Effect e : compound){
+				e.doThing(target);
+			}
 		}
+	}
+	public void doThing(Entity target) throws Exception {
+		switch (type){
+		case DAMAGE:
+//			target.dealDamage(damage,type);
+		case AOE:
+			for(Entity e : Screen.game.allEntities){
+				if(Math.sqrt(Math.pow(target.x-e.x-e.getWidth()/2, 2)+Math.pow(target.y-e.y-e.getHeight()/2, 2))<radius){
+					doThing(e);
+				}
+			}
+		case MODIFIER:
+//			target.addModifier(modifier);
+		case SUMMON:
+			throw new Exception("invalid effect type");
+		case COMPOUND:
+			for(Effect e : compound){
+				e.doThing(target);
+			}
+		}
+		
+		
 	}
 	
 }

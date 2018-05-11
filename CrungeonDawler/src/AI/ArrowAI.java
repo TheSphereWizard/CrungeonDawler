@@ -9,8 +9,8 @@ public class ArrowAI extends StraightLineAI{
 	int age =0;
 	Entity shooter;
 	
-	public ArrowAI(int vx, int vy,Behavior behaviortype, Entity shooter,Effect e) {
-		super(vx, vy, behaviortype);
+	public ArrowAI(int vx, int vy, Entity shooter) {
+		super(vx, vy);
 		this.shooter=shooter;
 		this.collides=false;
 	}
@@ -24,8 +24,8 @@ public class ArrowAI extends StraightLineAI{
 		}catch(Exception E){	
 		}
 	}
-	public void updateentitiy(Entity self, Player p, Entity lastcollided, int[] directionofwall) {
-		super.updateentitiy(self, p, lastcollided, directionofwall);
+	public void updateentitiy(Entity self, Player p) {
+		super.updateentitiy(self, p);
 		if(age++>=1000){
 			//Cast Death Effect of self
 			Screen.game.removeEntityLater(self);

@@ -1,12 +1,9 @@
 package crungeonDawler;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -15,7 +12,6 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import AI.ArrowAI;
-import AI.NullAI;
 import AI.ProjectiletoPointAI;
 import AI.ShooterAI;
 import AI.StraightLineAI;
@@ -81,26 +77,6 @@ public class Game {
 				dungeon.getGraphics().drawImage(e.getSprite(), (e.getX()-player.getX()-TILE_SIZE/2)+dungeon.getWidth()/2, (e.getY()-player.getY()-TILE_SIZE/2)+dungeon.getHeight()/2, null);
 			}
 		}
-//		int playerTileX = ((player.getX())/pixelTileWidth)*pixelTileWidth+dungeon.getWidth()/2-16;
-//		int playerTileY = ((player.getY())/pixelTileWidth)*pixelTileWidth+dungeon.getHeight()/2-16;
-//		Graphics g = dungeon.getGraphics();
-//		g.setColor(Color.PINK);
-//		g.fillRect(playerTileX-player.getX(), playerTileY-player.getY(), 32, 32);
-//		g.setColor(Color.BLACK);
-//		g.drawString("E", playerTileX-player.getX(), playerTileY-player.getY());
-		int[] cen = new int[]{player.x-Game.TILE_SIZE/2,player.y-Game.TILE_SIZE/2};
-		int x=Math.abs(player.actor.getFacing()-4);
-		int y=player.actor.getFacing()-4;
-		if(x==1||x==0)
-			cen[0]+=32;
-		if(x==3||x==4)
-			cen[0]-=32;
-		if(y>0)
-			cen[1]+=32;
-		if(y<0&y!=-4)
-			cen[1]-=32;
-		g2d.setColor(Color.RED);
-		dungeon.getGraphics().fillRect(cen[0]-player.x+dungeon.getWidth()/2,cen[1]-player.y+dungeon.getHeight()/2,32,32);
 		g2d.drawImage(dungeon, (Screen.frameWidth-dungeon.getWidth())/2,(Screen.frameHeight-dungeon.getHeight())/2,null);
 		g2d.setColor(Color.RED);
 		g2d.drawString(String.valueOf(getCurrentRoom()), 20, 20);
@@ -150,18 +126,6 @@ public class Game {
 		e.y=y*TILE_SIZE;
 		allEntities.add(e);
 	}
-//	private ArrayList<Entity> lateradd = new ArrayList<Entity>();
-//	public void addEntityLater(Entity e, int x, int y){
-//		e.x=x*pixelTileWidth;
-//		e.y=y*pixelTileWidth;
-//		lateradd.add(e);
-//	}
-//	private void addLaterEntities(){
-//		for(Entity e :lateradd){
-//			allEntities.add(e);
-//		}
-//		lateradd.clear();
-//	}
 	private ArrayList<Entity> laterremove = new ArrayList<Entity>();
 	public void removeEntityLater(Entity e){
 		laterremove.add(e);
@@ -182,7 +146,7 @@ public class Game {
 	public void UpdateGame(Point mousePosition,boolean[] keyPressed,boolean[] mousePressed){
 		for(int i=0;i<allEntities.size();i++){
 			Entity e = allEntities.get(i);
-			e.update(player, null, abouttocollide(e));
+			e.update(player);
 			if(e.ai.slide){
 				tryLegalMovement(e,new int[]{0,e.vy});
 				tryLegalMovement(e,new int[]{e.vx,0});
@@ -240,9 +204,9 @@ public class Game {
 		if(mousePressed[0]){
 			if(mouseslowdown%mouseslowdownfactor==1){
 				mousePosition.translate(player.x-Screen.frameWidth/2, player.y-Screen.frameHeight/2);
-				Entity arrow=new Monster("Arrow", new Actor("arrow",32,32,true),new ArrowAI(0,0,StraightLineAI.Behavior.REFLECT,null,new Effect(0)));
-				Monster m =new Monster("test",new Actor("bulbasor3",TILE_SIZE,TILE_SIZE,false), new ShooterAI(3,5,30,arrow));
-				addEntity(new Monster("Playersummon", new Actor("arrow",32,32,true),new ProjectiletoPointAI(8,mousePosition,new Effect(1,m))),player.x/32,player.y/32);
+//				Entity arrow=new Monster("Arrow", new Actor("arrow",32,32,true),new ArrowAI(0,0,StraightLineAI.Behavior.STICK,null,new Effect(0)));
+//				Monster m =new Monster("test",new Actor("bulbasor3",TILE_SIZE,TILE_SIZE,false), new ShooterAI(3,5,30,arrow));
+				addEntity(new Monster("Playersummon", new Actor("arrow",32,32,true),new ProjectiletoPointAI(8,mousePosition)),player.x/32,player.y/32);
 
 //				addEntity(new Monster("PlayerArrow", new Actor("arrow",32,32,true),new ArrowAI((mousePosition.x-Screen.frameWidth/2)/20,(mousePosition.y-Screen.frameHeight/2)/20,StraightLineAI.Behavior.REFLECT,player)),player.x/32,player.y/32);
 			}
@@ -250,9 +214,6 @@ public class Game {
 		mouseslowdown=0;
 		}
 		
-	}
-	private int[] abouttocollide(Entity e) {//Needs to indicate whether a wall is in the pos or negitive x or y direction.
-		return new int[]{0,0};
 	}
 	void tryLegalMovement(Entity e, int[] translation){
 		if(legalMovement(e, translation)){

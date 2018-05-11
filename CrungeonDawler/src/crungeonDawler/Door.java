@@ -26,8 +26,8 @@ public class Door extends Entity{
 			}
 		}
 	}
-	public void update(Player p, Entity lastcollided, int[] directionofwall){
-		super.update(p, lastcollided, directionofwall);
+	public void update(Player p){
+		super.update(p);
 		if(actor.doorState==0||actor.doorState==8){
 			this.ai.collides=false;
 		}else{

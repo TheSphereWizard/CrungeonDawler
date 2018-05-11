@@ -47,12 +47,11 @@ public class ShooterAI extends AI{
 				Class<? extends Entity> clazz = projectile.getClass();
 				try {
 					Constructor<?> ctor = clazz.getConstructor(String.class,Actor.class,AI.class,boolean.class);
+					Entity e = projectile;
+					ArrowAI r = (ArrowAI)projectile.ai;
 					
-					Monster m = (Monster) projectile;//This is just temporary testing code for different projectile 
-					ArrowAI r = (ArrowAI)projectile.ai;//behaviors and should be done not this way later -Note to self
-					
-					Entity object = (Entity) ctor.newInstance(self.name+" bullet",new Actor(projectile.actor.spriteSheet,projectile.getWidth(),projectile.getHeight(),projectile.actor.rotatable),new ArrowAI((p.getX()+8-self.getX())/16,(p.getY()+8-self.getY())/16,r.behaviortype,self,effect),false);
-					Screen.game.addEntity(object, self.getX()/32, self.getY()/32);
+					Entity newprojectile = (Entity) ctor.newInstance(self.name+"'s projectile",new Actor(projectile.actor.spriteSheet,projectile.getWidth(),projectile.getHeight(),projectile.actor.rotatable),new ArrowAI((p.getX()+8-self.getX())/16,(p.getY()+8-self.getY())/16,self),false);
+					Screen.game.addEntity(newprojectile, self.getX()/32, self.getY()/32);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,5 +61,5 @@ public class ShooterAI extends AI{
 			slow%=(refresh*2);
 		}
 	}
-
+	public void updateentitiy(Entity self, Player p) {}
 }

@@ -11,14 +11,10 @@ public abstract class Entity {
 	public int vx,vy;
 	public AI ai;
 	int[] invalidtiles = new int[]{0,LevelLayout.wallID,LevelLayout.lowwallID};
+	public Effect onbirth,oncollide, ondeath;
 	public Entity(String name, Actor actor,AI ai){
 		this.name = name;
 		this.actor = actor;
-		this.ai= ai;
-	}
-	public Entity(String name, DoorActor doorActor, NullAI ai) {
-		this.name = name;
-		this.actor = doorActor;
 		this.ai= ai;
 	}
 	public int getX(){
@@ -36,8 +32,8 @@ public abstract class Entity {
 	public void setVY(int vy){
 		this.vy = vy;
 	}
-	public void update(Player p, Entity lastcollided, int[] directionofwall){
-		ai.updateentitiy(this,p,lastcollided, directionofwall);
+	public void update(Player p){
+		ai.updateentitiy(this,p);
 	}
 	public void oncollide(Entity other){
 		ai.oncollide(this,other);
@@ -52,5 +48,6 @@ public abstract class Entity {
 		return actor.getHeight();
 	}
 	public void onInteract(Player p) {
+		ai.onInteract(p);
 	}
 }
