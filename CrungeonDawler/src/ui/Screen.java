@@ -302,7 +302,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
         for(Component c: this.getComponents()){
         	c.setVisible(false);
         }
-        for(Component c: UILoader.loadUI("/git/CrungeonDawler/CrungeonDawler/resources/Interface/stupidUI.xml", 1600,900)){
+        for(Component c: UILoader.loadUI("resources/Interface/stupidUI.xml", 1600,900)){
         	this.add(c);
         }
         game=new Game(new Player("Test Player",new Actor("Bulbasor3",Game.TILE_SIZE,Game.TILE_SIZE,false)));//Umm players will need some sort of menu to pick from, Or at the very least a feild for Name

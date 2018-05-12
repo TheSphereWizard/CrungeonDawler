@@ -11,11 +11,16 @@ public class Item {
 	ArrayList<Gem> gems;
 	Effect effect;
 	ItemIdentity identity;
-	Item(Actor a, boolean ranged,Effect e,ItemIdentity r){//maybe pass in player as owner, but not if enemies will hold items
+	Item(Actor a, Effect e, ItemIdentity r){
 		effect=e;
 		identity=r;
+		//the Effect is the Item, aka a bow will have an effect that summons an arrow the arrow is an entity defined in the effect
 	}
 	public void causeEffect(Entity caster, Point Mouse){
-//		Effect.doThing(caster, Mouse);
+		try {
+			effect.doThing(Mouse);//need something that allows modifiers to affect the effect.
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

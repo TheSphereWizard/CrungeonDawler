@@ -76,8 +76,5 @@ public class Effect {
 				e.doThing(target);
 			}
 		}
-		
-		
-	}
-	
+	}	
 }
