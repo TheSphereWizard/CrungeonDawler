@@ -209,6 +209,7 @@ public class Game {
 				addEntity(new Monster("Playersummon", new Actor("arrow",32,32,true),new ProjectiletoPointAI(8,mousePosition)),player.x/32,player.y/32);
 
 //				addEntity(new Monster("PlayerArrow", new Actor("arrow",32,32,true),new ArrowAI((mousePosition.x-Screen.frameWidth/2)/20,(mousePosition.y-Screen.frameHeight/2)/20,StraightLineAI.Behavior.REFLECT,player)),player.x/32,player.y/32);
+			
 			}
 		}else{
 		mouseslowdown=0;

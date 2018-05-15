@@ -1,0 +1,22 @@
+{
+	"type": "Summon",
+	"number":1,
+	"entity":{
+		"name":"test",
+		"path":"bulbasaur3",
+		"ai":{
+			"type":"ShooterAI",
+			"maxspeed":10,
+			"range":10,
+			"refresh":10,
+			"entity":{
+				"name":"arrow",
+				"path":"arrow",
+				"ai":{
+					"type":"TowardsPlayerAI",
+					"maxspeed":10,
+				},
+			},
+		},
+	},
+}
