@@ -1,5 +1,4 @@
 package newVersion;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -10,13 +9,14 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class Screen extends JPanel implements /*KeyListener,*/MouseListener,ActionListener{
+public class Screen extends JPanel implements KeyListener,MouseListener,ActionListener{
 	public static enum GameState{MAIN_MENU, PLAYING, GAMEOVER, MENU, LOADING, STARTUP}
 	public static GameState gameState;
 
@@ -37,7 +37,7 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	static final int MENU_BUTTON_NEWGAME  = 0;
 	static final int MENU_BUTTON_CONTINUE = 1;
 	static final int MENU_BUTTON_EXIT     = 2;
-	
+
 	private ArrayList<Component> gameUI = new ArrayList<Component>();
 	static final int ACTION_BUTTON_1  = 3;
 	static final int ACTION_BUTTON_2  = 4;
@@ -45,25 +45,28 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	static final int ACTION_BUTTON_4  = 6;
 	static final int INVENTORY_BUTTON = 7;
 	static final int MAP_BUTTON       = 8;
-	
+
 	Game game;
+
 	public Screen(){
-		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();//I use this instead of KeyListener because i can't get KeyListener to work
-        manager.addKeyEventDispatcher(this.new MyDispatcher());
+		//KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		//manager.addKeyEventDispatcher(this.new MyDispatcher());
+		this.setFocusable(true);
 		this.setDoubleBuffered(true);
 		this.setBackground(Color.black);
 		this.addMouseListener(this);
-        
-        gameState = GameState.STARTUP;
-        Thread gameThread = new Thread() {
-            public void run(){
-                GameLoop();
-            }
-        };
-        gameThread.start();
-       
+		this.addKeyListener(this);
+
+		gameState = GameState.STARTUP;
+		Thread gameThread = new Thread() {
+			public void run(){
+				GameLoop();
+			}
+		};
+		gameThread.start();
+
 	}
-	
+
 	/*****************************************************************/
 	/* Keep track of inputs                                          */
 	/*****************************************************************/
@@ -87,6 +90,12 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	public void mouseReleased(MouseEvent e) {
 		mousePressed[e.getButton()-1] = false;
 	}
+	public void keyPressed(KeyEvent e) {
+		keyPressed[e.getKeyCode()] = true;
+	}
+	public void keyReleased(KeyEvent e) {
+		keyPressed[e.getKeyCode()] = false;
+	}
 	public void actionPerformed(ActionEvent e) {
 		try{
 			buttonPressed[Integer.parseInt(e.getActionCommand())]=true;
@@ -94,22 +103,22 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 			System.out.println(e.getActionCommand());
 		}
 	}
-	private class MyDispatcher implements KeyEventDispatcher {
-	    public boolean dispatchKeyEvent(KeyEvent e) {
-	        if (e.getID() == KeyEvent.KEY_PRESSED) {
-	        	keyPressed[e.getKeyCode()] = true;
-	        }
-	        if (e.getID() == KeyEvent.KEY_RELEASED) {
-	        	keyPressed[e.getKeyCode()] = false;
-	        }
-	        return false;
-	     }
-	}
-	
+	/*private class MyDispatcher implements KeyEventDispatcher {
+		public boolean dispatchKeyEvent(KeyEvent e) {
+			if (e.getID() == KeyEvent.KEY_PRESSED) {
+				keyPressed[e.getKeyCode()] = true;
+			}
+			if (e.getID() == KeyEvent.KEY_RELEASED) {
+				keyPressed[e.getKeyCode()] = false;
+			}
+			return false;
+		}
+	}*/
+
 	/*****************************************************************/
 	/* Main loop                                                     */
 	/*****************************************************************/
-	
+
 	private void GameLoop() {
 		long startupTime = 0, lastStartupTime = System.nanoTime();
 
@@ -119,10 +128,12 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 			startTime = System.nanoTime();
 			switch (gameState) {
 			case PLAYING:
+				game.updateGame(mousePosition(), mousePressed, keyPressed, buttonPressed);
 				break;
 			case GAMEOVER:
 				break;
 			case MAIN_MENU:
+				newGame();
 				if(buttonPressed[MENU_BUTTON_NEWGAME]){
 					newGame();
 					buttonPressed[MENU_BUTTON_NEWGAME] = false;
@@ -163,20 +174,21 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 			} catch (InterruptedException ex) { }
 		}
 	}
-	
+
 	/*****************************************************************/
 	/* Graphical Stuff                                               */
 	/*****************************************************************/
-	
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;        
-		Draw(g2d);
+		draw(g2d);
 	}
-	public void Draw(Graphics2D g2d) {
+	public void draw(Graphics2D g2d) {
 		switch (gameState)
 		{
 		case PLAYING:
+			game.draw(g2d);
 			break;
 		case MENU:
 			break;
@@ -190,15 +202,16 @@ public class Screen extends JPanel implements /*KeyListener,*/MouseListener,Acti
 	/* Starting a game                                               */
 	/*****************************************************************/
 	private void newGame(){
-        lastTime = System.nanoTime();
-        game=new Game();
+		lastTime = System.nanoTime();
+		game=new Game(this.getWidth(),this.getHeight());
 		gameState=GameState.PLAYING;
-    }
+	}
 	/*****************************************************************/
 	/* Unused methods                                                */
 	/*****************************************************************/
-	
+
 	public void mouseClicked(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
+	public void keyTyped(KeyEvent arg0) {}
 }

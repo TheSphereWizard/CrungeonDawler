@@ -1,0 +1,5 @@
+{
+	"type":"area",
+	"radius":10,
+	"effect":"damageTest"
+}
