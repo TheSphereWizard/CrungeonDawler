@@ -4,6 +4,7 @@ package newVersion;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class Game {
@@ -27,6 +28,7 @@ public class Game {
 		manager.loadWeaponType("test");
 		manager.loadEntityType("test");
 		player=manager.entities.get("test").getEntity();
+		player.weapon=manager.weapons.get("test").getWeapon();
 		player.setPos(new Point(100,100));
 		level = new Level("test","test");
 	}
@@ -44,6 +46,11 @@ public class Game {
 			int[] move = moves.get(i);
 			Entity e1 = entities.get(i);
 			attemptMovement(e1,move[0],move[1]);
+		}
+		if(mousePressed[MouseEvent.BUTTON1-1]) {
+			if(player.weapon.getReady()) {
+//				player.weapon;
+			}
 		}
 		attemptMovement(player,pMove[0],pMove[1]);
 	}
@@ -104,8 +111,6 @@ public class Game {
 			g2d.drawImage(e.getActor().getSprite(e.vx,e.vy), ePos.x,ePos.y, null);
 		}
 	}
-	
-	
 	public void executeEffect(Effect e,Entity caster,Entity targetEntity,Point targetPoint){
 		if(e.type.equals("damage")) {
 			targetEntity.dealDamage(e.damage);

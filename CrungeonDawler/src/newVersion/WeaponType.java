@@ -15,6 +15,7 @@ public class WeaponType {
 		contentManager = c;
 	}
 	public Weapon getWeapon() {
-		return new Weapon();
+		return new Weapon(name, projectile, cooldownTime, minLevel, maxLevel,
+				minRarity, maxRarity, baseStats, contentManager);
 	}
 }
