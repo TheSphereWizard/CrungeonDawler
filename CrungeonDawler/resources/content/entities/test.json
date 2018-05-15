@@ -1,0 +1,23 @@
+{
+	"name":"test",
+	"actor":"test",
+	"mover":"test",
+	"onBirth":"test",
+	"onDeath":"test",
+	"onCollide":"test",
+	"weapon":"test",
+	"lifetime":1000,
+	"baseHealth":100,
+	"width":32,
+	"height":32,
+	"speed":10,
+	"misc":10,
+	"minLevel":0,
+	"maxLevel":2,
+	"baseStats":{
+		"STR":10,
+		"DEX":10,
+		"INT":10
+	},
+	"contentManager":null
+}

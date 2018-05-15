@@ -35,7 +35,7 @@ public class ContentManager {
 	public EntityType readEntityType(String path) {
 		BufferedReader bufferedReader;
 		try {
-			bufferedReader = new BufferedReader(new FileReader("resources/content/entities/"+path));
+			bufferedReader = new BufferedReader(new FileReader("resources/content/entities/"+path+".json"));
 			EntityType n = gson.fromJson(bufferedReader, EntityType.class);
 			entities.put(path, n);
 			return n;
@@ -52,7 +52,7 @@ public class ContentManager {
 	public ActorType readActorType(String path) {
 		BufferedReader bufferedReader;
 		try {
-			bufferedReader = new BufferedReader(new FileReader("resources/content/actors/"+path));
+			bufferedReader = new BufferedReader(new FileReader("resources/content/actors/"+path+".json"));
 			ActorType a = gson.fromJson(bufferedReader, ActorType.class);
 			actors.put(path, a);
 			return a;
@@ -69,7 +69,7 @@ public class ContentManager {
 	public Effect readEffect(String path) {
 		BufferedReader bufferedReader;
 		try {
-			bufferedReader = new BufferedReader(new FileReader("resources/content/effects/"+path));
+			bufferedReader = new BufferedReader(new FileReader("resources/content/effects/"+path+".json"));
 			Effect f = gson.fromJson(bufferedReader, Effect.class);
 			effects.put(path, f);
 			return f;
@@ -86,7 +86,7 @@ public class ContentManager {
 	public WeaponType readWeaponType(String path) {
 		BufferedReader bufferedReader;
 		try {
-			bufferedReader = new BufferedReader(new FileReader("resources/content/weapons/"+path));
+			bufferedReader = new BufferedReader(new FileReader("resources/content/weapons/"+path+".json"));
 			WeaponType w = gson.fromJson(bufferedReader, WeaponType.class);
 			weapons.put(path, w);
 			return w;
@@ -103,7 +103,7 @@ public class ContentManager {
 	public ItemType readItemType(String path) {
 		BufferedReader bufferedReader;
 		try {
-			bufferedReader = new BufferedReader(new FileReader("resources/content/items/"+path));
+			bufferedReader = new BufferedReader(new FileReader("resources/content/items/"+path+".json"));
 			ItemType i = gson.fromJson(bufferedReader, ItemType.class);
 			items.put(path, i);
 			return i;
@@ -120,7 +120,7 @@ public class ContentManager {
 	public Buff readBuff(String path) {
 		BufferedReader bufferedReader;
 		try {
-			bufferedReader = new BufferedReader(new FileReader("resources/content/buffs/"+path));
+			bufferedReader = new BufferedReader(new FileReader("resources/content/buffs/"+path+".json"));
 			Buff b = gson.fromJson(bufferedReader, Buff.class);
 			buffs.put(path, b);
 			return b;

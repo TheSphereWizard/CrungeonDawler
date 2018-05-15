@@ -22,14 +22,20 @@ public class Game {
 		height = h;
 		screenCenter = new Point(width/2,height/2);
 		manager = new ContentManager();
+		manager.loadActorType("test");
+		manager.loadEffect("damageTest");
+		manager.loadWeaponType("test");
+		manager.loadEntityType("test");
+		player=manager.entities.get("test").getEntity();
+		player.setPos(new Point(100,100));
 		level = new Level("test","test");
 	}
 	public void updateGame(Point mousePosition,boolean[] mousePressed,boolean[] keyPressed,boolean[] buttonPressed){
 		int[] pMove = {0,0};
-		if(keyPressed[KeyEvent.VK_A]) {pMove[0]-=1;}
-		if(keyPressed[KeyEvent.VK_W]) {pMove[1]-=1;}
-		if(keyPressed[KeyEvent.VK_D]) {pMove[0]+=1;}
-		if(keyPressed[KeyEvent.VK_S]) {pMove[1]+=1;}
+		if(keyPressed[KeyEvent.VK_A]) {pMove[0]-=3;}
+		if(keyPressed[KeyEvent.VK_W]) {pMove[1]-=3;}
+		if(keyPressed[KeyEvent.VK_D]) {pMove[0]+=3;}
+		if(keyPressed[KeyEvent.VK_S]) {pMove[1]+=3;}
 		moves = new ArrayList<int[]>();
 		for(Entity e:entities) {
 			moves.add(e.getMove(player));
@@ -39,8 +45,7 @@ public class Game {
 			Entity e1 = entities.get(i);
 			attemptMovement(e1,move[0],move[1]);
 		}
-		attemptMovement(player,pMove[0],0);
-		attemptMovement(player,0,pMove[1]);
+		attemptMovement(player,pMove[0],pMove[1]);
 	}
 	public void addEntity(Entity e,Point p) {
 		e.setPos(p);
@@ -60,7 +65,7 @@ public class Game {
 		int minY = (e1.getPosition().y+level.getHeight()*TILE_SIZE/2)/TILE_SIZE;
 		int maxX = (e1.getPosition().x+e1.getDimension().width-1+level.getWidth()*TILE_SIZE/2)/TILE_SIZE;
 		int maxY = (e1.getPosition().y+e1.getDimension().height-1+level.getHeight()*TILE_SIZE/2)/TILE_SIZE;
-		System.out.println(minX+" "+minY+" "+maxX+" "+maxY);
+//		System.out.println(minX+" "+minY+" "+maxX+" "+maxY);
 		for(int tX=minX;tX<=maxX;tX++) {
 			for(int tY=minY;tY<=maxY;tY++) {
 				int tileID = level.getTileID(tX, tY);

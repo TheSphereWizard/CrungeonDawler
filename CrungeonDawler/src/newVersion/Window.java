@@ -9,7 +9,7 @@ public class Window extends JFrame{
 	Window(int width, int height){
 		Window.frame=this;
 		this.setContentPane(new Screen());
-        this.setUndecorated(true);
+//        this.setUndecorated(true);
         this.setExtendedState(this.MAXIMIZED_BOTH);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

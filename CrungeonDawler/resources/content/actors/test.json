@@ -1,5 +1,6 @@
 {
 	"spriteSheetPath":"test",
 	"width":32,
-	"height":32
+	"height":32,
+	"rotateable":"false"
 }
