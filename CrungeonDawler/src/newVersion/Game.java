@@ -49,8 +49,10 @@ public class Game {
 		}
 		if(mousePressed[MouseEvent.BUTTON1-1]) {
 			if(player.weapon.getReady()) {
-//				player.weapon;
+				addEntity(player.weapon.useWeapon(mousePosition),mousePosition);
+				System.out.println("red");
 			}
+			player.weapon.update();
 		}
 		attemptMovement(player,pMove[0],pMove[1]);
 	}
