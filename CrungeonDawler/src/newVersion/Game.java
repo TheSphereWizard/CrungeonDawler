@@ -29,8 +29,8 @@ public class Game {
 		manager.loadEntityType("test");
 		player=manager.entities.get("test").getEntity();
 		player.weapon=manager.weapons.get("test").getWeapon();
-		player.setPos(new Point(100,100));
-		level = new Level("test","test");
+		player.setPos(new Point(0,0));
+		level = new Level("test",100,100);
 	}
 	public void updateGame(Point mousePosition,boolean[] mousePressed,boolean[] keyPressed,boolean[] buttonPressed){
 		int[] pMove = {0,0};
@@ -74,23 +74,23 @@ public class Game {
 		int minY = (e1.getPosition().y+level.getHeight()*TILE_SIZE/2)/TILE_SIZE;
 		int maxX = (e1.getPosition().x+e1.getDimension().width-1+level.getWidth()*TILE_SIZE/2)/TILE_SIZE;
 		int maxY = (e1.getPosition().y+e1.getDimension().height-1+level.getHeight()*TILE_SIZE/2)/TILE_SIZE;
-//		System.out.println(minX+" "+minY+" "+maxX+" "+maxY);
+
 		for(int tX=minX;tX<=maxX;tX++) {
 			for(int tY=minY;tY<=maxY;tY++) {
 				int tileID = level.getTileID(tX, tY);
-				canMove &= (tileID==1);
+				canMove &= (tileID!=3&&tileID!=2);
 			}
 		}
 		if(!canMove){
-			e1.move(-x, -y);
+			e1.position.translate(-x, -y);
 		}
 	}
+	int renderdist=5;
 	public void draw(Graphics2D g2d) {
 		Point center = player.getCenterPoint();
 		Point playerPos = new Point(player.getPosition());
 		playerPos.translate(-center.x,-center.y);
 		playerPos.translate(screenCenter.x,screenCenter.y);
-		
 		//draw map
 		for(int x=0;x<level.getWidth();x++) {
 			for(int y=0;y<level.getHeight();y++) {

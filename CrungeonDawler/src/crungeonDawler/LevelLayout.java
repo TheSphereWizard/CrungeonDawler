@@ -7,7 +7,7 @@ public class LevelLayout {
 	static final int voidID = 0;
 	static final int wallID = 1;
 	static final int doorID = 2;
-	static final int placeddoorID = 3;
+	public static final int placeddoorID = 3;
 	static final int floorID=4;
 	static final int lowwallID = 5;
 	static final int monsterID = 6;

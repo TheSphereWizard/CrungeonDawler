@@ -1,5 +1,5 @@
 package newVersion;
-import java.awt.Color;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,22 +15,16 @@ public class Level {
 	int height;
 	BufferedImage map;
 	BufferedImage sheet;
-	public Level(String mapPath,String sheetPath) {
+	public Level(String sheetPath,int w,int h) {
+		LevelLayout l =new LevelLayout(w,h);
+		levelLayout = l.level;
+		regionLayout = l.roomids;
 		try {
-			map = ImageIO.read(new File("resources/levels/"+mapPath+".png"));
+			map = Read.outputroom(levelLayout);;
 			sheet = ImageIO.read(new File("resources/tileSets/"+sheetPath+".png"));
 		} catch (IOException e) {e.printStackTrace();}
-		width = map.getWidth();
-		height = map.getHeight();
-		levelLayout = new int[width][height];
-		regionLayout = new int[width][height];
-		for(int x=0;x<width;x++) {
-			for(int y=0;y<height;y++) {
-				Color c = new Color(map.getRGB(x, y));
-				levelLayout[x][y] = c.getBlue()/127 + c.getGreen()*3/127;
-				regionLayout[x][y] = c.getRed();
-			}	
-		}
+		width = w;
+		height = h;
 	}
 	public int getWidth() {
 		return width;
@@ -39,7 +33,9 @@ public class Level {
 		return height;
 	}
 	public Image getTile(int x,int y) {
-		return sheet.getSubimage(0, Game.TILE_SIZE*levelLayout[x][y], Game.TILE_SIZE, Game.TILE_SIZE);
+		if(levelLayout[x][y]<4)
+			return sheet.getSubimage(0, Game.TILE_SIZE*levelLayout[x][y], Game.TILE_SIZE, Game.TILE_SIZE);
+		return sheet.getSubimage(0, 0, Game.TILE_SIZE, Game.TILE_SIZE);
 	}
 	public int getTileID(int x,int y) {
 		return levelLayout[x][y];
@@ -47,4 +43,36 @@ public class Level {
 	public int getRegion(int x,int y) {
 		return regionLayout[x][y];
 	}
+	public ArrayList<int[]> spawnMobs() {
+		ArrayList<int[]> r = new ArrayList<int[]>();
+		for(int x=0;x<width;x++){
+			for(int y=0;y<height;y++){
+				if(levelLayout[x][y]==LevelLayout.monsterID){
+					levelLayout[x][y]=LevelLayout.floorID;
+					r.add(new int[]{x,y});
+				}
+			}
+		}
+		return r;
+	}
+	public ArrayList<int[]> spawnDoors() {
+		ArrayList<int[]> r = new ArrayList<int[]>();
+		for(int x=0;x<width;x++){
+			for(int y=0;y<height;y++){
+				if(levelLayout[x][y]==LevelLayout.placeddoorID){
+					levelLayout[x][y]=LevelLayout.floorID;
+					if(levelLayout[x+1][y]==LevelLayout.placeddoorID){
+						levelLayout[x+1][y]=LevelLayout.floorID;
+						r.add(new int[]{x,y,0});
+					}else{
+						levelLayout[x][y+1]=LevelLayout.floorID;
+						r.add(new int[]{x,y,1});
+					}
+					
+				}
+			}
+		}
+		return r;
+	}
+	
 }
